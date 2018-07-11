@@ -1,25 +1,26 @@
 package com.cjljohnson.PetriNetter.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxGraphModel;
+import com.mxgraph.util.mxConstants;
+import com.mxgraph.util.mxResources;
 import com.mxgraph.view.mxGraph;
+import com.mxgraph.view.mxStylesheet;
 
 public class PetriGraph extends mxGraph{
 	
 	public PetriGraph() {
+		initStyles();
 	}
 	
 	// Overrides method to disallow direct cell editing
@@ -90,7 +91,8 @@ public class PetriGraph extends mxGraph{
 			}
 			if (value instanceof Arc)
 			{
-				return "t" + getCellMarkingName(cell);
+				int weight = ((Arc)value).getWeight();
+				return weight == 1 ? "" : Integer.toString(weight);
 			}
 		}
 
@@ -185,6 +187,107 @@ public class PetriGraph extends mxGraph{
 //			}
 //		}
 //	}
+	
+	/**
+	 * Returns the validation error message to be displayed when inserting or
+	 * changing an edges' connectivity. A return value of null means the edge
+	 * is valid, a return value of '' means it's not valid, but do not display
+	 * an error message. Any other (non-empty) string returned from this method
+	 * is displayed as an error message when trying to connect an edge to a
+	 * source and target. This implementation uses the multiplicities, as
+	 * well as multigraph and allowDanglingEdges to generate validation
+	 * errors.
+	 * 
+	 * @param edge Cell that represents the edge to validate.
+	 * @param source Cell that represents the source terminal.
+	 * @param target Cell that represents the target terminal.
+	 */
+	public String getEdgeValidationError(Object edge, Object source,
+			Object target)
+	{
+		if (edge != null && !isAllowDanglingEdges()
+				&& (source == null || target == null))
+		{
+			return "";
+		}
+
+		if (edge != null && model.getTerminal(edge, true) == null
+				&& model.getTerminal(edge, false) == null)
+		{
+			return null;
+		}
+
+		// Checks if we're dealing with a loop
+		if (!isAllowLoops() && source == target && source != null)
+		{
+			return "";
+		}
+
+		// Checks if the connection is generally allowed
+		if (!isValidConnection(source, target))
+		{
+			return "";
+		}
+
+		if (source != null && target != null)
+		{
+			StringBuffer error = new StringBuffer();
+			boolean hasError = false;
+
+			// Checks if the cells are already connected
+			// and adds an error message if required			
+			if (!multigraph)
+			{
+				Object[] tmp = mxGraphModel.getEdgesBetween(model, source,
+						target, true);
+
+				// Checks if the source and target are not connected by another edge
+				if (tmp.length > 1 || (tmp.length == 1 && tmp[0] != edge))
+				{
+				    hasError = true;
+					error.append(mxResources.get("alreadyConnected",
+							"Already Connected") + "\n");
+				}
+			}
+
+			// Gets the number of outgoing edges from the source
+			// and the number of incoming edges from the target
+			// without counting the edge being currently changed.
+			int sourceOut = mxGraphModel.getDirectedEdgeCount(model, source,
+					true, edge);
+			int targetIn = mxGraphModel.getDirectedEdgeCount(model, target,
+					false, edge);
+
+			// Checks the change against each multiplicity rule
+			if (multiplicities != null)
+			{
+				for (int i = 0; i < multiplicities.length; i++)
+				{
+					String err = multiplicities[i].check(this, edge, source,
+							target, sourceOut, targetIn);
+
+					if (err != null)
+					{
+					    hasError = true;
+						error.append(err);
+					}
+				}
+			}
+
+			// Validates the source and target terminals independently
+			String err = validateEdge(edge, source, target);
+
+			if (err != null)
+			{
+			    hasError = true;
+				error.append(err);
+			}
+
+			return (hasError) ? error.toString() : null;
+		}
+
+		return (allowDanglingEdges) ? null : "";
+	}
 	
 	public String validateEdge(Object edge, Object source, Object target)
 	{
@@ -497,7 +600,6 @@ public class PetriGraph extends mxGraph{
 			mxCell source = (mxCell) edge.getSource();
 			mxCell target = (mxCell) edge.getTarget();
 			
-			// transition
 			if (transition)
 			{
 				if (source.getValue() instanceof Transition)
@@ -521,11 +623,11 @@ public class PetriGraph extends mxGraph{
 		Map<String, Integer> tokenMap = new TreeMap<String, Integer>();
 		for (String id : cells.keySet()) {
 			mxCell cell = (mxCell)cells.get(id);
-			Object value = cell.getValue();
-			if (value instanceof Element) {
-				Element el = (Element)value;
-				if (el.getTagName().equalsIgnoreCase("place") && !getCellGeometry(cell).isRelative()) {
-					int tokens = Integer.parseInt(el.getAttribute("tokens"));
+
+			if (cell.getValue() instanceof Place) {
+				Place place = (Place)cell.getValue();
+				if (!getCellGeometry(cell).isRelative()) {
+					int tokens = place.getTokens();
 					tokenMap.put(id, tokens);
 				}
 			}
@@ -539,31 +641,24 @@ public class PetriGraph extends mxGraph{
 		for (String id : tokenMap.keySet()) {
 			mxCell cell = (mxCell)model.getCell(id);
 			if (cell != null) {
-				Object value = cell.getValue();
-				if (value instanceof Element) {
-					Element el = (Element)value;
-					if (el.getTagName().equalsIgnoreCase("place")) {
-						el.setAttribute("tokens", "" + tokenMap.get(id));
-					}
+				if (cell.getValue() instanceof Place) {
+					Place place = (Place)cell.getValue();
+					place.setTokens(tokenMap.get(id));
 				}
 			}
 		}
 	}
 	
 	public int getCellMarkingName(Object cell) {
-//		System.out.println(cell);
 		if (cell != null && cell instanceof mxCell)
 		{
-			while (((mxCell)cell).getGeometry().isRelative()) {
+			while ( ((mxCell)cell).getGeometry().isRelative()) {
 				cell = ((mxCell)cell).getParent();
 			}
 			Object value = ((mxCell) cell).getValue();
 
-			if (value instanceof Element)
+			if (value != null)
 			{
-				Element elt = (Element) value;
-
-				String type = elt.getTagName();
 				int n = 1;
 				Object[] vertices = getChildVertices(getDefaultParent());
 				for (Object vertex : vertices) {
@@ -573,18 +668,76 @@ public class PetriGraph extends mxGraph{
 					
 					Object vVal = ((mxCell) vertex).getValue();
 
-					if (vVal instanceof Element)
+					if (value.getClass().equals(vVal.getClass()))
 					{
-						Element vElt = (Element) vVal;
-						if (vElt.getTagName().equalsIgnoreCase(type)) {
-							n++;
-						}
+						n++;
 					}
 				}
 				
 			}
 		}
 		return 0;
+	}
+	
+	private void initStyles() {
+		mxStylesheet stylesheet = getStylesheet();
+		Hashtable<String, Object> placeStyle = new Hashtable<String, Object>();
+		placeStyle.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_ELLIPSE);
+		placeStyle.put(mxConstants.STYLE_OPACITY, 100);
+		placeStyle.put(mxConstants.STYLE_FONTCOLOR, "#000000");
+		placeStyle.put(mxConstants.STYLE_FILLCOLOR, "#FFFFFF");
+		placeStyle.put(mxConstants.STYLE_STROKECOLOR, "#000000");
+		placeStyle.put(mxConstants.STYLE_STROKEWIDTH, 5);
+		placeStyle.put(mxConstants.STYLE_NOLABEL, false);
+		placeStyle.put(mxConstants.STYLE_PERIMETER, mxConstants.PERIMETER_ELLIPSE);
+		placeStyle.put(mxConstants.STYLE_PERIMETER_SPACING, 4);
+		stylesheet.putCellStyle("PLACE", placeStyle);
+		
+		Hashtable<String, Object> placeCapacityStyle = new Hashtable<String, Object>();
+		placeCapacityStyle.put(mxConstants.STYLE_FONTCOLOR, "#000000");
+		placeCapacityStyle.put(mxConstants.STYLE_FILLCOLOR, "none");
+		placeCapacityStyle.put(mxConstants.STYLE_STROKECOLOR, "none");
+		stylesheet.putCellStyle("CAPACITY", placeCapacityStyle);
+		
+		Hashtable<String, Object> transitionStyle = new Hashtable<String, Object>();
+		transitionStyle.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_RECTANGLE);
+		transitionStyle.put(mxConstants.STYLE_OPACITY, 100);
+		transitionStyle.put(mxConstants.STYLE_FONTCOLOR, "#000000");
+		transitionStyle.put(mxConstants.STYLE_FILLCOLOR, "#FFFFFF");
+		transitionStyle.put(mxConstants.STYLE_STROKECOLOR, "#000000");
+		transitionStyle.put(mxConstants.STYLE_STROKEWIDTH, 5);
+		transitionStyle.put(mxConstants.STYLE_NOLABEL, false);
+		transitionStyle.put(mxConstants.STYLE_PERIMETER_SPACING, 4);
+		stylesheet.putCellStyle("TRANSITION", transitionStyle);
+		
+
+        Hashtable<String, Object> activeTransitionStyle = new Hashtable<String, Object>();
+        activeTransitionStyle.put(mxConstants.STYLE_STROKECOLOR, "#FF0000");
+        stylesheet.putCellStyle("ACTIVETRANSITION", activeTransitionStyle);
+		
+		Hashtable<String, Object> arcStyle = new Hashtable<String, Object>();
+		arcStyle.put(mxConstants.STYLE_OPACITY, 100);
+		arcStyle.put(mxConstants.STYLE_FONTCOLOR, "#000000");
+		arcStyle.put(mxConstants.STYLE_FILLCOLOR, "#FFFFFF");
+		arcStyle.put(mxConstants.STYLE_STROKECOLOR, "#000000");
+		arcStyle.put(mxConstants.STYLE_STROKEWIDTH, 5);
+		stylesheet.putCellStyle("ARC", arcStyle);
+		
+		// Settings for edges
+	    Map<String, Object> edge = new HashMap<String, Object>();
+	    //edge.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CURVE);
+	    edge.put(mxConstants.STYLE_ORTHOGONAL, false);
+	    edge.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CONNECTOR);
+	    edge.put(mxConstants.STYLE_ENDARROW, mxConstants.ARROW_CLASSIC);
+	    edge.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_BOTTOM);
+	    edge.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_LEFT);
+	    edge.put(mxConstants.STYLE_STROKECOLOR, "#000000");
+	    edge.put(mxConstants.STYLE_STROKEWIDTH, 2);
+	    edge.put(mxConstants.STYLE_FONTCOLOR, "#000000");
+	    edge.put(mxConstants.STYLE_ROUNDED, true);
+	    edge.put(mxConstants.STYLE_EDGE, "PETRI_STYLE");
+
+	    stylesheet.setDefaultEdgeStyle(edge);
 	}
 	
 
