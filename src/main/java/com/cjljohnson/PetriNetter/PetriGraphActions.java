@@ -1,6 +1,7 @@
 package com.cjljohnson.PetriNetter;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -83,6 +84,21 @@ public class PetriGraphActions {
         if (source instanceof mxGraphComponent)
         {
             return ((mxGraphComponent) source).getGraph();
+        }
+
+        return null;
+    }
+    
+    public static final PetriNetManager getManager(ActionEvent e)
+    {
+        Object source = e.getSource();
+
+        if (source instanceof Component)
+        {
+            Component component = (Component)source;
+            while (component != null && !(component instanceof PetriNetManager))
+            	component = component.getParent();
+            return (PetriNetManager)component;
         }
 
         return null;
@@ -198,92 +214,97 @@ public class PetriGraphActions {
         public void actionPerformed(ActionEvent e)
         {
             //final PetriGraph graph = (PetriGraph) getGraph(e);
-            JSplitPane pane = (JSplitPane)((JTabbedPane)e.getSource()).getComponentAt(0);
-            final PetriGraph graph = (PetriGraph) ((mxGraphComponent)pane.getComponent(0)).getGraph();
-//        	System.out.println(((JTabbedPane)e.getSource()).getComponentAt(0));
-//        	final PetriGraph graph = (PetriGraph) ((mxGraphComponent)((JTabbedPane)e.getSource()).getComponentAt(0)).getGraph();
-
-            if (graph != null)
-            {
-                long start = System.currentTimeMillis();
-                final ReachabilityGraph reach = new ReachabilityGraph(graph, 200);
-                long end = System.currentTimeMillis();
-                System.out.println(end - start);
-                //JFrame frame2 = new JFrame("Reachability Graph");
-                //frame2.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                
-                
-                // define layout
-                mxIGraphLayout layout = new mxFastOrganicLayout(reach);
-
-                // layout graph
-                layout.execute(reach.getDefaultParent());
-                
-                final mxGraphComponent reachComponent = new mxGraphComponent(reach);
-                
-                reachComponent.getGraphControl().addMouseListener(new MouseAdapter()
-                {
-
-                    public void mouseReleased(MouseEvent e)
-                    {
-                        Object obj = reachComponent.getCellAt(e.getX(), e.getY());
-
-                        if (obj != null && obj instanceof mxCell && e.getClickCount() == 2)
-                        {
-                            
-                            Object value = ((mxCell) obj).getValue();
-                            if (value instanceof Map<?,?>)
-                            {
-                                reach.setActiveState(obj);
-                            }
-                        }
-                    }
-                });
-                reachComponent.setConnectable(false);
-                
-                
-                reachComponent.getGraphControl().addMouseListener(new MouseAdapter()
-                {
-
-                    /**
-                     * 
-                     */
-                    public void mousePressed(MouseEvent e)
-                    {
-                        // Handles context menu on the Mac where the trigger is on mousepressed
-                        mouseReleased(e);
-                    }
-
-                    /**
-                     * 
-                     */
-                    public void mouseReleased(MouseEvent e)
-                    {
-                        if (e.isPopupTrigger())
-                        {
-                         // Reach Right Click
-//                            Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(),
-//                                    reachComponent);
-//                            ReachRightClick menu = new ReachRightClick(reachComponent, pt.x, pt.y);
-//                            menu.show(reachComponent, pt.x, pt.y);
-
-                            e.consume();
-                        }
-                    }
-
-                });
-                
-                
-                
-//                JTabbedPane pane = (JTabbedPane)e.getSource();
-//                pane.addTab("Reach", null, reachComponent,
-//                        "Reachability Graph");
-                //frame2.setContentPane(reachComponent);
-                //frame2.pack();
-                //frame2.setSize(400, 400);
-                //frame2.setVisible(true);
-                pane.setRightComponent(reachComponent);
-            }
+        	
+        	PetriNetManager manager = getManager(e);
+        	manager.createReachabilityGraph();
+        	//return;
+        	
+//            JSplitPane pane = (JSplitPane)((JTabbedPane)e.getSource()).getComponentAt(0);
+//            final PetriGraph graph = (PetriGraph) ((mxGraphComponent)pane.getComponent(0)).getGraph();
+////        	System.out.println(((JTabbedPane)e.getSource()).getComponentAt(0));
+////        	final PetriGraph graph = (PetriGraph) ((mxGraphComponent)((JTabbedPane)e.getSource()).getComponentAt(0)).getGraph();
+//
+//            if (graph != null)
+//            {
+//                long start = System.currentTimeMillis();
+//                final ReachabilityGraph reach = new ReachabilityGraph(graph, 200);
+//                long end = System.currentTimeMillis();
+//                System.out.println(end - start);
+//                //JFrame frame2 = new JFrame("Reachability Graph");
+//                //frame2.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//                
+//                
+//                // define layout
+//                mxIGraphLayout layout = new mxFastOrganicLayout(reach);
+//
+//                // layout graph
+//                layout.execute(reach.getDefaultParent());
+//                
+//                final mxGraphComponent reachComponent = new mxGraphComponent(reach);
+//                
+//                reachComponent.getGraphControl().addMouseListener(new MouseAdapter()
+//                {
+//
+//                    public void mouseReleased(MouseEvent e)
+//                    {
+//                        Object obj = reachComponent.getCellAt(e.getX(), e.getY());
+//
+//                        if (obj != null && obj instanceof mxCell && e.getClickCount() == 2)
+//                        {
+//                            
+//                            Object value = ((mxCell) obj).getValue();
+//                            if (value instanceof Map<?,?>)
+//                            {
+//                                reach.setActiveState(obj);
+//                            }
+//                        }
+//                    }
+//                });
+//                reachComponent.setConnectable(false);
+//                
+//                
+//                reachComponent.getGraphControl().addMouseListener(new MouseAdapter()
+//                {
+//
+//                    /**
+//                     * 
+//                     */
+//                    public void mousePressed(MouseEvent e)
+//                    {
+//                        // Handles context menu on the Mac where the trigger is on mousepressed
+//                        mouseReleased(e);
+//                    }
+//
+//                    /**
+//                     * 
+//                     */
+//                    public void mouseReleased(MouseEvent e)
+//                    {
+//                        if (e.isPopupTrigger())
+//                        {
+//                         // Reach Right Click
+////                            Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(),
+////                                    reachComponent);
+////                            ReachRightClick menu = new ReachRightClick(reachComponent, pt.x, pt.y);
+////                            menu.show(reachComponent, pt.x, pt.y);
+//
+//                            e.consume();
+//                        }
+//                    }
+//
+//                });
+//                
+//                
+//                
+////                JTabbedPane pane = (JTabbedPane)e.getSource();
+////                pane.addTab("Reach", null, reachComponent,
+////                        "Reachability Graph");
+//                //frame2.setContentPane(reachComponent);
+//                //frame2.pack();
+//                //frame2.setSize(400, 400);
+//                //frame2.setVisible(true);
+//                pane.setRightComponent(reachComponent);
+//            }
         }
     }
     

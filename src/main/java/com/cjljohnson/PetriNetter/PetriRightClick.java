@@ -15,8 +15,10 @@ import org.w3c.dom.Element;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.util.mxGraphActions;
 import com.mxgraph.util.mxResources;
-
+import com.cjljohnson.PetriNetter.model.Arc;
 import com.cjljohnson.PetriNetter.model.PetriGraph;
+import com.cjljohnson.PetriNetter.model.Place;
+import com.cjljohnson.PetriNetter.model.Transition;
 
 public class PetriRightClick extends JPopupMenu
 {
@@ -35,15 +37,12 @@ public class PetriRightClick extends JPopupMenu
 	    
 	    if (cell != null) {
 	        Object value = ((mxCell)cell).getValue();
-            if (value instanceof Element) {
-                final Element el = (Element)value;
-                if (el.getTagName().equalsIgnoreCase("place")) {
-                	placeMenu(manager, cell, el);
-                } else if (el.getTagName().equalsIgnoreCase("arc")) {
-                	arcMenu(manager, cell, el);
-                } else if (el.getTagName().equalsIgnoreCase("transition")) {
-                    transitionMenu(manager, cell, el);
-                }
+            if (value instanceof Place) {
+                placeMenu(manager, cell, (Place)value);
+            } else if (value instanceof Arc) {
+            	arcMenu(manager, cell, (Arc)value);
+            } else if (value instanceof Transition) {
+                transitionMenu(manager, cell, (Transition)value);
             }
 	    }
 	    
@@ -55,11 +54,11 @@ public class PetriRightClick extends JPopupMenu
 	    
 	    addSeparator();
 	    
-//	    add(hello.bind("Reach", PetriGraphActions.getCreateReachabilityAction(),
-//	            "/petri/images/reach.gif"));
-	    
-	    add(manager.bind2("Reach", PetriGraphActions.getCreateReachabilityAction(),
+	    add(manager.bind("Reach", PetriGraphActions.getCreateReachabilityAction(),
 	            "/petri/images/reach.gif"));
+	    
+//	    add(manager.bind2("Reach", PetriGraphActions.getCreateReachabilityAction(),
+//	            "/petri/images/reach.gif"));
 	    
 	    addSeparator();
 
@@ -84,29 +83,30 @@ public class PetriRightClick extends JPopupMenu
 //		add(hello.bind("Load", new PetriGraphActions.LoadAction(true), "/com/mxgraph/examples/swing/images/load.gif"));
 	}
 
-    private void placeMenu(final PetriNetManager manager, final Object cell, final Element el) {
+    private void placeMenu(final PetriNetManager manager, final Object cell, final Place place) {
 		
             // Tokens
             JPanel tokensPanel = new JPanel();
             JLabel tokensL = new JLabel("Tokens:  ");
             final JTextField tokensTF = new JTextField(5);
-            tokensTF.setText(el.getAttribute("tokens"));
+            tokensTF.setText(Integer.toString(place.getTokens()));
             tokensTF.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                 	int newTokens;
                 	try {
                 		newTokens = Integer.parseInt(tokensTF.getText());
-                		int capacity = Integer.parseInt(el.getAttribute("capacity"));
+                		int capacity = place.getCapacity();
                 		if (newTokens >= 0 && (newTokens <= capacity || capacity == -1)) {
-                    		el.setAttribute("tokens", "" + newTokens);
+                    		place.setTokens(newTokens);
                     		((PetriGraph)manager.getPetriComponent().getGraph()).checkEnabledFromPlace(cell);
                     		manager.getPetriComponent().refresh();
+                    		manager.disableReachComponent();
                     		return;
                     	}
                 	} catch (Exception exc) {
                 		
                 	}
-                	tokensTF.setText(el.getAttribute("tokens"));
+                	tokensTF.setText(Integer.toString(place.getTokens()));
             		return;
                 	
                 }
@@ -119,10 +119,10 @@ public class PetriRightClick extends JPopupMenu
             JPanel capacityPanel = new JPanel();
             JLabel capacityL = new JLabel("Capacity:");
             final JTextField capacityTF = new JTextField(5);
-            if (el.getAttribute("capacity").equalsIgnoreCase("-1")) {
+            if (place.getCapacity() == -1) {
                 capacityTF.setText("n");
             } else {
-                capacityTF.setText(el.getAttribute("capacity"));
+                capacityTF.setText(Integer.toString(place.getCapacity()));
             }
             capacityTF.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -133,19 +133,20 @@ public class PetriRightClick extends JPopupMenu
                 	    } else {
                 	        newCapacity = Integer.parseInt(capacityTF.getText());
                 	    }
-                		if ((newCapacity > 0 && newCapacity >= Integer.parseInt(el.getAttribute("tokens"))) 
+                		if ((newCapacity > 0 && newCapacity >= place.getTokens()) 
                     			|| newCapacity == -1) {
-                    		el.setAttribute("capacity", "" + newCapacity);
+                    		place.setCapacity(newCapacity);
                     		((PetriGraph)manager.getPetriComponent().getGraph()).checkEnabledFromPlace(cell);
+                    		manager.disableReachComponent();
                     		manager.getPetriComponent().refresh();
                     	}
                 	} catch (Exception exc) {
                 		
                 	}
-                	if (el.getAttribute("capacity").equalsIgnoreCase("-1")) {
+                	if (place.getCapacity() == -1) {
                         capacityTF.setText("n");
                     } else {
-                        capacityTF.setText(el.getAttribute("capacity"));
+                        capacityTF.setText(Integer.toString(place.getCapacity()));
                     }
             		return;
                 	
@@ -158,27 +159,28 @@ public class PetriRightClick extends JPopupMenu
             addSeparator();
 	}
 	
-	private void arcMenu(final PetriNetManager manager, final Object cell, final Element el) {
+	private void arcMenu(final PetriNetManager manager, final Object cell, final Arc arc) {
 		// Weight
         JPanel weightPanel = new JPanel();
         JLabel weightL = new JLabel("Weight:");
         final JTextField weightTF = new JTextField(5);
-        weightTF.setText(el.getAttribute("weight"));
+        weightTF.setText(Integer.toString(arc.getWeight()));
         weightTF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
             	int newWeight;
             	try {
             		newWeight = Integer.parseInt(weightTF.getText());
             		if (newWeight > 0) {
-                		el.setAttribute("weight", "" + newWeight);
+                		arc.setWeight(newWeight);
                 		((PetriGraph)manager.getPetriComponent().getGraph()).checkEnabledFromEdge(cell);
                 		manager.getPetriComponent().refresh();
+                		manager.disableReachComponent();
                 		return;
                 	}
             	} catch (Exception exc) {
             		
             	}
-            	weightTF.setText(el.getAttribute("weight"));
+            	weightTF.setText(Integer.toString(arc.getWeight()));
         		return;
             	
             }
@@ -190,7 +192,7 @@ public class PetriRightClick extends JPopupMenu
         addSeparator();
 	}
 	
-	private void transitionMenu(PetriNetManager manager, Object cell, Element el) {
+	private void transitionMenu(PetriNetManager manager, Object cell, Transition transition) {
         
 	    boolean isFirable = ((PetriGraph)manager.getPetriComponent().getGraph()).isFirable(cell);
 	    

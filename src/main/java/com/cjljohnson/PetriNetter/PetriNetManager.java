@@ -11,12 +11,14 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -25,7 +27,11 @@ import javax.swing.UnsupportedLookAndFeelException;
 import com.cjljohnson.PetriNetter.model.Arc;
 import com.cjljohnson.PetriNetter.model.PetriGraph;
 import com.cjljohnson.PetriNetter.model.Transition;
+import com.cjljohnson.PetriNetter.reachability.ReachRightClick;
+import com.cjljohnson.PetriNetter.reachability.ReachabilityGraph;
 import com.cjljohnson.PetriNetter.view.PetriEdgeFunction;
+import com.mxgraph.layout.mxFastOrganicLayout;
+import com.mxgraph.layout.mxIGraphLayout;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.handler.mxKeyboardHandler;
@@ -40,10 +46,23 @@ public class PetriNetManager extends JPanel {
 	
 	mxGraphComponent petriComponent;
 	mxGraphComponent reachComponent;
-	JTabbedPane tabbedPane;
+	JSplitPane splitPane;
+	boolean reachValid;
+	
+	protected mxIEventListener changeTracker = new mxIEventListener()
+	{
+		public void invoke(Object source, mxEventObject evt)
+		{
+//			reachValid = false;
+//			if (reachComponent != null)
+//				reachComponent.setEnabled(false);
+			System.out.println(evt.getProperties());
+		}
+	};
 	
 	public PetriNetManager() {
 		initPetriGraph();
+		reachValid = false;
 	}
 	
 	private void initPetriGraph() {
@@ -51,6 +70,7 @@ public class PetriNetManager extends JPanel {
 		
 		final PetriGraph graph = new PetriGraph();
 		initialisePetriGraph(graph);
+
 		petriComponent = new mxGraphComponent(graph);
 		initialiseGraphComponent(petriComponent);
 		
@@ -74,23 +94,28 @@ public class PetriNetManager extends JPanel {
                     graph.checkEnabledFromEdge(connectionCell);
                     graph.refresh();
                 }
+                disableReachComponent();
             }
         });
 		
 		graph.addListener(mxEvent.CELLS_ADDED, new mxIEventListener() {
             public void invoke(Object sender, mxEventObject evt) {
+            	disableReachComponent();
             }
         });
 		
 		graph.addListener(mxEvent.CELLS_REMOVED, new mxIEventListener() {
             public void invoke(Object sender, mxEventObject evt) {
                 Object[] cells = (Object[]) evt.getProperty("cells");
+                disableReachComponent();
                 for (Object cell : cells) {
                 	graph.checkEnabledFromEdge(cell);
                 }
                 graph.refresh();
             }
         });
+		
+		graph.getModel().addListener(mxEvent.CHANGE, changeTracker);
 	}
 	
 	public void initialiseGraphComponent(final mxGraphComponent graphComponent) {
@@ -193,8 +218,8 @@ public class PetriNetManager extends JPanel {
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				action.actionPerformed(new ActionEvent(tabbedPane, e
-						.getID(), e.getActionCommand()));
+//				action.actionPerformed(new ActionEvent(tabbedPane, e
+//						.getID(), e.getActionCommand()));
 			}
 		};
 		
@@ -203,6 +228,92 @@ public class PetriNetManager extends JPanel {
 		return newAction;
 	}
 	
+	public void createReachabilityGraph() {
+		if (splitPane == null) 
+		{
+			splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+					petriComponent, null);
+			splitPane.setOneTouchExpandable(true);
+			splitPane.setDividerLocation(150);
+			add(splitPane, BorderLayout.CENTER);
+		}
+		
+		final ReachabilityGraph reach = new ReachabilityGraph((PetriGraph)petriComponent.getGraph(), 200);
+		
+		// define layout
+        mxIGraphLayout layout = new mxFastOrganicLayout(reach);
+
+        // layout graph
+        layout.execute(reach.getDefaultParent());
+        
+        final mxGraphComponent reachComponent = new mxGraphComponent(reach);
+        
+        reachComponent.getGraphControl().addMouseListener(new MouseAdapter()
+        {
+
+            public void mouseReleased(MouseEvent e)
+            {
+                Object obj = reachComponent.getCellAt(e.getX(), e.getY());
+
+                if (reachValid && obj != null && obj instanceof mxCell && e.getClickCount() == 2)
+                {
+                    
+                    Object value = ((mxCell) obj).getValue();
+                    if (value instanceof Map<?,?>)
+                    {
+                        reach.setActiveState(obj);
+                    }
+                }
+            }
+        });
+        reachComponent.setConnectable(false);
+        
+        
+        reachComponent.getGraphControl().addMouseListener(new MouseAdapter()
+        {
+
+            /**
+             * 
+             */
+            public void mousePressed(MouseEvent e)
+            {
+                // Handles context menu on the Mac where the trigger is on mousepressed
+                mouseReleased(e);
+            }
+
+            /**
+             * 
+             */
+            public void mouseReleased(MouseEvent e)
+            {
+                if (e.isPopupTrigger() && reachValid)
+                {
+                 // Reach Right Click
+                    Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(),
+                            reachComponent);
+                    ReachRightClick menu = new ReachRightClick(reachComponent, pt.x, pt.y);
+                    menu.show(reachComponent, pt.x, pt.y);
+
+                    e.consume();
+                }
+            }
+
+        });
+        
+        this.reachComponent = reachComponent;
+		
+		splitPane.setRightComponent(reachComponent);
+		
+		reachValid = true;
+		
+		validate();
+	}
+	
+	public void disableReachComponent() {
+		reachValid = false;
+		if (reachComponent != null)
+			reachComponent.setEnabled(false);
+	}
 	
 	
 	public mxGraphComponent getPetriComponent() {
@@ -213,13 +324,9 @@ public class PetriNetManager extends JPanel {
 		return reachComponent;
 	}
 
-	public JTabbedPane getTabbedPane() {
-		return tabbedPane;
-	}
-
 	public static void main(String[] args) {
 		try {
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -272,7 +379,7 @@ public class PetriNetManager extends JPanel {
 		frame.pack();
 		frame.setSize(600, 600);
 		frame.setLocationRelativeTo(null);
-		frame.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+		//frame.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
 		frame.setVisible(true);
 		
 	}

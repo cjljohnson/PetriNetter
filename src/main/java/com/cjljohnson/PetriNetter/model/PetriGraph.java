@@ -403,6 +403,11 @@ public class PetriGraph extends mxGraph{
 	}
 	
 	public void checkEnabledTransitions() {
+		
+		try
+		{
+			getModel().beginUpdate();
+		
 	    Object[] cells = getChildVertices(getDefaultParent());
 	    Object[] edges = getAllEdges(cells);
 	    
@@ -413,6 +418,11 @@ public class PetriGraph extends mxGraph{
 	    for (Object edge : edges ) {
 	    	checkEnabledEdge(edge);
 	    }
+		}
+		finally
+		{
+			getModel().endUpdate();
+		}
 	}
 	
 	/*
