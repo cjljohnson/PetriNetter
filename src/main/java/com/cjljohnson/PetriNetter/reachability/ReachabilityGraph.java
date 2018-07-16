@@ -58,8 +58,8 @@ public class ReachabilityGraph extends mxGraph{
 		
 		calcReachability();
 		
-		showLive();
-		showBounded();
+		//showLive();
+		//showBounded();
 	}
 	
 	public void showLive() {
@@ -177,7 +177,7 @@ public class ReachabilityGraph extends mxGraph{
 	                		label += ", t" + graph.getCellMarkingName(vertex);
 	                		edge.setValue(label);
 	                	} else {
-	                		insertEdge(getDefaultParent(), null, "t" + graph.getCellMarkingName(vertex), node1, node, null);
+	                		insertEdge(getDefaultParent(), null, "t" + graph.getCellMarkingName(vertex), node1, node, "");
 	                	}
 	                	
 	                	
