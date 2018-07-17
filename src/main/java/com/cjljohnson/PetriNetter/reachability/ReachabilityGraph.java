@@ -115,7 +115,7 @@ public class ReachabilityGraph extends mxGraph{
 	{
 	    if (getModel().isEdge(cell))
 	    {
-	        //return false;
+	        return false;
 	    }
 
 	    return super.isCellSelectable(cell);

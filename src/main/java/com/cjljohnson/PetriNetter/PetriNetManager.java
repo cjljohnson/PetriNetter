@@ -30,8 +30,12 @@ import com.cjljohnson.PetriNetter.model.Transition;
 import com.cjljohnson.PetriNetter.reachability.ReachRightClick;
 import com.cjljohnson.PetriNetter.reachability.ReachabilityGraph;
 import com.cjljohnson.PetriNetter.view.PetriEdgeFunction;
+import com.mxgraph.layout.mxEdgeLabelLayout;
 import com.mxgraph.layout.mxFastOrganicLayout;
+import com.mxgraph.layout.mxGraphLayout;
 import com.mxgraph.layout.mxIGraphLayout;
+import com.mxgraph.layout.mxParallelEdgeLayout;
+import com.mxgraph.layout.mxPartitionLayout;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.handler.mxKeyboardHandler;
@@ -241,8 +245,10 @@ public class PetriNetManager extends JPanel {
 		final ReachabilityGraph reach = new ReachabilityGraph((PetriGraph)petriComponent.getGraph(), 200);
 		
 		// define layout
-        mxIGraphLayout layout = new mxFastOrganicLayout(reach);
-
+		mxFastOrganicLayout layout = new mxFastOrganicLayout(reach);
+		//mxIGraphLayout layout = new mxEdgeLabelLayout(reach);
+        
+        layout.setDisableEdgeStyle(false);
         // layout graph
         layout.execute(reach.getDefaultParent());
         

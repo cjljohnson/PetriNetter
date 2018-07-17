@@ -40,9 +40,6 @@ public class PetriEdgeFunction implements mxEdgeStyleFunction{
         double newX = midX + 20 * Math.sin(polar);
         double newY = midY + 20 * Math.cos(polar);
         result.add(new mxPoint(newX, newY));
-        result.add(new mxPoint(newX, newY));
-        result.add(new mxPoint(newX, newY));
-        System.out.println(result);
     }
     
     
