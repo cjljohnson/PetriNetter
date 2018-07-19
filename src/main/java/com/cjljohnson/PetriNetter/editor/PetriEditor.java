@@ -29,6 +29,9 @@ public class PetriEditor extends JPanel{
     public PetriEditor(String title) {
         JFrame frame = new JFrame(title);
         
+        ImageIcon img = new ImageIcon(PetriEditor.class.getResource("/images/place.gif"));
+        frame.setIconImage(img.getImage());
+        
         this.menuBar = new PetriMenuBar(this);
         this.toolBar = new PetriToolBar(this, JToolBar.HORIZONTAL);
         this.pane = new JTabbedPane();
