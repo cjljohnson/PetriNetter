@@ -2,6 +2,7 @@ package com.cjljohnson.PetriNetter.editor;
 
 import javax.swing.BorderFactory;
 import javax.swing.JToolBar;
+import javax.swing.UIManager;
 
 
 
@@ -13,12 +14,16 @@ public class PetriToolBar extends JToolBar {
         setBorder(BorderFactory.createCompoundBorder(BorderFactory
                 .createEmptyBorder(3, 3, 3, 3), getBorder()));
         setFloatable(false);
+        setRollover(true);
 
         add(editor.bind("New", new PetriEditorActions.NewAction(),
-                "/images/new.gif"));
+        		UIManager.getIcon("FileView.fileIcon")));
         add(editor.bind("Open", new PetriEditorActions.OpenAction(),
-                null));
+        		UIManager.getIcon("FileChooser.newFolderIcon")));
         add(editor.bind("Save", new PetriEditorActions.SaveAction(true),
-                null));
+        		UIManager.getIcon("FileView.floppyDriveIcon")));
+        
+        addSeparator();
+        
     }
 }

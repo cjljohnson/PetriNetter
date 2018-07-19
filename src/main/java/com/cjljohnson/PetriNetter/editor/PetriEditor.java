@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
@@ -38,8 +39,7 @@ public class PetriEditor extends JPanel{
         add(toolBar, BorderLayout.NORTH);
         add(pane);
         
-        pane.add("New Petri Net", new PetriNetManager());
-        pane.setTabComponentAt(0, new ButtonTabComponent(pane));
+        newPetriNet();
         
         frame.setJMenuBar(menuBar);
         frame.setContentPane(this);
@@ -47,7 +47,6 @@ public class PetriEditor extends JPanel{
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-        newPetriNet();
     }
     
     public PetriNetManager newPetriNet() {
@@ -60,9 +59,17 @@ public class PetriEditor extends JPanel{
     
     @SuppressWarnings("serial")
     public Action bind(String name, final Action action, String iconUrl)
+    {        		
+        ImageIcon icon = (iconUrl != null) ? new ImageIcon(
+                PetriEditor.class.getResource(iconUrl)) : null;
+        
+        return bind(name, action, icon);
+    }
+    
+    @SuppressWarnings("serial")
+    public Action bind(String name, final Action action, Icon icon)
     {
-        AbstractAction newAction = new AbstractAction(name, (iconUrl != null) ? new ImageIcon(
-              PetriEditor.class.getResource(iconUrl)) : null)
+        AbstractAction newAction = new AbstractAction(name, icon)
 //        AbstractAction newAction = new AbstractAction(name, (iconUrl != null) ? null : null)
         {
             public void actionPerformed(ActionEvent e)

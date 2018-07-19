@@ -535,5 +535,91 @@ public class PetriEditorActions {
             }
         }
     }
+    
+    @SuppressWarnings("serial")
+    public static class CreateReachabilityAction extends AbstractAction
+    {
+        /**
+         * 
+         */
+        public void actionPerformed(ActionEvent e)
+        {
+            PetriEditor editor = (PetriEditor)e.getSource();
+            if (editor != null)
+            {
+            	PetriNetManager manager = editor.getActiveGraphManager();
+            	if (manager != null)
+            	{
+            		manager.createReachabilityGraph();
+            	} else 
+            	{
+            		JOptionPane.showMessageDialog(editor, "A Petri Net must be selected to "
+            				+ "create a reachability graph.");
+            	}
+            }
+        }
+    }
+    
+    @SuppressWarnings("serial")
+    public static class ShowBoundedness extends AbstractAction
+    {
+        /**
+         * 
+         */
+        public void actionPerformed(ActionEvent e)
+        {
+            PetriEditor editor = (PetriEditor)e.getSource();
+            if (editor != null)
+            {
+            	PetriNetManager manager = editor.getActiveGraphManager();
+            	if (manager != null)
+            	{
+            		if (manager.reachValid() == true)
+            		{
+            			manager.calcBoundedness();
+            		} else 
+            		{
+            			JOptionPane.showMessageDialog(editor, "Reachability must be calculated "
+            					+ "before boundedness.");
+            		}
+            	} else 
+            	{
+            		JOptionPane.showMessageDialog(editor, "A Petri Net must be selected to "
+            				+ "calculate boundedness.");
+            	}
+            }
+        }
+    }
+    
+    @SuppressWarnings("serial")
+    public static class ShowLiveness extends AbstractAction
+    {
+        /**
+         * 
+         */
+        public void actionPerformed(ActionEvent e)
+        {
+            PetriEditor editor = (PetriEditor)e.getSource();
+            if (editor != null)
+            {
+            	PetriNetManager manager = editor.getActiveGraphManager();
+            	if (manager != null)
+            	{
+            		if (manager.reachValid() == true)
+            		{
+            			manager.calcLiveness();
+            		} else 
+            		{
+            			JOptionPane.showMessageDialog(editor, "Reachability must be calculated "
+            					+ "before liveness.");
+            		}
+            	} else 
+            	{
+            		JOptionPane.showMessageDialog(editor, "A Petri Net must be selected to "
+            				+ "calculate liveness.");
+            	}
+            }
+        }
+    }
 
 }

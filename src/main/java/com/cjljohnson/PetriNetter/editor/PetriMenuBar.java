@@ -15,9 +15,9 @@ public class PetriMenuBar extends JMenuBar{
         // File menu
         menu = add(new JMenu("File"));
         
-        menu.add(editor.bind("New", new PetriEditorActions.NewAction(), "/images/place.gif"));
-        menu.add(editor.bind("Open", new PetriEditorActions.OpenAction(), null));
-        menu.add(editor.bind("Save", new PetriEditorActions.SaveAction(true), null));
+        menu.add(editor.bind("New", new PetriEditorActions.NewAction(), UIManager.getIcon("FileView.fileIcon")));
+        menu.add(editor.bind("Open", new PetriEditorActions.OpenAction(), UIManager.getIcon("FileChooser.newFolderIcon")));
+        menu.add(editor.bind("Save", new PetriEditorActions.SaveAction(true), UIManager.getIcon("FileView.floppyDriveIcon")));
         UIManager.getIcon("FileView.fileIcon");
         
         // Edit menu
@@ -26,9 +26,9 @@ public class PetriMenuBar extends JMenuBar{
         
         // Analysis menu
         menu = add(new JMenu("Analysis"));
-        menu.add("Reachability");
-        menu.add("Boundedness");
-        menu.add("Liveness");
+        menu.add(editor.bind("Create Reachability Graph", new PetriEditorActions.CreateReachabilityAction(), "/images/reach.gif"));
+        menu.add(editor.bind("Boundedness", new PetriEditorActions.ShowBoundedness(), ""));
+        menu.add(editor.bind("Liveness", new PetriEditorActions.ShowLiveness(), ""));
     }
 
 }

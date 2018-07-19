@@ -226,7 +226,7 @@ public class PetriNetManager extends JPanel {
 		{
 			splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
 					petriComponent, null);
-			splitPane.setOneTouchExpandable(true);
+			splitPane.setOneTouchExpandable(false);
 			splitPane.setDividerLocation(150);
 			add(splitPane, BorderLayout.CENTER);
 		}
@@ -304,6 +304,20 @@ public class PetriNetManager extends JPanel {
 		validate();
 	}
 	
+	public void calcBoundedness() {
+		if (reachValid) {
+			ReachabilityGraph reach = (ReachabilityGraph) reachComponent.getGraph();
+			reach.showBounded();
+		}
+	}
+	
+	public void calcLiveness() {
+		if (reachValid) {
+			ReachabilityGraph reach = (ReachabilityGraph) reachComponent.getGraph();
+			reach.showLive();
+		}
+	}
+	
 	public void disableReachComponent() {
 		reachValid = false;
 		if (reachComponent != null)
@@ -317,6 +331,10 @@ public class PetriNetManager extends JPanel {
 
 	public mxGraphComponent getReachComponent() {
 		return reachComponent;
+	}
+	
+	public boolean reachValid() {
+		return reachValid;
 	}
 
 	public static void main(String[] args) {
