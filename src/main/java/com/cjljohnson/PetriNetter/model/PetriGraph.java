@@ -341,6 +341,7 @@ public class PetriGraph extends mxGraph{
 				place.setTokens(tokens - arcWeight);
 			}
 		}
+		System.out.println(((mxCell)obj).getValue());
 		return true;
 	}
 	

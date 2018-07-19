@@ -71,13 +71,13 @@ public class PetriRightClick extends JPopupMenu
 		
 		addSeparator();
 		
-		add(manager.bind("New", new PetriGraphActions.NewAction(), 
-				"/com/mxgraph/examples/swing/images/new.gif"));
-		
-//		add(hello.bind("Save As", new PetriGraphActions.SaveAction(true), 
+//		add(manager.bind("New", new PetriGraphActions.NewAction(), 
+//				"/com/mxgraph/examples/swing/images/new.gif"));
+//		
+//		add(manager.bind("Save As", new PetriGraphActions.SaveAction(true), 
 //				"/com/mxgraph/examples/swing/images/save.gif"));
 //		
-//		add(hello.bind("Open", new PetriGraphActions.OpenAction(),
+//		add(manager.bind("Open", new PetriGraphActions.OpenAction(),
 //				"/com/mxgraph/examples/swing/images/open.gif"));
 		
 //		add(hello.bind("Load", new PetriGraphActions.LoadAction(true), "/com/mxgraph/examples/swing/images/load.gif"));

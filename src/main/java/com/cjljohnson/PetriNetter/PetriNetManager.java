@@ -53,6 +53,10 @@ public class PetriNetManager extends JPanel {
 	JSplitPane splitPane;
 	boolean reachValid;
 	
+	static {
+	    mxStyleRegistry.putValue("PETRI_STYLE", new PetriEdgeFunction());
+	}
+	
 	protected mxIEventListener changeTracker = new mxIEventListener()
 	{
 		public void invoke(Object source, mxEventObject evt)
@@ -65,14 +69,16 @@ public class PetriNetManager extends JPanel {
 	};
 	
 	public PetriNetManager() {
-		initPetriGraph();
+        this(new PetriGraph());
+    }
+	
+	public PetriNetManager(PetriGraph graph) {
+		initPetriGraph(graph);
 		reachValid = false;
 	}
 	
-	private void initPetriGraph() {
-		mxStyleRegistry.putValue("PETRI_STYLE", new PetriEdgeFunction());
+	private void initPetriGraph(final PetriGraph graph) {
 		
-		final PetriGraph graph = new PetriGraph();
 		initialisePetriGraph(graph);
 
 		petriComponent = new mxGraphComponent(graph);
@@ -207,23 +213,6 @@ public class PetriNetManager extends JPanel {
 			{
 				action.actionPerformed(new ActionEvent(petriComponent, e
 						.getID(), e.getActionCommand()));
-			}
-		};
-		
-		newAction.putValue(Action.SHORT_DESCRIPTION, action.getValue(Action.SHORT_DESCRIPTION));
-		
-		return newAction;
-	}
-	
-	@SuppressWarnings("serial")
-	public Action bind2(String name, final Action action, String iconUrl)
-	{
-		AbstractAction newAction = new AbstractAction(name, (iconUrl != null) ? null : null)
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-//				action.actionPerformed(new ActionEvent(tabbedPane, e
-//						.getID(), e.getActionCommand()));
 			}
 		};
 		
