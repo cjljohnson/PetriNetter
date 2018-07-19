@@ -15,10 +15,10 @@ public class PetriToolBar extends JToolBar {
         setFloatable(false);
 
         add(editor.bind("New", new PetriEditorActions.NewAction(),
-                "/com/mxgraph/examples/swing/images/new.gif"));
+                "/images/new.gif"));
         add(editor.bind("Open", new PetriEditorActions.OpenAction(),
-                "/com/mxgraph/examples/swing/images/open.gif"));
-        add(editor.bind("Save", new PetriEditorActions.SaveAction(false),
-                "/com/mxgraph/examples/swing/images/save.gif"));
+                null));
+        add(editor.bind("Save", new PetriEditorActions.SaveAction(true),
+                null));
     }
 }

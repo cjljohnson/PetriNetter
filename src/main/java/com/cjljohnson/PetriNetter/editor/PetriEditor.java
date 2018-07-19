@@ -2,10 +2,13 @@ package com.cjljohnson.PetriNetter.editor;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
@@ -58,9 +61,9 @@ public class PetriEditor extends JPanel{
     @SuppressWarnings("serial")
     public Action bind(String name, final Action action, String iconUrl)
     {
-        //AbstractAction newAction = new AbstractAction(name, (iconUrl != null) ? new ImageIcon(
-        //      BasicGraphEditor.class.getResource(iconUrl)) : null)
-        AbstractAction newAction = new AbstractAction(name, (iconUrl != null) ? null : null)
+        AbstractAction newAction = new AbstractAction(name, (iconUrl != null) ? new ImageIcon(
+              PetriEditor.class.getResource(iconUrl)) : null)
+//        AbstractAction newAction = new AbstractAction(name, (iconUrl != null) ? null : null)
         {
             public void actionPerformed(ActionEvent e)
             {
