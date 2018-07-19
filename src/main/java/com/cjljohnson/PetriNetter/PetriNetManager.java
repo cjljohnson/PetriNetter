@@ -322,6 +322,9 @@ public class PetriNetManager extends JPanel {
 		reachValid = false;
 		if (reachComponent != null)
 			reachComponent.setEnabled(false);
+			if (splitPane != null && splitPane.getRightComponent() instanceof mxGraphComponent) {
+				splitPane.setRightComponent(new JPanel());
+			}
 	}
 	
 	
