@@ -2,6 +2,7 @@ package com.cjljohnson.PetriNetter.editor;
 
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
@@ -28,6 +29,11 @@ public class PetriToolBar extends JToolBar {
         
         addSeparator();
         
+        
+        JToggleButton cursor = new JToggleButton(new ImageIcon(
+                PetriEditor.class.getResource("/images/place.gif")));
+        cursor.setToolTipText("Cursor");
+        add(cursor);
         JToggleButton addPlace = new JToggleButton(new ImageIcon(
                 PetriEditor.class.getResource("/images/place.gif")));
         addPlace.setToolTipText("Add Place");
@@ -36,6 +42,13 @@ public class PetriToolBar extends JToolBar {
                 PetriEditor.class.getResource("/images/transition.gif")));
         addTransition.setToolTipText("Add Transition");
         add(addTransition);
+        
+        ButtonGroup bGroup = new ButtonGroup();
+        bGroup.add(cursor);
+        bGroup.add(addPlace);
+        bGroup.add(addTransition);
+        
+        cursor.setSelected(true);
         
         addSeparator();
         
