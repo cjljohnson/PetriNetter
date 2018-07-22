@@ -1,6 +1,7 @@
 package com.cjljohnson.PetriNetter.editor;
 
 import java.awt.BorderLayout;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -19,12 +20,16 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import com.cjljohnson.PetriNetter.PetriNetManager;
+import com.cjljohnson.PetriNetter.editor.tools.PetriToolActions;
+import com.cjljohnson.PetriNetter.editor.tools.PetriToolActions.ToolAction;
 
 public class PetriEditor extends JPanel{
     
     JMenuBar menuBar;
     JToolBar toolBar;
     JTabbedPane pane;
+    
+    ToolAction selectedTool;
     
     public PetriEditor(String title) {
         JFrame frame = new JFrame(title);
@@ -120,6 +125,14 @@ public class PetriEditor extends JPanel{
 
     public final void setPane(JTabbedPane pane) {
         this.pane = pane;
+    }
+
+    public final ToolAction getSelectedTool() {
+        return selectedTool;
+    }
+
+    public final void setSelectedTool(ToolAction selectedTool) {
+        this.selectedTool = selectedTool;
     }
 
     public static void main(String[] args) {

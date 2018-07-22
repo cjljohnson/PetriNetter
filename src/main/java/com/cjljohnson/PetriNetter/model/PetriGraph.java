@@ -690,6 +690,35 @@ public class PetriGraph extends mxGraph{
 		return 0;
 	}
 	
+	public boolean setTokens(Object cell, int tokens) {
+	    if (cell == null || !(cell instanceof mxCell) ||
+	            !(((mxCell)cell).getValue() instanceof Place)
+	            || tokens < 0) {
+	        return false;
+	    }
+	    Place place = (Place)((mxCell)cell).getValue();
+	    
+	    int currentTokens = place.getTokens();
+	    int capacity = place.getCapacity();
+	    
+	    if (tokens <= capacity || capacity == -1) {
+	        place.setTokens(tokens);
+	        checkEnabledFromPlace(cell);
+	        return true;
+	    }
+	    return false;
+	}
+	
+	public int getTokens(Object cell) {
+        if (cell == null || !(cell instanceof mxCell) ||
+                !(((mxCell)cell).getValue() instanceof Place)) {
+            return -1;
+        }
+        Place place = (Place)((mxCell)cell).getValue();
+        
+        return place.getTokens();
+    }
+	
 	private void initStyles() {
 		mxStylesheet stylesheet = getStylesheet();
 		Hashtable<String, Object> placeStyle = new Hashtable<String, Object>();

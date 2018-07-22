@@ -6,6 +6,8 @@ package com.cjljohnson.PetriNetter;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Frame;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -24,6 +26,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import com.cjljohnson.PetriNetter.editor.PetriEditor;
 import com.cjljohnson.PetriNetter.model.Arc;
 import com.cjljohnson.PetriNetter.model.PetriGraph;
 import com.cjljohnson.PetriNetter.model.Transition;
@@ -75,6 +78,7 @@ public class PetriNetManager extends JPanel {
 	public PetriNetManager(PetriGraph graph) {
 		initPetriGraph(graph);
 		reachValid = false;
+		//petriComponent.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
 	}
 	
 	private void initPetriGraph(final PetriGraph graph) {
@@ -139,6 +143,19 @@ public class PetriNetManager extends JPanel {
 		graphComponent.setBackground(Color.WHITE);
 		graphComponent.setEnterStopsCellEditing(true);
 		graphComponent.setDragEnabled(false);
+		
+		
+		// Tool listener
+		graphComponent.getGraphControl().addMouseListener(new MouseAdapter()
+        {
+
+            public void mouseClicked(MouseEvent e)
+            {
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    doToolAction(e);
+                }
+            }
+        });
 
 		// Double click listener
 		graphComponent.getGraphControl().addMouseListener(new MouseAdapter()
@@ -184,6 +201,19 @@ public class PetriNetManager extends JPanel {
 
 		new mxRubberband(graphComponent);
 		new mxKeyboardHandler(graphComponent);
+	}
+	
+	private void doToolAction(MouseEvent e) {
+	    //Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(),
+        //        petriComponent);
+	    Component c= e.getComponent();
+	    while (c != null && !(c instanceof PetriEditor)) {
+	        c = c.getParent();
+	    }
+	    if (c instanceof PetriEditor) {
+	        PetriEditor editor = (PetriEditor)c;
+	        editor.getSelectedTool().onClick(e, this);
+	    }
 	}
 	
 	private void showGraphPopupMenu(MouseEvent e)
