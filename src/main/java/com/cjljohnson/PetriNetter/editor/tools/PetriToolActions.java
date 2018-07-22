@@ -1,5 +1,6 @@
 package com.cjljohnson.PetriNetter.editor.tools;
 
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -31,10 +32,21 @@ public class PetriToolActions {
 
         public void actionPerformed(ActionEvent e) {
             editor.setSelectedTool(this);
-            setCursor();
+            for (Component manager : editor.getPane().getComponents()) {
+                if (manager instanceof PetriNetManager) {
+                    setCursor(((PetriNetManager)manager).getPetriComponent());
+                }
+            }
+            
         }
         
-        public abstract void setCursor();
+        public abstract void setCursor(mxGraphComponent graph);
+        
+        protected void setGraphHandlers(mxGraphComponent graph, boolean enabled) {
+            //graph.getGraphHandler().setEnabled(enabled);
+            //graph.getSelectionCellsHandler().setEnabled(enabled);
+            //graph.getConnectionHandler().setEnabled(enabled);
+        }
         
     }
     
@@ -57,9 +69,10 @@ public class PetriToolActions {
         }
 
         @Override
-        public void setCursor() {
-            // TODO Auto-generated method stub
-            
+        public void setCursor(mxGraphComponent graph) {
+            setGraphHandlers(graph, true);
+            graph.getGraphControl().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            graph.getGraphHandler().DEFAULT_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR);
         }
     }
     
@@ -83,7 +96,9 @@ public class PetriToolActions {
             Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(),
                     manager.getPetriComponent());
             
-            if (graph != null && (graphComponent.getCellAt(e.getX(), e.getY()) == null))
+            if (graph != null && ((graphComponent.getCellAt(e.getX(), e.getY()) == null)
+                    || ((mxCell)graphComponent.getCellAt(e.getX(), e.getY()))
+                    .getGeometry().isRelative()))
             {
                 graph.addPlace(0, -1, pt.x, pt.y);
                 e.consume();
@@ -91,9 +106,10 @@ public class PetriToolActions {
         }
 
         @Override
-        public void setCursor() {
-            // TODO Auto-generated method stub
-            
+        public void setCursor(mxGraphComponent graph) {
+            setGraphHandlers(graph, false);
+            graph.getGraphControl().setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+            graph.getGraphHandler().DEFAULT_CURSOR = new Cursor(Cursor.CROSSHAIR_CURSOR);
         }
     }
     
@@ -117,7 +133,9 @@ public class PetriToolActions {
             Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(),
                     manager.getPetriComponent());
             
-            if (graph != null && (graphComponent.getCellAt(e.getX(), e.getY()) == null))
+            if (graph != null && ((graphComponent.getCellAt(e.getX(), e.getY()) == null)
+                    || ((mxCell)graphComponent.getCellAt(e.getX(), e.getY()))
+                    .getGeometry().isRelative()))
             {
                 graph.addTransition(pt.x, pt.y);
                 e.consume();
@@ -126,9 +144,10 @@ public class PetriToolActions {
         }
 
         @Override
-        public void setCursor() {
-            
-            
+        public void setCursor(mxGraphComponent graph) {
+            setGraphHandlers(graph, false);
+            graph.getGraphControl().setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+            graph.getGraphHandler().DEFAULT_CURSOR = new Cursor(Cursor.CROSSHAIR_CURSOR);
         }
     }
     
@@ -163,9 +182,10 @@ public class PetriToolActions {
         }
 
         @Override
-        public void setCursor() {
-            
-            
+        public void setCursor(mxGraphComponent graph) {
+            setGraphHandlers(graph, false);
+            graph.getGraphControl().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            graph.getGraphHandler().DEFAULT_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR);
         }
     }
     
@@ -200,9 +220,10 @@ public class PetriToolActions {
         }
 
         @Override
-        public void setCursor() {
-            
-            
+        public void setCursor(mxGraphComponent graph) {
+            setGraphHandlers(graph, false);
+            graph.getGraphControl().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            graph.getGraphHandler().DEFAULT_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR);
         }
     }
     

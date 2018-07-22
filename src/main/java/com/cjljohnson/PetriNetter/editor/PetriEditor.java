@@ -61,6 +61,7 @@ public class PetriEditor extends JPanel{
         PetriNetManager manager = new PetriNetManager();
         pane.add("New Petri Net", manager);
         pane.setTabComponentAt(pane.getTabCount() - 1, new ButtonTabComponent(pane));
+        selectedTool.setCursor(manager.getPetriComponent());
         
         return manager;
     }

@@ -206,7 +206,7 @@ public class PetriNetManager extends JPanel {
 	private void doToolAction(MouseEvent e) {
 	    //Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(),
         //        petriComponent);
-	    Component c= e.getComponent();
+	    Component c = e.getComponent();
 	    while (c != null && !(c instanceof PetriEditor)) {
 	        c = c.getParent();
 	    }
