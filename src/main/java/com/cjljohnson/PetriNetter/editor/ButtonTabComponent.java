@@ -45,14 +45,19 @@ import java.awt.event.*;
  */
 public class ButtonTabComponent extends JPanel {
     private final JTabbedPane pane;
+    private final PetriEditor editor;
  
-    public ButtonTabComponent(final JTabbedPane pane) {
+    public ButtonTabComponent(final PetriEditor editor) {
         //unset default FlowLayout' gaps
         super(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        if (pane == null) {
+        if (editor == null) {
+            throw new NullPointerException("PetriEditor is null");
+        }
+        this.editor = editor;
+        if (editor.getPane() == null) {
             throw new NullPointerException("TabbedPane is null");
         }
-        this.pane = pane;
+        this.pane = editor.getPane();
         setOpaque(false);
          
         //make JLabel read titles from JTabbedPane
@@ -100,7 +105,8 @@ public class ButtonTabComponent extends JPanel {
         public void actionPerformed(ActionEvent e) {
             int i = pane.indexOfTabComponent(ButtonTabComponent.this);
             if (i != -1) {
-                pane.remove(i);
+            	editor.closeTab(i);
+                //pane.remove(i);
             }
         }
  
