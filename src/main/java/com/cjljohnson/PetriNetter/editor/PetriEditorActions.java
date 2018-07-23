@@ -126,7 +126,7 @@ public class PetriEditorActions {
 
             ((mxGraphModel) graph.getModel()).clear();
             mxGdCodec.decode(gdText, graph);
-            //         editor.setCurrentFile(new File(lastDir + "/" + filename));
+                     //editor.setCurrentFile(new File(lastDir + "/" + filename));
         }
 
         /**
@@ -216,8 +216,11 @@ public class PetriEditorActions {
 
                         //                                 resetEditor(editor);
                     }
-
-                    editor.addPetriNet(new PetriNetManager(graph));
+                    PetriNetManager manager = new PetriNetManager(graph);
+                    manager.setCurrentFile(fc.getSelectedFile());
+                    editor.addPetriNet(manager);
+                    editor.updateTitle(manager);
+                    
                 }
                 catch (IOException ex)
                 {
@@ -259,10 +262,12 @@ public class PetriEditorActions {
         /**
          * Saves XML+PNG format.
          */
-        protected void saveXmlPng(mxGraphComponent graphComponent, String filename,
+        protected void saveXmlPng(PetriEditor editor, String filename,
                 Color bg) throws IOException
         {
-            //mxGraphComponent graphComponent = editor.getGraphComponent();
+            PetriNetManager manager = (PetriNetManager)editor.getPane()
+                    .getSelectedComponent();
+            mxGraphComponent graphComponent = manager.getPetriComponent();
             mxGraph graph = graphComponent.getGraph();
 
             // Creates the image for the PNG file
@@ -291,7 +296,8 @@ public class PetriEditorActions {
                     encoder.encode(image);
 
                     //editor.setModified(false);
-                    //editor.setCurrentFile(new File(filename));
+                    manager.setCurrentFile(new File(filename));
+                    editor.updateTitle(manager);
                 }
                 else
                 {
@@ -327,8 +333,7 @@ public class PetriEditorActions {
                 String filename = null;
                 boolean dialogShown = false;
 
-                //if (showDialog || editor.getCurrentFile() == null)
-                if (showDialog)
+                if (showDialog || manager.getCurrentFile() == null)
                 {
                     String wd;
 
@@ -477,7 +482,8 @@ public class PetriEditorActions {
                             mxUtils.writeFile(xml, filename);
 
                             //editor.setModified(false);
-                            //editor.setCurrentFile(new File(filename));
+                            manager.setCurrentFile(new File(filename));
+                            editor.updateTitle(manager);
                         }
                         else if (ext.equalsIgnoreCase("txt"))
                         {
@@ -503,7 +509,7 @@ public class PetriEditorActions {
                             //                                      && ext.equalsIgnoreCase("png") && !dialogShown))
                             if (selectedFilter == xmlPngFilter)
                             {
-                                saveXmlPng(graphComponent, filename, bg);
+                                saveXmlPng(editor, filename, bg);
                             }
                             else
                             {

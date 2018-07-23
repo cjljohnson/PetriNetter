@@ -13,6 +13,7 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.Map;
 
 import javax.swing.AbstractAction;
@@ -55,6 +56,7 @@ public class PetriNetManager extends JPanel {
 	mxGraphComponent reachComponent;
 	JSplitPane splitPane;
 	boolean reachValid;
+	File currentFile;
 	
 	static {
 	    mxStyleRegistry.putValue("PETRI_STYLE", new PetriEdgeFunction());
@@ -364,6 +366,14 @@ public class PetriNetManager extends JPanel {
 
 	public mxGraphComponent getReachComponent() {
 		return reachComponent;
+	}
+	
+	public File getCurrentFile() {
+	    return currentFile;
+	}
+	
+	public void setCurrentFile(File file) {
+	    currentFile = file;
 	}
 	
 	public boolean reachValid() {

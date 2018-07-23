@@ -34,8 +34,10 @@ public class PetriToolBar extends JToolBar {
         		UIManager.getIcon("FileView.fileIcon")));
         add(editor.bind("Open", new PetriEditorActions.OpenAction(),
         		UIManager.getIcon("FileChooser.newFolderIcon")));
-        add(editor.bind("Save", new PetriEditorActions.SaveAction(true),
+        add(editor.bind("Save", new PetriEditorActions.SaveAction(false),
         		UIManager.getIcon("FileView.floppyDriveIcon")));
+        add(editor.bind("Save As", new PetriEditorActions.SaveAction(true),
+                UIManager.getIcon("FileView.floppyDriveIcon")));
         
         addSeparator();
         

@@ -1,11 +1,13 @@
 package com.cjljohnson.PetriNetter.editor;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.io.File;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -62,8 +64,33 @@ public class PetriEditor extends JPanel{
         pane.add("New Petri Net", manager);
         pane.setTabComponentAt(pane.getTabCount() - 1, new ButtonTabComponent(pane));
         selectedTool.setCursor(manager.getPetriComponent());
+        updateTitle(manager);
         
         return manager;
+    }
+    
+    public boolean updateTitle(Component component) {
+        if (!(component instanceof PetriNetManager)) {
+            return false;
+        }
+        PetriNetManager manager = (PetriNetManager)component;
+        File file = manager.getCurrentFile();
+        
+        String title;
+        
+        if (file != null) {
+            title = file.getName();
+        } else {
+            title = "Petri Net";
+        }
+            
+        pane.setTitleAt(pane.indexOfComponent(component), title);
+        return true;
+    }
+    
+    public boolean setTabTitle(Component component, String newTitle) {
+        pane.setTitleAt(pane.indexOfComponent(component), newTitle);
+        return true;
     }
     
     @SuppressWarnings("serial")
