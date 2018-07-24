@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.AbstractAction;
@@ -47,6 +48,9 @@ import com.mxgraph.swing.handler.mxRubberband;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
+import com.mxgraph.util.mxUndoManager;
+import com.mxgraph.util.mxUndoableEdit;
+import com.mxgraph.util.mxUndoableEdit.mxUndoableChange;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxStyleRegistry;
 
@@ -57,10 +61,20 @@ public class PetriNetManager extends JPanel {
 	JSplitPane splitPane;
 	boolean reachValid;
 	File currentFile;
+	protected mxUndoManager undoManager;
 	
 	static {
 	    mxStyleRegistry.putValue("PETRI_STYLE", new PetriEdgeFunction());
 	}
+	
+	protected mxIEventListener undoHandler = new mxIEventListener()
+    {
+        public void invoke(Object source, mxEventObject evt)
+        {
+            undoManager.undoableEditHappened((mxUndoableEdit) evt
+                    .getProperty("edit"));
+        }
+    };
 	
 	protected mxIEventListener changeTracker = new mxIEventListener()
 	{
@@ -77,9 +91,29 @@ public class PetriNetManager extends JPanel {
         this(new PetriGraph());
     }
 	
-	public PetriNetManager(PetriGraph graph) {
+	public PetriNetManager(final PetriGraph graph) {
 		initPetriGraph(graph);
 		reachValid = false;
+		
+		undoManager = new mxUndoManager();
+		// Adds the command history to the model and view
+        graph.getModel().addListener(mxEvent.UNDO, undoHandler);
+        graph.getView().addListener(mxEvent.UNDO, undoHandler);
+
+        // Keeps the selection in sync with the command history
+        mxIEventListener undoHandler = new mxIEventListener()
+        {
+            public void invoke(Object source, mxEventObject evt)
+            {
+                List<mxUndoableChange> changes = ((mxUndoableEdit) evt
+                        .getProperty("edit")).getChanges();
+                graph.setSelectionCells(graph
+                        .getSelectionCellsForChanges(changes));
+            }
+        };
+
+        undoManager.addListener(mxEvent.UNDO, undoHandler);
+        undoManager.addListener(mxEvent.REDO, undoHandler);
 		//petriComponent.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
 	}
 	
@@ -380,7 +414,15 @@ public class PetriNetManager extends JPanel {
 		return reachValid;
 	}
 
-	public static void main(String[] args) {
+	public final mxUndoManager getUndoManager() {
+        return undoManager;
+    }
+
+    public final void setUndoManager(mxUndoManager undoManager) {
+        this.undoManager = undoManager;
+    }
+
+    public static void main(String[] args) {
 		try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException e) {

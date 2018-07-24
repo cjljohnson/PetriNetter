@@ -627,5 +627,48 @@ public class PetriEditorActions {
             }
         }
     }
+    
+    /**
+    *
+    */
+   @SuppressWarnings("serial")
+   public static class HistoryAction extends AbstractAction
+   {
+       /**
+        * 
+        */
+       protected boolean undo;
+
+       /**
+        * 
+        */
+       public HistoryAction(boolean undo)
+       {
+           this.undo = undo;
+       }
+
+       /**
+        * 
+        */
+       public void actionPerformed(ActionEvent e)
+       {
+           PetriEditor editor = (PetriEditor)e.getSource();
+           if (editor != null)
+           {
+               PetriNetManager manager = editor.getActiveGraphManager();
+               if (manager != null)
+               {
+                   if (undo)
+                   {
+                       manager.getUndoManager().undo();
+                   }
+                   else
+                   {
+                       manager.getUndoManager().redo();
+                   }
+               }
+           }
+       }
+   }
 
 }
