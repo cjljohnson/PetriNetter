@@ -56,12 +56,13 @@ import com.mxgraph.view.mxStyleRegistry;
 
 public class PetriNetManager extends JPanel {
 	
-	mxGraphComponent petriComponent;
-	mxGraphComponent reachComponent;
-	JSplitPane splitPane;
-	boolean reachValid;
-	File currentFile;
-	protected mxUndoManager undoManager;
+	private mxGraphComponent petriComponent;
+	private mxGraphComponent reachComponent;
+	private JSplitPane splitPane;
+	private boolean reachValid;
+	private boolean modified;
+	private File currentFile;
+	private mxUndoManager undoManager;
 	
 	static {
 	    mxStyleRegistry.putValue("PETRI_STYLE", new PetriEdgeFunction());
@@ -83,7 +84,8 @@ public class PetriNetManager extends JPanel {
 //			reachValid = false;
 //			if (reachComponent != null)
 //				reachComponent.setEnabled(false);
-			System.out.println(evt.getProperties());
+			setModified(true);
+//			System.out.println(evt.getProperties());
 		}
 	};
 	
@@ -91,8 +93,9 @@ public class PetriNetManager extends JPanel {
         this(new PetriGraph());
     }
 	
+
 	public PetriNetManager(final PetriGraph graph) {
-		initPetriGraph(graph);
+		init(graph);
 		reachValid = false;
 		
 		undoManager = new mxUndoManager();
@@ -117,7 +120,7 @@ public class PetriNetManager extends JPanel {
 		//petriComponent.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
 	}
 	
-	private void initPetriGraph(final PetriGraph graph) {
+	private void init(final PetriGraph graph) {
 		
 		initialisePetriGraph(graph);
 
@@ -410,10 +413,17 @@ public class PetriNetManager extends JPanel {
 	    currentFile = file;
 	}
 	
+	public boolean getModified() {
+		return modified;
+	}
+	
+	public void setModified(boolean modified) {
+		this.modified = modified;
+	}
+	
 	public boolean reachValid() {
 		return reachValid;
 	}
-
 	public final mxUndoManager getUndoManager() {
         return undoManager;
     }

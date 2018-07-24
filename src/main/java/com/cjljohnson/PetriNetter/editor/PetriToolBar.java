@@ -30,13 +30,13 @@ public class PetriToolBar extends JToolBar {
         setFloatable(false);
         setRollover(true);
 
-        add(editor.bind("New", new PetriEditorActions.NewAction(),
+        add(editor.bind("New", PetriEditorActions.getNewAction(),
         		UIManager.getIcon("FileView.fileIcon")));
-        add(editor.bind("Open", new PetriEditorActions.OpenAction(),
+        add(editor.bind("Open", PetriEditorActions.getOpenAction(),
         		UIManager.getIcon("FileChooser.newFolderIcon")));
-        add(editor.bind("Save", new PetriEditorActions.SaveAction(false),
+        add(editor.bind("Save", PetriEditorActions.getSaveAction(),
         		UIManager.getIcon("FileView.floppyDriveIcon")));
-        add(editor.bind("Save As", new PetriEditorActions.SaveAction(true),
+        add(editor.bind("Save As", PetriEditorActions.getSaveAsAction(),
                 UIManager.getIcon("FileView.floppyDriveIcon")));
         
         addSeparator();

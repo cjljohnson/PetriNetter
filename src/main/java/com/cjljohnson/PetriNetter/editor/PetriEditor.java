@@ -7,6 +7,8 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 
 import javax.swing.AbstractAction;
@@ -15,6 +17,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
@@ -24,6 +27,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import com.cjljohnson.PetriNetter.PetriNetManager;
 import com.cjljohnson.PetriNetter.editor.tools.PetriToolActions;
 import com.cjljohnson.PetriNetter.editor.tools.PetriToolActions.ToolAction;
+import com.mxgraph.util.mxResources;
 
 public class PetriEditor extends JPanel{
     
@@ -55,14 +59,30 @@ public class PetriEditor extends JPanel{
         frame.setContentPane(this);
         frame.setPreferredSize(new Dimension(500, 500));
         frame.pack();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent we)
+            {
+            	boolean closeWindow = closeAllTabs();
+            	if (closeWindow) {
+            		System.exit(0);
+            	}
+//                String ObjButtons[] = {"Yes","No"};
+//                int PromptResult = JOptionPane.showOptionDialog(null,"Are you sure you want to exit?","Online Examination System",JOptionPane.DEFAULT_OPTION,JOptionPane.WARNING_MESSAGE,null,ObjButtons,ObjButtons[1]);
+//                if(PromptResult==JOptionPane.YES_OPTION)
+//                {
+//                    System.exit(0);
+//                }
+            }
+        });
         frame.setVisible(true);
     }
     
     public PetriNetManager newPetriNet() {
         PetriNetManager manager = new PetriNetManager();
         pane.add("New Petri Net", manager);
-        pane.setTabComponentAt(pane.getTabCount() - 1, new ButtonTabComponent(pane));
+        pane.setTabComponentAt(pane.getTabCount() - 1, new ButtonTabComponent(this));
         selectedTool.setCursor(manager.getPetriComponent());
         updateTitle(manager);
         
@@ -91,6 +111,48 @@ public class PetriEditor extends JPanel{
     public boolean setTabTitle(Component component, String newTitle) {
         pane.setTitleAt(pane.indexOfComponent(component), newTitle);
         return true;
+    }
+    
+    public boolean closeAllTabs() {
+    	//pane.getTreeLock();
+    	while (pane.getTabCount() > 0) {
+    		boolean successful = closeTab(0);
+    		if (!successful) {
+    			return false;
+    		}
+    	}
+    	return true;
+    }
+    
+    public boolean closeTab(int i) {
+    	
+    	if (i == -1 || i >= pane.getTabCount()) {
+    		throw new IndexOutOfBoundsException("Tried to close non-existant tab.");
+    	}
+
+    	PetriNetManager manager;
+    	
+    	manager = (PetriNetManager)pane.getComponentAt(i);
+    	
+    	String message = pane.getTitleAt(i) + " has been modified. Do you want to save changes?";
+    	
+    	if (manager != null && manager.getModified()) {
+    		int selection = JOptionPane.showConfirmDialog(manager,
+                    message);
+    		
+    		if (selection == JOptionPane.CANCEL_OPTION) {
+    			return false;
+    		}
+    		else if (selection == JOptionPane.YES_OPTION) {
+    			Component current = pane.getSelectedComponent();
+    			pane.setSelectedIndex(i);
+    			PetriEditorActions.getSaveAction().actionPerformed(new ActionEvent(this, ActionEvent.ACTION_FIRST, "save"));
+    			pane.setSelectedComponent(current);
+    		}
+    	}
+    	
+    pane.remove(i);
+    return true;	
     }
     
     @SuppressWarnings("serial")
@@ -122,7 +184,7 @@ public class PetriEditor extends JPanel{
     
     public boolean addPetriNet(PetriNetManager manager) {
         pane.add("Petri Net", manager);
-        pane.setTabComponentAt(pane.getTabCount() - 1, new ButtonTabComponent(pane));
+        pane.setTabComponentAt(pane.getTabCount() - 1, new ButtonTabComponent(this));
         
         return true;
     }

@@ -15,9 +15,10 @@ public class PetriMenuBar extends JMenuBar{
         // File menu
         menu = add(new JMenu("File"));
         
-        menu.add(editor.bind("New", new PetriEditorActions.NewAction(), UIManager.getIcon("FileView.fileIcon")));
-        menu.add(editor.bind("Open", new PetriEditorActions.OpenAction(), UIManager.getIcon("FileChooser.newFolderIcon")));
-        menu.add(editor.bind("Save", new PetriEditorActions.SaveAction(true), UIManager.getIcon("FileView.floppyDriveIcon")));
+        menu.add(editor.bind("New", PetriEditorActions.getNewAction(), UIManager.getIcon("FileView.fileIcon")));
+        menu.add(editor.bind("Open", PetriEditorActions.getOpenAction(), UIManager.getIcon("FileChooser.newFolderIcon")));
+        menu.add(editor.bind("Save", PetriEditorActions.getSaveAction(), UIManager.getIcon("FileView.floppyDriveIcon")));
+        menu.add(editor.bind("Save As...", PetriEditorActions.getSaveAsAction(), UIManager.getIcon("FileView.floppyDriveIcon")));
         UIManager.getIcon("FileView.fileIcon");
         
         // Edit menu
