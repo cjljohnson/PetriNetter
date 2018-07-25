@@ -242,8 +242,6 @@ public class PetriNetManager extends JPanel {
 	}
 	
 	private void doToolAction(MouseEvent e) {
-	    //Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(),
-        //        petriComponent);
 	    Component c = e.getComponent();
 	    while (c != null && !(c instanceof PetriEditor)) {
 	        c = c.getParent();
@@ -295,7 +293,8 @@ public class PetriNetManager extends JPanel {
 			splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
 					petriComponent, null);
 			splitPane.setOneTouchExpandable(false);
-			splitPane.setDividerLocation(150);
+			splitPane.setDividerLocation(Math.min(getWidth() / 2, getWidth() / 2));
+			removeAll();
 			add(splitPane, BorderLayout.CENTER);
 		}
 		
@@ -306,6 +305,8 @@ public class PetriNetManager extends JPanel {
 		//mxIGraphLayout layout = new mxEdgeLabelLayout(reach);
         
         layout.setDisableEdgeStyle(false);
+        //layout.setForceConstant(reach.getChildVertices(reach.getDefaultParent()).length * 2);
+        //layout.setMinDistanceLimit(40);
         // layout graph
         layout.execute(reach.getDefaultParent());
         
@@ -330,6 +331,7 @@ public class PetriNetManager extends JPanel {
             }
         });
         reachComponent.setConnectable(false);
+        reachComponent.setToolTips(true);
         
         
         reachComponent.getGraphControl().addMouseListener(new MouseAdapter()
@@ -389,10 +391,16 @@ public class PetriNetManager extends JPanel {
 	public void disableReachComponent() {
 		reachValid = false;
 		if (reachComponent != null)
-			reachComponent.setEnabled(false);
-			if (splitPane != null && splitPane.getRightComponent() instanceof mxGraphComponent) {
-				splitPane.setRightComponent(new JPanel());
-			}
+			reachComponent = null;
+			splitPane = null;
+			removeAll();
+			add(petriComponent, BorderLayout.CENTER);
+			validate();
+			
+//			reachComponent.setEnabled(false);
+//			if (splitPane != null && splitPane.getRightComponent() instanceof mxGraphComponent) {
+//				splitPane.setRightComponent(new JPanel());
+//			}
 	}
 	
 	

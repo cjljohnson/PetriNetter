@@ -53,6 +53,7 @@ public class ReachabilityGraph extends mxGraph{
 		initStyles();
 		
 		setCellsEditable(false);
+		setCellsResizable(false);
 		
 		
 		
@@ -142,6 +143,7 @@ public class ReachabilityGraph extends mxGraph{
 				calcNodeReachability(queue.poll(), queue);
 				i++;
 			}
+			setCellStyle(node.getStyle() + ";INITIAL", new Object[] {node});
 			graph.setPlaceTokens(s1);
 			setCellStyle(node.getStyle() + ";CURRENT", new Object[] {node});
 		} finally {
@@ -195,14 +197,23 @@ public class ReachabilityGraph extends mxGraph{
 	
 	private void initStyles() {
 		mxStylesheet stylesheet = getStylesheet();
+//		Hashtable<String, Object> nodeStyle = new Hashtable<String, Object>();
+//		nodeStyle.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_RECTANGLE);
+//		nodeStyle.put(mxConstants.STYLE_OPACITY, 100);
+//		nodeStyle.put(mxConstants.STYLE_FONTCOLOR, "#000000");
+//		nodeStyle.put(mxConstants.STYLE_FILLCOLOR, "#FFFFFF");
+//		nodeStyle.put(mxConstants.STYLE_STROKECOLOR, "#FF0000");
+//		nodeStyle.put(mxConstants.STYLE_STROKEWIDTH, 2);
+//		stylesheet.putCellStyle("NODE", nodeStyle);
+		
 		Hashtable<String, Object> nodeStyle = new Hashtable<String, Object>();
-		nodeStyle.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_RECTANGLE);
+		nodeStyle.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_ELLIPSE);
+		nodeStyle.put(mxConstants.STYLE_PERIMETER, mxConstants.PERIMETER_ELLIPSE);
 		nodeStyle.put(mxConstants.STYLE_OPACITY, 100);
 		nodeStyle.put(mxConstants.STYLE_FONTCOLOR, "#000000");
 		nodeStyle.put(mxConstants.STYLE_FILLCOLOR, "#FFFFFF");
 		nodeStyle.put(mxConstants.STYLE_STROKECOLOR, "#FF0000");
 		nodeStyle.put(mxConstants.STYLE_STROKEWIDTH, 2);
-		//nodeStyle.put(mxConstants.STYLE_NOLABEL, true);
 		stylesheet.putCellStyle("NODE", nodeStyle);
 		
 		Hashtable<String, Object> completeStyle = new Hashtable<String, Object>();
@@ -210,8 +221,14 @@ public class ReachabilityGraph extends mxGraph{
 		stylesheet.putCellStyle("COMPLETE", completeStyle);
 		
 		Hashtable<String, Object> currentStyle = new Hashtable<String, Object>();
-        currentStyle.put(mxConstants.STYLE_FILLCOLOR, "#00FF00");
+        //currentStyle.put(mxConstants.STYLE_FILLCOLOR, "#97b9ef");
+        currentStyle.put(mxConstants.STYLE_STROKEWIDTH, 4);
         stylesheet.putCellStyle("CURRENT", currentStyle);
+        
+        Hashtable<String, Object> initialStyle = new Hashtable<String, Object>();
+        initialStyle.put(mxConstants.STYLE_FILLCOLOR, "#00FF00");
+        //initialStyle.put(mxConstants.STYLE_STROKEWIDTH, 4);
+        stylesheet.putCellStyle("INITIAL", initialStyle);
 		
 		Map<String, Object> edge = new HashMap<String, Object>();
 	    edge.put(mxConstants.STYLE_ROUNDED, true);
@@ -270,6 +287,34 @@ public class ReachabilityGraph extends mxGraph{
 		}
 
 		return super.convertValueToString(cell);
+	}
+	
+	@Override
+	public String getToolTipForCell(Object cell) {
+		if (cell instanceof mxCell)
+		{
+			Object value = ((mxCell) cell).getValue();
+
+			if (value instanceof Map<?,?>)
+			{	
+				Map<String, Integer> map = (Map<String, Integer>)value;
+				StringBuilder sb = new StringBuilder();
+				sb.append("<html>");
+				//sb.append("<div style=\"background-color: red\">");
+				for (String id : map.keySet()) {
+					Object vertex = ((mxGraphModel)graph.getModel()).getCell(id);
+					sb.append("<p style=\"color: \">");
+					sb.append("<span style=\"font-weight: bold\">p");
+					sb.append(graph.getCellMarkingName(vertex));
+					sb.append(": </span>");
+					sb.append(map.get(id));
+					sb.append("</p>");
+				}
+				sb.append("</html>");
+				return sb.toString();
+			}
+		}
+		return "";
 	}
 	
 	public void findNodes() {
