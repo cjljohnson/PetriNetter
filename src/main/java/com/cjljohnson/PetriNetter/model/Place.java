@@ -1,6 +1,6 @@
 package com.cjljohnson.PetriNetter.model;
 
-public class Place {
+public class Place implements Cloneable {
 	
 	private int tokens;
 	private int capacity;
@@ -49,6 +49,12 @@ public class Place {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public Place clone() {
+	    return new Place(tokens, capacity, index, name);
+	}
+	
+	
 	
 //	public Place(int tokens, int capacity, int index, String name) {
 //		

@@ -76,6 +76,11 @@ public class PetriGraph extends mxGraph{
 				Place place = (Place)value;
 				if (getCellGeometry(cell).isRelative()) 
 				{ // Capacity label
+				    while (getCellGeometry(cell).isRelative()) 
+				    {
+				        cell = ((mxCell) cell).getParent();
+				    }
+				    place = (Place)((mxCell) cell).getValue();
 					int capacity = place.getCapacity();
 					String capacityLabel = capacity == -1 ? "n" : Integer.toString(capacity);
 					return "k = " + capacityLabel + "\np" + getCellMarkingName(cell);
@@ -315,31 +320,39 @@ public class PetriGraph extends mxGraph{
 		mxCell t = (mxCell) obj;
 		if (!isFirable(obj)) return false;
 		Object[] edges = getAllEdges(new Object[] {obj});
-		
-		// Fire Transition
-		for (Object o : edges) 
-		{
-			mxCell edge = (mxCell)o;
-			if (t.equals(edge.getSource())) // Outgoing arc
-			{
-				mxCell out = (mxCell)edge.getTarget();
-				Place place = ((Place)out.getValue());
-				int tokens = place.getTokens();
-				
-				Arc arc = (Arc)edge.getValue();
-				int arcWeight = arc.getWeight();
-				place.setTokens(tokens + arcWeight);
-			} else	// Incoming arc
-			{
-				mxCell in = (mxCell)edge.getSource();
-				Place place = ((Place)in.getValue());
-				int tokens = place.getTokens();
-				
-				Arc arc = (Arc)edge.getValue();
-				int arcWeight = arc.getWeight();
 
-				place.setTokens(tokens - arcWeight);
-			}
+		// Fire Transition
+		try 
+		{
+		    model.beginUpdate();
+		    for (Object o : edges) 
+		    {
+		        mxCell edge = (mxCell)o;
+		        if (t.equals(edge.getSource())) // Outgoing arc
+		        {
+		            mxCell out = (mxCell)edge.getTarget();
+		            Place place = ((Place)out.getValue());
+		            int tokens = place.getTokens();
+
+		            Arc arc = (Arc)edge.getValue();
+		            int arcWeight = arc.getWeight();
+		            setTokens(out, tokens + arcWeight);
+		        } else	// Incoming arc
+		        {
+		            mxCell in = (mxCell)edge.getSource();
+		            Place place = ((Place)in.getValue());
+		            int tokens = place.getTokens();
+
+		            Arc arc = (Arc)edge.getValue();
+		            int arcWeight = arc.getWeight();
+
+		            setTokens(in, tokens - arcWeight);
+		        }
+		    }
+		    checkEnabledFromTransition(obj);
+		} finally
+		{
+		    model.endUpdate();
 		}
 		System.out.println(((mxCell)obj).getValue());
 		return true;
@@ -702,8 +715,15 @@ public class PetriGraph extends mxGraph{
 	    int capacity = place.getCapacity();
 	    
 	    if (tokens <= capacity || capacity == -1) {
-	        place.setTokens(tokens);
-	        checkEnabledFromPlace(cell);
+	        try {
+	            model.beginUpdate();
+	            Place newPlace = place.clone();
+	            newPlace.setTokens(tokens);
+	            model.setValue(cell, newPlace);
+	            checkEnabledFromPlace(cell);
+	        } finally {
+	            model.endUpdate();
+	        }
 	        return true;
 	    }
 	    return false;
@@ -719,8 +739,60 @@ public class PetriGraph extends mxGraph{
         return place.getTokens();
     }
 	
+	public boolean setCapacity(Object cell, int capacity) {
+        if (cell == null || !(cell instanceof mxCell) ||
+                !(((mxCell)cell).getValue() instanceof Place)
+                || capacity < -1) {
+            return false;
+        }
+        Place place = (Place)((mxCell)cell).getValue();
+        
+        int currentTokens = place.getTokens();
+        int currentCapacity = place.getCapacity();
+        
+        if (currentTokens <= capacity || capacity == -1) {
+            try {
+                model.beginUpdate();
+                Place newPlace = place.clone();
+                newPlace.setCapacity(capacity);
+                model.setValue(cell, newPlace);
+                checkEnabledFromPlace(cell);
+            } finally {
+                model.endUpdate();
+            }
+            return true;
+        }
+        return false;
+    }
+	
+	public boolean setArcWeight(Object cell, int weight) {
+	    if (cell == null || !(cell instanceof mxCell) ||
+	            !(((mxCell)cell).getValue() instanceof Arc)
+	            || weight < 1) {
+	        return false;
+	    }
+	    Arc arc = (Arc)((mxCell)cell).getValue();
+
+	    int currentWeight = arc.getWeight();
+
+	    if (currentWeight == weight) {
+	        return true;
+	    }
+
+	    try {
+	        model.beginUpdate();
+	        Arc newArc = arc.clone();
+	        newArc.setWeight(weight);
+	        model.setValue(cell, newArc);
+	        checkEnabledFromEdge(cell);
+	    } finally {
+	        model.endUpdate();
+	    }
+	    return true;
+	}
+
 	private void initStyles() {
-		mxStylesheet stylesheet = getStylesheet();
+	    mxStylesheet stylesheet = getStylesheet();
 		Hashtable<String, Object> placeStyle = new Hashtable<String, Object>();
 		placeStyle.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_ELLIPSE);
 		placeStyle.put(mxConstants.STYLE_OPACITY, 100);

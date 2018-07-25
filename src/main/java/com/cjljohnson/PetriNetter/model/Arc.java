@@ -1,6 +1,6 @@
 package com.cjljohnson.PetriNetter.model;
 
-public class Arc {
+public class Arc implements Cloneable {
 
 	private int weight;
 	
@@ -19,4 +19,8 @@ public class Arc {
 	public void setWeight(int weight) {
 		this.weight = weight;
 	}
+	
+	public Arc clone() {
+        return new Arc(weight);
+    }
 }

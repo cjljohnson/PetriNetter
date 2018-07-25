@@ -210,7 +210,6 @@ public class PetriNetManager extends JPanel {
 					if (value instanceof Transition)
 					{
 							if (graph.fireTransition(obj)) {
-								graph.checkEnabledFromTransition(obj);
 								graphComponent.refresh();
 							}
 					}

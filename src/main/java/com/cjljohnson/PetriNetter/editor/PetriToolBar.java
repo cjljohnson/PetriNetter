@@ -41,6 +41,11 @@ public class PetriToolBar extends JToolBar {
         
         addSeparator();
         
+        add(editor.bind("Undo", PetriEditorActions.getUndoAction(),
+                UIManager.getIcon("FileView.floppyDriveIcon")));
+        add(editor.bind("Redo", PetriEditorActions.getRedoAction(),
+                UIManager.getIcon("FileView.floppyDriveIcon")));
+        
         
         JToggleButton cursor = new JToggleButton(new ImageIcon(
                 PetriEditor.class.getResource("/images/place.gif")));
