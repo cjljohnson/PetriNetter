@@ -323,7 +323,7 @@ public class PetriNetManager extends JPanel {
                 {
                     
                     Object value = ((mxCell) obj).getValue();
-                    if (value instanceof Map<?,?>)
+                    if (reach.getMarkingMap(obj) != null)
                     {
                         reach.setActiveState(obj);
                     }
@@ -332,6 +332,12 @@ public class PetriNetManager extends JPanel {
         });
         reachComponent.setConnectable(false);
         reachComponent.setToolTips(true);
+        //reachComponent.setGridVisible(true);
+		// Sets the background to white
+        reachComponent.getViewport().setOpaque(true);
+        reachComponent.getViewport().setBackground(Color.WHITE);
+        reachComponent.setBackground(Color.WHITE);
+        reachComponent.setDragEnabled(false);
         
         
         reachComponent.getGraphControl().addMouseListener(new MouseAdapter()

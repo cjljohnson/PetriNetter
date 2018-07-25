@@ -14,12 +14,14 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.TreeMap;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 
 import org.w3c.dom.Element;
 
@@ -32,8 +34,13 @@ import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxStylesheet;
 
 public class ReachabilityGraph extends mxGraph{
+	
+	static {
+		UIManager.put( "ToolTip.border", BorderFactory.createCompoundBorder( UIManager.getBorder( "ToolTip.border" ), BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) ) );
+	}
 
 	private Map<Map<String, Integer>, mxCell> nodeMap;
+	private Map<String, Map<String, Integer>> markingMap;
 	private int size;
 	private PetriGraph graph;
 	int i;
@@ -42,6 +49,7 @@ public class ReachabilityGraph extends mxGraph{
 	private Map<String, Integer> boundedness;
 	
 	public ReachabilityGraph(PetriGraph graph, int size) {
+		markingMap = new HashMap<String, Map<String, Integer>>();
 		nodeMap = new HashMap<Map<String, Integer>, mxCell>();
 		this.size = size;
 		this.graph = graph;
@@ -54,6 +62,7 @@ public class ReachabilityGraph extends mxGraph{
 		
 		setCellsEditable(false);
 		setCellsResizable(false);
+		setSplitEnabled(false);
 		
 		
 		
@@ -133,9 +142,10 @@ public class ReachabilityGraph extends mxGraph{
 		try {
 			getModel().beginUpdate();
 			
-			mxCell node = (mxCell)insertVertex(getDefaultParent(), null, s1, i * 50, i * 50,
+			mxCell node = (mxCell)insertVertex(getDefaultParent(), null, "M0", i * 50, i * 50,
 					40, 40, "NODE");
 			
+			markingMap.put("M0", s1);
 			nodeMap.put(s1, node);
 		
 		
@@ -167,8 +177,10 @@ public class ReachabilityGraph extends mxGraph{
 	                	Map<String, Integer> newState = graph.getPlaceTokens();
 	                	mxCell node = nodeMap.get(newState);
 	                	if (node == null) {
-	                		node = (mxCell)insertVertex(getDefaultParent(), null, newState, i * 50, j * 50,
+	                		String markingName = "M" + markingMap.size();
+	                		node = (mxCell)insertVertex(getDefaultParent(), null, markingName, i * 50, j * 50,
 	            					40, 40, "NODE");
+	                		markingMap.put(markingName, newState);
 	                		nodeMap.put(newState, node);
 	                		queue.add(newState);
 	                	}
@@ -247,13 +259,14 @@ public class ReachabilityGraph extends mxGraph{
 	public void setActiveState(Object obj) {
 	    if (obj instanceof mxCell) {
 	        mxCell vertex = (mxCell)obj;
-	        if (vertex.getValue() instanceof Map<?,?>) {
+	        Map<String, Integer> map = getMarkingMap(obj);
+	        if (map != null) {
 	            Map<String, Integer> currentState = graph.getPlaceTokens();
 	            mxCell currentCell = nodeMap.get(currentState);
 	            String style = currentCell.getStyle().replaceFirst(";CURRENT", "");
 	            setCellStyle(style, new Object[] {currentCell});
 	            setCellStyle(vertex.getStyle() + ";CURRENT", new Object[] {vertex});
-	            Map<String, Integer> state = (Map<String, Integer>)vertex.getValue();
+	            Map<String, Integer> state = map;
 	            graph.setPlaceTokens(state);
 	            graph.checkEnabledTransitions();
 	            graph.refresh();
@@ -266,25 +279,25 @@ public class ReachabilityGraph extends mxGraph{
 	@Override
 	public String convertValueToString(Object cell)
 	{
-		if (cell instanceof mxCell)
-		{
-			Object value = ((mxCell) cell).getValue();
-
-			if (value instanceof Map<?,?>)
-			{	
-				Map<String, Integer> map = (Map<String, Integer>)value;
-				StringBuilder sb = new StringBuilder();
-				for (String id : map.keySet()) {
-					Object vertex = ((mxGraphModel)graph.getModel()).getCell(id);
-					sb.append('p');
-					sb.append(graph.getCellMarkingName(vertex));
-					sb.append(": ");
-					sb.append(map.get(id));
-					sb.append('\n');
-				}
-				return sb.toString();
-			}
-		}
+//		if (cell instanceof mxCell)
+//		{
+//			Object value = ((mxCell) cell).getValue();
+//
+//			if (value instanceof Map<?,?>)
+//			{	
+//				Map<String, Integer> map = (Map<String, Integer>)value;
+//				StringBuilder sb = new StringBuilder();
+//				for (String id : map.keySet()) {
+//					Object vertex = ((mxGraphModel)graph.getModel()).getCell(id);
+//					sb.append('p');
+//					sb.append(graph.getCellMarkingName(vertex));
+//					sb.append(": ");
+//					sb.append(map.get(id));
+//					sb.append('\n');
+//				}
+//				return sb.toString();
+//			}
+//		}
 
 		return super.convertValueToString(cell);
 	}
@@ -293,13 +306,14 @@ public class ReachabilityGraph extends mxGraph{
 	public String getToolTipForCell(Object cell) {
 		if (cell instanceof mxCell)
 		{
-			Object value = ((mxCell) cell).getValue();
+			Map<String, Integer> map = getMarkingMap(cell);
 
-			if (value instanceof Map<?,?>)
+			if (map != null)
 			{	
-				Map<String, Integer> map = (Map<String, Integer>)value;
+				String marking = getMarkingName(cell);
 				StringBuilder sb = new StringBuilder();
 				sb.append("<html>");
+				sb.append("<p style=\"font-weight: bold; font-size: 12px\">" + marking + "</p>");
 				//sb.append("<div style=\"background-color: red\">");
 				for (String id : map.keySet()) {
 					Object vertex = ((mxGraphModel)graph.getModel()).getCell(id);
@@ -356,5 +370,31 @@ public class ReachabilityGraph extends mxGraph{
 	        }
 	    }
 	    
+	}
+	
+	public Map<String, Integer> getMarkingMap(Object cell) {
+		if (cell instanceof mxCell)
+		{
+			Object value = ((mxCell) cell).getValue();
+
+			if (value instanceof String)
+			{	
+				return markingMap.get(value);
+			}
+		}
+		return null;
+	}
+	
+	public String getMarkingName(Object cell) {
+		if (cell instanceof mxCell)
+		{
+			Object value = ((mxCell) cell).getValue();
+
+			if (value instanceof String)
+			{	
+				return (String)value;
+			}
+		}
+		return null;
 	}
 }
