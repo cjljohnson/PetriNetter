@@ -19,6 +19,7 @@ import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
@@ -271,9 +272,9 @@ public class PetriNetManager extends JPanel {
 	@SuppressWarnings("serial")
 	public Action bind(String name, final Action action, String iconUrl)
 	{
-		//AbstractAction newAction = new AbstractAction(name, (iconUrl != null) ? new ImageIcon(
-		//		BasicGraphEditor.class.getResource(iconUrl)) : null)
-		AbstractAction newAction = new AbstractAction(name, (iconUrl != null) ? null : null)
+		AbstractAction newAction = new AbstractAction(name, (iconUrl != null) ? new ImageIcon(
+				PetriNetManager.class.getResource(iconUrl)) : null)
+//		AbstractAction newAction = new AbstractAction(name, (iconUrl != null) ? null : null)
 		{
 			public void actionPerformed(ActionEvent e)
 			{

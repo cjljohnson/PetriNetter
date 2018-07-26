@@ -247,12 +247,15 @@ public class ReachabilityGraph extends mxGraph{
 	    edge.put(mxConstants.STYLE_ORTHOGONAL, false);
 	    edge.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CONNECTOR);
 	    edge.put(mxConstants.STYLE_ENDARROW, mxConstants.ARROW_CLASSIC);
-	    edge.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_BOTTOM);
-	    edge.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_LEFT);
 	    edge.put(mxConstants.STYLE_STROKECOLOR, "#000000");
 	    edge.put(mxConstants.STYLE_STROKEWIDTH, 2);
 	    edge.put(mxConstants.STYLE_FONTCOLOR, "#000000");
 	    edge.put(mxConstants.STYLE_EDGE, "PETRI_STYLE");
+	    
+	    edge.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_BOTTOM);
+        edge.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_LEFT);
+	    //edge.put(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, "#ffffff");
+	    //edge.put(mxConstants.STYLE_LABEL_BORDERCOLOR, "#000000");
 		getStylesheet().setDefaultEdgeStyle(edge);
 	}
 	

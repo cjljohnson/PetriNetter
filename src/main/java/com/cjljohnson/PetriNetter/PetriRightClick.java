@@ -49,15 +49,15 @@ public class PetriRightClick extends JPopupMenu
         }
 
         add(manager.bind("Place", PetriGraphActions.getCreatePlaceAction(x, y),
-                "/petri/images/place.gif"));
+                "/images/place.gif"));
 
         add(manager.bind("Transition", PetriGraphActions.getCreateTransitionAction(x, y),
-                "/petri/images/transition.gif"));
+                "/images/transition.gif"));
 
         addSeparator();
 
         add(manager.bind("Reach", PetriGraphActions.getCreateReachabilityAction(),
-                "/petri/images/reach.gif"));
+                "/images/reach.gif"));
 
         //	    add(manager.bind2("Reach", PetriGraphActions.getCreateReachabilityAction(),
         //	            "/petri/images/reach.gif"));
@@ -68,10 +68,9 @@ public class PetriRightClick extends JPopupMenu
         //				"/com/mxgraph/examples/swing/images/undo.gif"));
 
         add(manager.bind("Delete", mxGraphActions.getDeleteAction(),
-                "/com/mxgraph/examples/swing/images/delete.gif"))
+                "/images/cross.png"))
         .setEnabled(true);
 
-        addSeparator();
 
         //		add(manager.bind("New", new PetriGraphActions.NewAction(), 
         //				"/com/mxgraph/examples/swing/images/new.gif"));
@@ -195,7 +194,7 @@ public class PetriRightClick extends JPopupMenu
 
         add(
                 manager.bind("Fire Transition", new PetriGraphActions.FireTransitionAction(cell),
-                        "/com/mxgraph/examples/swing/images/classic_end.gif"))
+                        "/images/lightning_go.png"))
         .setEnabled(isFirable);
 
         addSeparator();

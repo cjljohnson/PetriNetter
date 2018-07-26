@@ -1,5 +1,6 @@
 package com.cjljohnson.PetriNetter.editor;
 
+import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.UIManager;
@@ -17,8 +18,12 @@ public class PetriMenuBar extends JMenuBar{
         
         menu.add(editor.bind("New", PetriEditorActions.getNewAction(), UIManager.getIcon("FileView.fileIcon")));
         menu.add(editor.bind("Open", PetriEditorActions.getOpenAction(), UIManager.getIcon("FileChooser.newFolderIcon")));
-        menu.add(editor.bind("Save", PetriEditorActions.getSaveAction(), UIManager.getIcon("FileView.floppyDriveIcon")));
-        menu.add(editor.bind("Save As...", PetriEditorActions.getSaveAsAction(), UIManager.getIcon("FileView.floppyDriveIcon")));
+        menu.add(editor.bind("Save", PetriEditorActions.getSaveAction(), 
+                new ImageIcon(
+                        PetriEditor.class.getResource("/images/disk.png"))));
+        menu.add(editor.bind("Save As...", PetriEditorActions.getSaveAsAction(), 
+                new ImageIcon(
+                        PetriEditor.class.getResource("/images/disk_multiple.png"))));
         UIManager.getIcon("FileView.fileIcon");
         
         // Edit menu

@@ -35,20 +35,25 @@ public class PetriToolBar extends JToolBar {
         add(editor.bind("Open", PetriEditorActions.getOpenAction(),
         		UIManager.getIcon("FileChooser.newFolderIcon")));
         add(editor.bind("Save", PetriEditorActions.getSaveAction(),
-        		UIManager.getIcon("FileView.floppyDriveIcon")));
+                new ImageIcon(
+                        PetriEditor.class.getResource("/images/disk.png"))));
         add(editor.bind("Save As", PetriEditorActions.getSaveAsAction(),
-                UIManager.getIcon("FileView.floppyDriveIcon")));
+                new ImageIcon(
+                        PetriEditor.class.getResource("/images/disk_multiple.png"))));
         
         addSeparator();
         
         add(editor.bind("Undo", PetriEditorActions.getUndoAction(),
-                UIManager.getIcon("FileView.floppyDriveIcon")));
+                new ImageIcon(
+                        PetriEditor.class.getResource("/images/arrow_undo.png"))));
         add(editor.bind("Redo", PetriEditorActions.getRedoAction(),
-                UIManager.getIcon("FileView.floppyDriveIcon")));
+                new ImageIcon(
+                        PetriEditor.class.getResource("/images/arrow_redo.png"))));
         
+        addSeparator();
         
         JToggleButton cursor = new JToggleButton(new ImageIcon(
-                PetriEditor.class.getResource("/images/place.gif")));
+                PetriEditor.class.getResource("/images/cursor.png")));
         cursor.setToolTipText("Cursor");
         add(cursor);
         JToggleButton addPlace = new JToggleButton(new ImageIcon(
@@ -60,11 +65,11 @@ public class PetriToolBar extends JToolBar {
         addTransition.setToolTipText("Add Transition");
         add(addTransition);
         JToggleButton addToken = new JToggleButton(new ImageIcon(
-                PetriEditor.class.getResource("/images/transition.gif")));
+                PetriEditor.class.getResource("/images/add.png")));
         addToken.setToolTipText("Add Token to Place");
         add(addToken);
         JToggleButton removeToken = new JToggleButton(new ImageIcon(
-                PetriEditor.class.getResource("/images/transition.gif")));
+                PetriEditor.class.getResource("/images/delete.png")));
         removeToken.setToolTipText("Remove Token to Place");
         add(removeToken);
         
