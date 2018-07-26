@@ -16,19 +16,23 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -296,6 +300,27 @@ public class PetriNetManager extends JPanel {
 	}
 	
 	public void createReachabilityGraph() {
+		// Ask user reachability size
+		int iterations = -1;
+		JTextField iterTF = new JTextField();
+		
+		int result = JOptionPane.showConfirmDialog(null, iterTF, "Number of iterations",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+	    if (result == JOptionPane.OK_OPTION) {
+	    	try {
+                iterations = Integer.parseInt(iterTF.getText());
+            } catch (Exception e) {
+            }
+	    	if (iterations <= 1) {
+	    		JOptionPane.showMessageDialog(null, "NaN defaulting to 200.");
+	    		return;
+	    	}
+	    } else {
+	    	return;
+	    }
+		
+		
+		
 		if (splitPane == null) 
 		{
 			splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
@@ -306,7 +331,7 @@ public class PetriNetManager extends JPanel {
 			add(splitPane, BorderLayout.CENTER);
 		}
 		
-		final ReachabilityGraph reach = new ReachabilityGraph((PetriGraph)petriComponent.getGraph(), 200);
+		final ReachabilityGraph reach = new ReachabilityGraph((PetriGraph)petriComponent.getGraph(), iterations);
 		
 		// define layout
 		mxFastOrganicLayout layout = new mxFastOrganicLayout(reach);
