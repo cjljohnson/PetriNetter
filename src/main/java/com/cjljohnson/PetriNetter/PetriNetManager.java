@@ -312,6 +312,7 @@ public class PetriNetManager extends JPanel {
             } catch (Exception e) {
             }
 	    	if (iterations <= 1) {
+	    		iterations = 200;
 	    		JOptionPane.showMessageDialog(null, "NaN defaulting to 200.");
 	    		return;
 	    	}
