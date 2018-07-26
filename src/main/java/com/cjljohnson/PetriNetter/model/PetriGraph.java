@@ -790,6 +790,24 @@ public class PetriGraph extends mxGraph{
 	    }
 	    return true;
 	}
+	
+	public Object[] getPlaces() {
+		List<mxCell> places = new ArrayList<mxCell>();
+		
+		mxGraphModel model = (mxGraphModel) getModel();
+		Map<String, Object> cells = model.getCells();
+		for (String id : cells.keySet()) {
+			mxCell cell = (mxCell)cells.get(id);
+
+			if (cell.getValue() instanceof Place) {
+				Place place = (Place)cell.getValue();
+				if (!getCellGeometry(cell).isRelative()) {
+					places.add(cell);
+				}
+			}
+		}
+		return places.toArray();
+	}
 
 	private void initStyles() {
 	    mxStylesheet stylesheet = getStylesheet();

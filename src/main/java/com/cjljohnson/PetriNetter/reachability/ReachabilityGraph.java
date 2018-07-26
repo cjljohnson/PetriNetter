@@ -49,7 +49,7 @@ public class ReachabilityGraph extends mxGraph{
 	private Map<String, Integer> boundedness;
 	
 	public ReachabilityGraph(PetriGraph graph, int size) {
-		markingMap = new HashMap<String, Map<String, Integer>>();
+		markingMap = new TreeMap<String, Map<String, Integer>>();
 		nodeMap = new HashMap<Map<String, Integer>, mxCell>();
 		this.size = size;
 		this.graph = graph;
@@ -154,7 +154,9 @@ public class ReachabilityGraph extends mxGraph{
 				i++;
 			}
 			setCellStyle(node.getStyle() + ";INITIAL", new Object[] {node});
+			System.out.println("YEE");
 			graph.setPlaceTokens(s1);
+			graph.refresh();
 			setCellStyle(node.getStyle() + ";CURRENT", new Object[] {node});
 		} finally {
 			getModel().endUpdate();
@@ -399,5 +401,9 @@ public class ReachabilityGraph extends mxGraph{
 			}
 		}
 		return null;
+	}
+	
+	public Map<String, Map<String, Integer>> getMarkings() {
+		return markingMap;
 	}
 }

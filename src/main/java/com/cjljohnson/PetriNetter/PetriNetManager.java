@@ -8,12 +8,14 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -23,16 +25,21 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import com.cjljohnson.PetriNetter.editor.PetriEditor;
 import com.cjljohnson.PetriNetter.model.Arc;
 import com.cjljohnson.PetriNetter.model.PetriGraph;
 import com.cjljohnson.PetriNetter.model.Transition;
+import com.cjljohnson.PetriNetter.reachability.MarkingTableModel;
 import com.cjljohnson.PetriNetter.reachability.ReachRightClick;
 import com.cjljohnson.PetriNetter.reachability.ReachabilityGraph;
 import com.cjljohnson.PetriNetter.view.PetriEdgeFunction;
@@ -376,9 +383,43 @@ public class PetriNetManager extends JPanel {
 		
 		splitPane.setRightComponent(reachComponent);
 		
+		
+		// TABLE
+		PetriGraph graph = ((PetriGraph)petriComponent.getGraph());
+		Object[] places = ((PetriGraph)petriComponent.getGraph()).getPlaces();
+		System.out.println(Arrays.toString(places));
+		String[] columnNames = new String[places.length];
+		int i = 0;
+		for (Object place : places) {
+			columnNames[i] = "p" + ((PetriGraph)petriComponent.getGraph()).getCellMarkingName(place);
+			i++;
+		}
+		JTable table = new JTable(new MarkingTableModel(reach.getMarkings(), graph));
+		DefaultTableCellRenderer renderer = (DefaultTableCellRenderer)table.getDefaultRenderer(Object.class);
+		renderer.setHorizontalAlignment( SwingConstants.CENTER );
+		((DefaultTableCellRenderer)table.getTableHeader().getDefaultRenderer())
+	    .setHorizontalAlignment(SwingConstants.CENTER);
+		table.setFillsViewportHeight(true);
+		JScrollPane tableScrollPane = new JScrollPane(table);
+		
+		System.out.println(reach.getGraphBounds());
+		reach.setMinimumGraphSize(reach.getGraphBounds());
+		Dimension dim = new Dimension(400, 300);
+		//new Dimension(reach.getGraphBounds().getX(), reach.getGraphBounds().getY())
+		reachComponent.setPreferredSize(dim);
+		
+		JSplitPane reachSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, reachComponent, tableScrollPane);
+		reachSplit.setResizeWeight(1.0);
+		
+		splitPane.setRightComponent(reachSplit);
+		splitPane.setResizeWeight(0.5);
+		
+		
+		
 		reachValid = true;
 		
 		validate();
+		reachSplit.setDividerLocation(0.9);
 	}
 	
 	public void calcBoundedness() {

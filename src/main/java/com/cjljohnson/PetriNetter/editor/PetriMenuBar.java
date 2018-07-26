@@ -28,7 +28,12 @@ public class PetriMenuBar extends JMenuBar{
         
         // Edit menu
         menu = add(new JMenu("Edit"));
-        menu.add("Undo");
+        menu.add(editor.bind("Undo", PetriEditorActions.getUndoAction(),
+                new ImageIcon(
+                        PetriEditor.class.getResource("/images/arrow_undo.png"))));
+        menu.add(editor.bind("Redo", PetriEditorActions.getRedoAction(),
+                new ImageIcon(
+                        PetriEditor.class.getResource("/images/arrow_redo.png"))));
         
         // Analysis menu
         menu = add(new JMenu("Analysis"));
