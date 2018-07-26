@@ -43,6 +43,7 @@ public class ReachabilityGraph extends mxGraph{
 	private Map<String, Map<String, Integer>> markingMap;
 	private int size;
 	private PetriGraph graph;
+	private PetriGraph graph2;
 	int i;
 	private Set<Object> liveSet;
 	private boolean isComplete;
@@ -56,6 +57,11 @@ public class ReachabilityGraph extends mxGraph{
 		liveSet = new HashSet<Object>();
 		isComplete = false;
 		boundedness = new TreeMap<String, Integer>();
+		
+		
+		this.graph2 = new PetriGraph();
+		graph2.addCells(graph.cloneCells(graph.getChildCells(graph.getDefaultParent())));
+
 		
 		
 		initStyles();
@@ -136,7 +142,7 @@ public class ReachabilityGraph extends mxGraph{
 		Queue<Map<String, Integer>> queue = new ArrayDeque<Map<String, Integer>>();
 		i = 0;
 		
-		Map<String, Integer> s1 = graph.getPlaceTokens();
+		Map<String, Integer> s1 = graph2.getPlaceTokens();
 		queue.add(s1);
 		
 		try {
@@ -155,8 +161,8 @@ public class ReachabilityGraph extends mxGraph{
 			}
 			setCellStyle(node.getStyle() + ";INITIAL", new Object[] {node});
 			System.out.println("YEE");
-			graph.setPlaceTokens(s1);
-			graph.refresh();
+			graph2.setPlaceTokens(s1);
+			graph2.refresh();
 			setCellStyle(node.getStyle() + ";CURRENT", new Object[] {node});
 		} finally {
 			getModel().endUpdate();
@@ -167,16 +173,16 @@ public class ReachabilityGraph extends mxGraph{
 	}
 	
 	private void calcNodeReachability(Map<String, Integer> state, Queue<Map<String, Integer>> queue) {
-		graph.setPlaceTokens(state);
+		graph2.setPlaceTokens(state);
 		mxCell node1 = nodeMap.get(state);
 		int j = 0;
-		for (Object vertex : graph.getChildVertices(graph.getDefaultParent())) {
+		for (Object vertex : graph2.getChildVertices(graph2.getDefaultParent())) {
 			if (vertex instanceof mxCell) {
 				Object value = ((mxCell) vertex).getValue();
 				if (value instanceof Transition) {
-	                if (graph.isFirable(vertex)) {
-	                	graph.fireTransition(vertex);
-	                	Map<String, Integer> newState = graph.getPlaceTokens();
+	                if (graph2.isFirable(vertex)) {
+	                	graph2.fireTransition(vertex);
+	                	Map<String, Integer> newState = graph2.getPlaceTokens();
 	                	mxCell node = nodeMap.get(newState);
 	                	if (node == null) {
 	                		String markingName = "M" + markingMap.size();
@@ -186,18 +192,18 @@ public class ReachabilityGraph extends mxGraph{
 	                		nodeMap.put(newState, node);
 	                		queue.add(newState);
 	                	}
-	                	Object[] edges = graph.getEdgesBetween(node1, node, true);
+	                	Object[] edges = graph2.getEdgesBetween(node1, node, true);
 	                	if (edges.length > 0) {
 	                		mxCell edge = (mxCell) edges[0];
 	                		String label = (String) edge.getValue();
-	                		label += ", t" + graph.getCellMarkingName(vertex);
+	                		label += ", t" + graph2.getCellMarkingName(vertex);
 	                		edge.setValue(label);
 	                	} else {
-	                		insertEdge(getDefaultParent(), null, "t" + graph.getCellMarkingName(vertex), node1, node, "");
+	                		insertEdge(getDefaultParent(), null, "t" + graph2.getCellMarkingName(vertex), node1, node, "");
 	                	}
 	                	
 	                	
-	                	graph.setPlaceTokens(state);
+	                	graph2.setPlaceTokens(state);
 	                	j++;
 	                	
 	                	// Add to liveSet
@@ -273,7 +279,7 @@ public class ReachabilityGraph extends mxGraph{
 	            setCellStyle(vertex.getStyle() + ";CURRENT", new Object[] {vertex});
 	            Map<String, Integer> state = map;
 	            graph.setPlaceTokens(state);
-	            graph.checkEnabledTransitions();
+	            //graph.checkEnabledTransitions();
 	            graph.refresh();
 	            
 	        }
@@ -346,7 +352,6 @@ public class ReachabilityGraph extends mxGraph{
 	    mxGraphModel model = (mxGraphModel) graph.getModel();
 	    panel.add(new JLabel("Define marking:"));
 	    for (String id : key.keySet()) {
-	        System.out.println(id);
 	        
 	        JTextField valField = new JTextField(5);
 	        JPanel panel2 = new JPanel();

@@ -661,15 +661,19 @@ public class PetriGraph extends mxGraph{
 	}
 	
 	public void setPlaceTokens(Map<String, Integer> tokenMap) {
-		mxGraphModel model = (mxGraphModel) getModel();
-		for (String id : tokenMap.keySet()) {
-			mxCell cell = (mxCell)model.getCell(id);
-			if (cell != null) {
-				if (cell.getValue() instanceof Place) {
-					Place place = (Place)cell.getValue();
-					place.setTokens(tokenMap.get(id));
+		try {
+			getModel().beginUpdate();
+			mxGraphModel model = (mxGraphModel) getModel();
+			for (String id : tokenMap.keySet()) {
+				mxCell cell = (mxCell)model.getCell(id);
+				if (cell != null) {
+					if (cell.getValue() instanceof Place) {
+						setTokens(cell, tokenMap.get(id));
+					}
 				}
 			}
+		}finally {
+			getModel().endUpdate();
 		}
 	}
 	
