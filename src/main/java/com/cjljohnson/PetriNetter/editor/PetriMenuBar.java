@@ -1,11 +1,17 @@
 package com.cjljohnson.PetriNetter.editor;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.UIManager;
 
 import com.cjljohnson.PetriNetter.PetriGraphActions;
+import com.cjljohnson.PetriNetter.editor.PetriEditorActions.HighlightTransitionsAction;
 
 public class PetriMenuBar extends JMenuBar{
     
@@ -34,6 +40,23 @@ public class PetriMenuBar extends JMenuBar{
         menu.add(editor.bind("Redo", PetriEditorActions.getRedoAction(),
                 new ImageIcon(
                         PetriEditor.class.getResource("/images/arrow_redo.png"))));
+        
+        // View menu
+        menu = add(new JMenu("View"));
+        JCheckBoxMenuItem showHighlight = new JCheckBoxMenuItem("Highlight Active Transitions");
+        // Define ActionListener
+        HighlightTransitionsAction highlightAction = new HighlightTransitionsAction(editor);
+        ActionListener highlightListener = new ActionListener() {
+          public void actionPerformed(ActionEvent actionEvent) {
+            AbstractButton abstractButton = (AbstractButton) actionEvent.getSource();
+            boolean selected = abstractButton.getModel().isSelected();
+            highlightAction.actionPerformed(actionEvent);
+          }
+        };
+        showHighlight.addActionListener(highlightAction);
+        //showHighlight.setAction(new PetriEditorActions.HighlightTransitionsAction(editor));
+        menu.add(showHighlight);
+        showHighlight.setSelected(true);
         
         // Analysis menu
         menu = add(new JMenu("Analysis"));

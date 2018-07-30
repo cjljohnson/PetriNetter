@@ -14,6 +14,7 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
+import javax.swing.AbstractButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
@@ -720,5 +721,38 @@ public class PetriEditorActions {
             }
         }
     }
+    
+    /**
+    *
+    */
+   @SuppressWarnings("serial")
+   public static class HighlightTransitionsAction extends AbstractAction
+   {
+       /**
+        * 
+        */
+	   private PetriEditor editor;
+
+       /**
+        * 
+        */
+       public HighlightTransitionsAction(PetriEditor editor)
+       {
+    	   this.editor = editor;
+       }
+
+       /**
+        * 
+        */
+       public void actionPerformed(ActionEvent e)
+       {
+    	   AbstractButton aButton = (AbstractButton) e.getSource();
+           if (editor != null && aButton != null)
+           {
+               boolean selected = aButton.getModel().isSelected();
+               editor.setHighlightTransitions(selected);
+           }
+       }
+   }
 
 }

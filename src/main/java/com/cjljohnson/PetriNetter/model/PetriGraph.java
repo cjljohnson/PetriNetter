@@ -355,6 +355,7 @@ public class PetriGraph extends mxGraph{
 		    model.endUpdate();
 		}
 		System.out.println(((mxCell)obj).getValue());
+		
 		return true;
 	}
 	
@@ -872,6 +873,22 @@ public class PetriGraph extends mxGraph{
 	    edge.put(mxConstants.STYLE_EDGE, "PETRI_STYLE");
 
 	    stylesheet.setDefaultEdgeStyle(edge);
+	}
+	
+	public void highlightActiveTransitions(boolean highlight) {
+		Map<String, Object> style = getStylesheet().getCellStyle("ACTIVETRANSITION", null);
+		
+		String colour;
+		
+		if (highlight) {
+			colour = "#FF0000";
+		} else {
+			colour = "#000000";
+		}
+		
+		style.put(mxConstants.STYLE_STROKECOLOR, colour);
+		getStylesheet().putCellStyle("ACTIVETRANSITION", style);
+		refresh();
 	}
 	
 

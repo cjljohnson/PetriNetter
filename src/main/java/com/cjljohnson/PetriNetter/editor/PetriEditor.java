@@ -27,6 +27,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import com.cjljohnson.PetriNetter.PetriNetManager;
 import com.cjljohnson.PetriNetter.editor.tools.PetriToolActions;
 import com.cjljohnson.PetriNetter.editor.tools.PetriToolActions.ToolAction;
+import com.cjljohnson.PetriNetter.model.PetriGraph;
 import com.mxgraph.util.mxResources;
 
 public class PetriEditor extends JPanel{
@@ -36,6 +37,7 @@ public class PetriEditor extends JPanel{
     JTabbedPane pane;
     
     ToolAction selectedTool;
+    boolean highlightTransitions;
     
     public PetriEditor(String title) {
         JFrame frame = new JFrame(title);
@@ -47,6 +49,8 @@ public class PetriEditor extends JPanel{
         this.toolBar = new PetriToolBar(this, JToolBar.HORIZONTAL);
         this.pane = new JTabbedPane();
         pane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        
+        this.highlightTransitions = true;
         
         //add(menuBar);
         setLayout(new BorderLayout());
@@ -84,6 +88,8 @@ public class PetriEditor extends JPanel{
         pane.add("New Petri Net", manager);
         pane.setTabComponentAt(pane.getTabCount() - 1, new ButtonTabComponent(this));
         selectedTool.setCursor(manager.getPetriComponent());
+        PetriGraph graph = (PetriGraph)manager.getPetriComponent().getGraph();
+        graph.highlightActiveTransitions(highlightTransitions);
         updateTitle(manager);
         
         return manager;
@@ -155,6 +161,15 @@ public class PetriEditor extends JPanel{
     return true;	
     }
     
+    public void setHighlightTransitions(boolean highlight) {
+    	this.highlightTransitions = highlight;
+    	for (int i = 0; i < pane.getTabCount(); i++) {
+    		PetriNetManager manager = (PetriNetManager)pane.getComponentAt(i);
+    		PetriGraph graph = (PetriGraph)manager.getPetriComponent().getGraph();
+    		graph.highlightActiveTransitions(highlight);
+    	}
+    }
+    
     @SuppressWarnings("serial")
     public Action bind(String name, final Action action, String iconUrl)
     {        		
@@ -184,6 +199,8 @@ public class PetriEditor extends JPanel{
     
     public boolean addPetriNet(PetriNetManager manager) {
         pane.add("Petri Net", manager);
+        PetriGraph graph = (PetriGraph)manager.getPetriComponent().getGraph();
+        graph.highlightActiveTransitions(highlightTransitions);
         pane.setTabComponentAt(pane.getTabCount() - 1, new ButtonTabComponent(this));
         
         return true;
