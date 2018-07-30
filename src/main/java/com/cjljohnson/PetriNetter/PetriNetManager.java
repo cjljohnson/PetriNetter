@@ -15,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -42,6 +43,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import com.cjljohnson.PetriNetter.editor.PetriEditor;
 import com.cjljohnson.PetriNetter.model.Arc;
 import com.cjljohnson.PetriNetter.model.PetriGraph;
+import com.cjljohnson.PetriNetter.model.Place;
 import com.cjljohnson.PetriNetter.model.Transition;
 import com.cjljohnson.PetriNetter.reachability.MarkingTableModel;
 import com.cjljohnson.PetriNetter.reachability.ReachRightClick;
@@ -54,6 +56,8 @@ import com.mxgraph.layout.mxIGraphLayout;
 import com.mxgraph.layout.mxParallelEdgeLayout;
 import com.mxgraph.layout.mxPartitionLayout;
 import com.mxgraph.model.mxCell;
+import com.mxgraph.model.mxGraphModel.mxChildChange;
+import com.mxgraph.model.mxGraphModel.mxValueChange;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.handler.mxKeyboardHandler;
 import com.mxgraph.swing.handler.mxRubberband;
@@ -93,11 +97,67 @@ public class PetriNetManager extends JPanel {
 	{
 		public void invoke(Object source, mxEventObject evt)
 		{
+		    System.out.println(evt.getProperties());
 //			reachValid = false;
 //			if (reachComponent != null)
 //				reachComponent.setEnabled(false);
 			setModified(true);
 //			System.out.println(evt.getProperties());
+			if(reachComponent != null && (changeGraphModel(evt) || checkMarking(evt))) {
+			    disableReachComponent();
+			}
+			if (reachComponent != null) {
+			    
+			}
+		}
+		
+		private boolean changeGraphModel(mxEventObject evt) {
+		    ArrayList<Object> changes = (ArrayList<Object>) evt.getProperty("changes");
+		    mxUndoableEdit edit = (mxUndoableEdit) evt
+                    .getProperty("edit");
+		    if (changes != null) {
+		        for (Object change : changes) {
+		            // Graph nodes added/deleted
+		            if (change instanceof mxChildChange) {
+		                return true;
+		            }
+		            if (change instanceof mxValueChange) {
+		                mxValueChange valueChange = (mxValueChange)change;
+		                // Arc value change
+		                if (valueChange.getValue() instanceof Arc) {
+		                    return true;
+		                }
+		                // Capacity change
+		                if (valueChange.getValue() instanceof Place) {
+                            Place newPlace = (Place)valueChange.getValue();
+                            Place oldPlace = (Place)valueChange.getPrevious();
+                            if (newPlace.getCapacity() != oldPlace.getCapacity()) {
+                                return true;
+                            }
+                        }
+		            }
+		        }
+		    }
+		    return false;
+		}
+		
+		private boolean checkMarking(mxEventObject evt) {
+		    ArrayList<Object> changes = (ArrayList<Object>) evt.getProperty("changes");
+		    if (changes != null) {
+                for (Object change : changes) {
+                    if (change instanceof mxValueChange) {
+                        boolean isReachableMarking = ((ReachabilityGraph)reachComponent.getGraph())
+                                .isReachableMarking(((PetriGraph)petriComponent.getGraph()).getPlaceTokens());
+                        if (isReachableMarking) {
+                            ((ReachabilityGraph)reachComponent.getGraph()).updateActiveMarking();
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+                }
+		    }
+		    return false;
 		}
 	};
 	
@@ -159,20 +219,20 @@ public class PetriNetManager extends JPanel {
                     graph.checkEnabledFromEdge(connectionCell);
                     graph.refresh();
                 }
-                disableReachComponent();
+                //disableReachComponent();
             }
         });
 		
 		graph.addListener(mxEvent.CELLS_ADDED, new mxIEventListener() {
             public void invoke(Object sender, mxEventObject evt) {
-            	disableReachComponent();
+            	//disableReachComponent();
             }
         });
 		
 		graph.addListener(mxEvent.CELLS_REMOVED, new mxIEventListener() {
             public void invoke(Object sender, mxEventObject evt) {
                 Object[] cells = (Object[]) evt.getProperty("cells");
-                disableReachComponent();
+                //disableReachComponent();
                 for (Object cell : cells) {
                 	graph.checkEnabledFromEdge(cell);
                 }

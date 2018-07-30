@@ -136,7 +136,6 @@ public class PetriRightClick extends JPopupMenu
                             || newCapacity == -1) {
                         PetriGraph graph = (PetriGraph)manager.getPetriComponent().getGraph();
                         graph.setCapacity(cell, newCapacity);
-                        manager.disableReachComponent();
                     }
                 } catch (Exception exc) {
 
@@ -171,7 +170,6 @@ public class PetriRightClick extends JPopupMenu
                     if (arc.getWeight() != newWeight && newWeight > 0) {
                         PetriGraph graph = (PetriGraph)manager.getPetriComponent().getGraph();
                         graph.setArcWeight(cell, newWeight);
-                        manager.disableReachComponent();
                     }
                 } catch (Exception exc) {
 

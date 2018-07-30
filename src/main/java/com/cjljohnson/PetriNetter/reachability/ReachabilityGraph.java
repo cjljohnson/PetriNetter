@@ -48,6 +48,7 @@ public class ReachabilityGraph extends mxGraph{
 	private Set<Object> liveSet;
 	private boolean isComplete;
 	private Map<String, Integer> boundedness;
+	private mxCell currentCell;
 	
 	public ReachabilityGraph(PetriGraph graph, int size) {
 		markingMap = new TreeMap<String, Map<String, Integer>>();
@@ -163,7 +164,7 @@ public class ReachabilityGraph extends mxGraph{
 			System.out.println("YEE");
 			graph2.setPlaceTokens(s1);
 			graph2.refresh();
-			setCellStyle(node.getStyle() + ";CURRENT", new Object[] {node});
+			setCurrentCell(node);
 		} finally {
 			getModel().endUpdate();
 		}
@@ -279,12 +280,32 @@ public class ReachabilityGraph extends mxGraph{
 	            setCellStyle(vertex.getStyle() + ";CURRENT", new Object[] {vertex});
 	            Map<String, Integer> state = map;
 	            graph.setPlaceTokens(state);
-	            //graph.checkEnabledTransitions();
 	            graph.refresh();
-	            
 	        }
 	    }
-	    
+	}
+	
+	public void updateActiveMarking() {
+            Map<String, Integer> currentState = graph.getPlaceTokens();
+            mxCell cell = nodeMap.get(currentState);
+            if (cell != null) {
+                setCurrentCell(cell);
+            }
+	}
+	
+	public void setCurrentCell(Object obj) {
+	    if (obj == currentCell) {
+	        return;
+	    }
+	    if (obj instanceof mxCell) {
+	        if (currentCell != null) {
+	            String style = currentCell.getStyle().replaceFirst(";CURRENT", "");
+	            setCellStyle(style, new Object[] {currentCell});
+	        }
+	        mxCell cell = (mxCell)obj;
+	        setCellStyle(cell.getStyle() + ";CURRENT", new Object[] {cell});
+	        currentCell = cell;
+	    }
 	}
 	
 	@Override
@@ -406,6 +427,10 @@ public class ReachabilityGraph extends mxGraph{
 			}
 		}
 		return null;
+	}
+	
+	public boolean isReachableMarking(Map<String, Integer> marking) {
+	    return nodeMap.get(marking) != null;
 	}
 	
 	public Map<String, Map<String, Integer>> getMarkings() {
