@@ -47,6 +47,7 @@ import com.cjljohnson.PetriNetter.model.Place;
 import com.cjljohnson.PetriNetter.model.Transition;
 import com.cjljohnson.PetriNetter.reachability.MarkingTableModel;
 import com.cjljohnson.PetriNetter.reachability.ReachRightClick;
+import com.cjljohnson.PetriNetter.reachability.ReachabilityChange;
 import com.cjljohnson.PetriNetter.reachability.ReachabilityGraph;
 import com.cjljohnson.PetriNetter.view.PetriEdgeFunction;
 import com.mxgraph.layout.mxEdgeLabelLayout;
@@ -56,6 +57,7 @@ import com.mxgraph.layout.mxIGraphLayout;
 import com.mxgraph.layout.mxParallelEdgeLayout;
 import com.mxgraph.layout.mxPartitionLayout;
 import com.mxgraph.model.mxCell;
+import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.model.mxGraphModel.mxChildChange;
 import com.mxgraph.model.mxGraphModel.mxValueChange;
 import com.mxgraph.swing.mxGraphComponent;
@@ -105,9 +107,15 @@ public class PetriNetManager extends JPanel {
 //			System.out.println(evt.getProperties());
 			if(reachComponent != null && (changeGraphModel(evt) || checkMarking(evt))) {
 			    disableReachComponent();
-			}
-			if (reachComponent != null) {
 			    
+			    // Add reach change to undoable edit
+			    mxGraphModel model = (mxGraphModel)petriComponent.getGraph().getModel();
+			    
+			    ReachabilityChange reachChange = new ReachabilityChange();
+			    reachChange.execute();
+			    mxUndoableEdit edit = (mxUndoableEdit) evt
+	                    .getProperty("edit");
+			    edit.add(reachChange);
 			}
 		}
 		

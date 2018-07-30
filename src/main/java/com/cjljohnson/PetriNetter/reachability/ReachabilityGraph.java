@@ -242,12 +242,13 @@ public class ReachabilityGraph extends mxGraph{
 		stylesheet.putCellStyle("COMPLETE", completeStyle);
 		
 		Hashtable<String, Object> currentStyle = new Hashtable<String, Object>();
-        //currentStyle.put(mxConstants.STYLE_FILLCOLOR, "#97b9ef");
-        currentStyle.put(mxConstants.STYLE_STROKEWIDTH, 4);
+        currentStyle.put(mxConstants.STYLE_FILLCOLOR, "#00FF00");
+        //currentStyle.put(mxConstants.STYLE_STROKEWIDTH, 4);
         stylesheet.putCellStyle("CURRENT", currentStyle);
         
         Hashtable<String, Object> initialStyle = new Hashtable<String, Object>();
-        initialStyle.put(mxConstants.STYLE_FILLCOLOR, "#00FF00");
+        //initialStyle.put(mxConstants.STYLE_FILLCOLOR, "#00FF00");
+        initialStyle.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_DOUBLE_ELLIPSE);
         //initialStyle.put(mxConstants.STYLE_STROKEWIDTH, 4);
         stylesheet.putCellStyle("INITIAL", initialStyle);
 		
@@ -275,9 +276,7 @@ public class ReachabilityGraph extends mxGraph{
 	        if (map != null) {
 	            Map<String, Integer> currentState = graph.getPlaceTokens();
 	            mxCell currentCell = nodeMap.get(currentState);
-	            String style = currentCell.getStyle().replaceFirst(";CURRENT", "");
-	            setCellStyle(style, new Object[] {currentCell});
-	            setCellStyle(vertex.getStyle() + ";CURRENT", new Object[] {vertex});
+	            setCurrentCell(vertex);
 	            Map<String, Integer> state = map;
 	            graph.setPlaceTokens(state);
 	            graph.refresh();
