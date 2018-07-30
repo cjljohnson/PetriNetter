@@ -99,19 +99,23 @@ public class PetriNetManager extends JPanel {
 	{
 		public void invoke(Object source, mxEventObject evt)
 		{
-		    System.out.println(evt.getProperties());
 //			reachValid = false;
 //			if (reachComponent != null)
 //				reachComponent.setEnabled(false);
 			setModified(true);
 //			System.out.println(evt.getProperties());
 			if(reachComponent != null && (changeGraphModel(evt) || checkMarking(evt))) {
-			    disableReachComponent();
+				ArrayList<Object> changes = (ArrayList<Object>) evt.getProperty("changes");
+				for (Object change : changes) {
+					if (change instanceof ReachabilityChange) {
+						return;
+					}
+				}
 			    
 			    // Add reach change to undoable edit
 			    mxGraphModel model = (mxGraphModel)petriComponent.getGraph().getModel();
 			    
-			    ReachabilityChange reachChange = new ReachabilityChange();
+			    ReachabilityChange reachChange = new ReachabilityChange(PetriNetManager.this, false, null, null);
 			    reachChange.execute();
 			    mxUndoableEdit edit = (mxUndoableEdit) evt
 	                    .getProperty("edit");
@@ -389,15 +393,16 @@ public class PetriNetManager extends JPanel {
 	    }
 		
 		
-		
+		JSplitPane splitPane = this.splitPane;
 		if (splitPane == null) 
 		{
 			splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
 					petriComponent, null);
 			splitPane.setOneTouchExpandable(false);
 			splitPane.setDividerLocation(Math.min(getWidth() / 2, getWidth() / 2));
-			removeAll();
-			add(splitPane, BorderLayout.CENTER);
+			splitPane.setResizeWeight(0.5);
+			//removeAll();
+			//add(splitPane, BorderLayout.CENTER);
 		}
 		
 		final ReachabilityGraph reach = new ReachabilityGraph((PetriGraph)petriComponent.getGraph(), iterations);
@@ -473,9 +478,8 @@ public class PetriNetManager extends JPanel {
 
         });
         
-        this.reachComponent = reachComponent;
+        //this.reachComponent = reachComponent;
 		
-		splitPane.setRightComponent(reachComponent);
 		
 		
 		// TABLE
@@ -496,7 +500,6 @@ public class PetriNetManager extends JPanel {
 		table.setFillsViewportHeight(true);
 		JScrollPane tableScrollPane = new JScrollPane(table);
 		
-		System.out.println(reach.getGraphBounds());
 		reach.setMinimumGraphSize(reach.getGraphBounds());
 		Dimension dim = new Dimension(400, 300);
 		//new Dimension(reach.getGraphBounds().getX(), reach.getGraphBounds().getY())
@@ -506,13 +509,13 @@ public class PetriNetManager extends JPanel {
 		reachSplit.setResizeWeight(1.0);
 		
 		splitPane.setRightComponent(reachSplit);
-		splitPane.setResizeWeight(0.5);
 		
 		
+		// Create undoable edit
+		mxGraphModel model = (mxGraphModel)(petriComponent.getGraph()).getModel();
+		model.execute(new ReachabilityChange(this, true, reachComponent, splitPane));
 		
-		reachValid = true;
 		
-		validate();
 		reachSplit.setDividerLocation(0.9);
 	}
 	
@@ -532,17 +535,38 @@ public class PetriNetManager extends JPanel {
 	
 	public void disableReachComponent() {
 		reachValid = false;
-		if (reachComponent != null)
+		if (reachComponent != null) {
 			reachComponent = null;
 			splitPane = null;
 			removeAll();
 			add(petriComponent, BorderLayout.CENTER);
 			validate();
+		}
 			
 //			reachComponent.setEnabled(false);
 //			if (splitPane != null && splitPane.getRightComponent() instanceof mxGraphComponent) {
 //				splitPane.setRightComponent(new JPanel());
 //			}
+	}
+	
+	public void setReachComponent(boolean reachValid, mxGraphComponent reachComponent, JSplitPane splitPane) {
+		this.reachValid = reachValid;
+		this.reachComponent = reachComponent;
+		
+		if (this.splitPane != splitPane) {
+			if (splitPane == null) {
+				removeAll();
+				add(petriComponent, BorderLayout.CENTER);
+				validate();
+			} else {
+				removeAll();
+				add(splitPane, BorderLayout.CENTER);
+				splitPane.setLeftComponent(petriComponent);
+				validate();
+				System.out.println(splitPane.getLeftComponent());
+			}
+			this.splitPane = splitPane;
+		}
 	}
 	
 	
@@ -579,9 +603,13 @@ public class PetriNetManager extends JPanel {
 
     public final void setUndoManager(mxUndoManager undoManager) {
         this.undoManager = undoManager;
-    }
+    }  
 
-    public static void main(String[] args) {
+    public JSplitPane getSplitPane() {
+		return splitPane;
+	}
+
+	public static void main(String[] args) {
 		try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException e) {
