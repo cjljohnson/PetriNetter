@@ -107,5 +107,13 @@ public class PetriToolBar extends JToolBar {
         liveness.putValue(Action.SHORT_DESCRIPTION, "Calculate Liveness");
         add(liveness);
         
+        addSeparator();
+        add(editor.bind("Save As", PetriEditorActions.getFinaliseNetAction(),
+                new ImageIcon(
+                        PetriEditor.class.getResource("/images/disk_multiple.png"))));
+        add(editor.bind("Save As", PetriEditorActions.getRevertToFinaliseNetAction(),
+        		new ImageIcon(
+        				PetriEditor.class.getResource("/images/disk_multiple.png"))));
+        
     }
 }

@@ -82,7 +82,7 @@ public class PetriGraph extends mxGraph{
 				    }
 				    place = (Place)((mxCell) cell).getValue();
 					int capacity = place.getCapacity();
-					String capacityLabel = capacity == -1 ? "n" : Integer.toString(capacity);
+					String capacityLabel = capacity == -1 ? "\u03C9" : Integer.toString(capacity);
 					return "k = " + capacityLabel + "\np" + getCellMarkingName(cell);
 				} else 
 				{

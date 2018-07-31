@@ -59,6 +59,7 @@ import com.mxgraph.layout.mxPartitionLayout;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.model.mxGraphModel.mxChildChange;
+import com.mxgraph.model.mxGraphModel.mxRootChange;
 import com.mxgraph.model.mxGraphModel.mxValueChange;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.handler.mxKeyboardHandler;
@@ -81,6 +82,7 @@ public class PetriNetManager extends JPanel {
 	private boolean modified;
 	private File currentFile;
 	private mxUndoManager undoManager;
+	private Object[] finalisedNet;
 	
 	static {
 	    mxStyleRegistry.putValue("PETRI_STYLE", new PetriEdgeFunction());
@@ -103,11 +105,11 @@ public class PetriNetManager extends JPanel {
 //			if (reachComponent != null)
 //				reachComponent.setEnabled(false);
 			setModified(true);
-//			System.out.println(evt.getProperties());
+			System.out.println(evt.getProperties());
 			if(reachComponent != null && (changeGraphModel(evt) || checkMarking(evt))) {
 				ArrayList<Object> changes = (ArrayList<Object>) evt.getProperty("changes");
 				for (Object change : changes) {
-					if (change instanceof ReachabilityChange) {
+					if (change instanceof ReachabilityChange || change instanceof mxRootChange) {
 						return;
 					}
 				}
@@ -223,6 +225,7 @@ public class PetriNetManager extends JPanel {
 		graph.setDropEnabled(false);
 		graph.checkEnabledTransitions();
 		graph.setEdgeLabelsMovable(false);
+		graph.setKeepEdgesInBackground(true);
 		
 		graph.addListener(mxEvent.CELL_CONNECTED, new mxIEventListener() {
             public void invoke(Object sender, mxEventObject evt) {
@@ -566,6 +569,30 @@ public class PetriNetManager extends JPanel {
 				System.out.println(splitPane.getLeftComponent());
 			}
 			this.splitPane = splitPane;
+		}
+	}
+	
+	public void finaliseNet() {
+		mxGraph graph = petriComponent.getGraph();
+		finalisedNet = graph.cloneCells(graph.getChildCells(graph.getDefaultParent()));
+	}
+	
+	public boolean revertToFinalised() {
+		if (finalisedNet != null) {
+			mxGraph graph = petriComponent.getGraph();
+			mxCell root = new mxCell();
+			try {
+				graph.getModel().beginUpdate();
+
+			root.insert(new mxCell());
+			graph.getModel().setRoot(root);
+			graph.addCells(graph.cloneCells(finalisedNet));
+			} finally {
+				graph.getModel().endUpdate();
+			}
+			return true;
+		} else {
+			return false;
 		}
 	}
 	

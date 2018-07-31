@@ -70,6 +70,7 @@ public class ReachabilityGraph extends mxGraph{
 		setCellsEditable(false);
 		setCellsResizable(false);
 		setSplitEnabled(false);
+		setKeepEdgesInBackground(true);
 		
 		
 		

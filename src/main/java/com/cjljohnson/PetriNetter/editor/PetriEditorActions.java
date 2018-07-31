@@ -53,6 +53,8 @@ public class PetriEditorActions {
     private static ShowLiveness showLiveness = new ShowLiveness();
     private static HistoryAction undoAction = new HistoryAction(true);
     private static HistoryAction redoAction = new HistoryAction(false);
+    private static FinaliseNetAction finaliseNetAction = new FinaliseNetAction();
+    private static RevertToFinalisedNetAction revertToFinaliseNetAction = new RevertToFinalisedNetAction();
 
     /* GETTERS */
 
@@ -91,12 +93,21 @@ public class PetriEditorActions {
     public static final HistoryAction getRedoAction() {
         return redoAction;
     }
+    
+    public static FinaliseNetAction getFinaliseNetAction() {
+		return finaliseNetAction;
+	}
+
+	public static RevertToFinalisedNetAction getRevertToFinaliseNetAction() {
+		return revertToFinaliseNetAction;
+	}
 
 
 
     /* ACTIONS */
 
-    @SuppressWarnings("serial")
+
+	@SuppressWarnings("serial")
     public static class NewAction extends AbstractAction
     {
         /**
@@ -751,6 +762,48 @@ public class PetriEditorActions {
            {
                boolean selected = aButton.getModel().isSelected();
                editor.setHighlightTransitions(selected);
+           }
+       }
+   }
+   
+   @SuppressWarnings("serial")
+   public static class FinaliseNetAction extends AbstractAction
+   {
+
+       /**
+        * 
+        */
+       public void actionPerformed(ActionEvent e)
+       {
+           PetriEditor editor = (PetriEditor)e.getSource();
+           if (editor != null)
+           {
+               PetriNetManager manager = editor.getActiveGraphManager();
+               if (manager != null)
+               {
+                   manager.finaliseNet();
+               }
+           }
+       }
+   }
+   
+   @SuppressWarnings("serial")
+   public static class RevertToFinalisedNetAction extends AbstractAction
+   {
+
+       /**
+        * 
+        */
+       public void actionPerformed(ActionEvent e)
+       {
+           PetriEditor editor = (PetriEditor)e.getSource();
+           if (editor != null)
+           {
+               PetriNetManager manager = editor.getActiveGraphManager();
+               if (manager != null)
+               {
+                   manager.revertToFinalised();
+               }
            }
        }
    }
