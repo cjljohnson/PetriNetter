@@ -336,6 +336,9 @@ public class PetriEditorActions {
         {
             PetriNetManager manager = (PetriNetManager)editor.getPane()
                     .getSelectedComponent();
+            
+            
+            
             mxGraphComponent graphComponent = manager.getPetriComponent();
             mxGraph graph = graphComponent.getGraph();
 
@@ -392,6 +395,11 @@ public class PetriEditorActions {
             if (editor != null)
             {
                 PetriNetManager manager = editor.getActiveGraphManager();
+                
+                if (manager == null) {
+                	return;
+                }
+                
                 mxGraphComponent graphComponent = manager.getPetriComponent();
                 mxGraph graph = graphComponent.getGraph();
                 FileFilter selectedFilter = null;
@@ -629,53 +637,6 @@ public class PetriEditorActions {
        }
 
        /**
-        * Saves XML+PNG format.
-        */
-       protected void saveXmlPng(PetriEditor editor, String filename,
-               Color bg) throws IOException
-       {
-           PetriNetManager manager = (PetriNetManager)editor.getPane()
-                   .getSelectedComponent();
-           mxGraphComponent graphComponent = manager.getPetriComponent();
-           mxGraph graph = graphComponent.getGraph();
-
-           // Creates the image for the PNG file
-           BufferedImage image = mxCellRenderer.createBufferedImage(graph,
-                   null, 1, bg, graphComponent.isAntiAlias(), null,
-                   graphComponent.getCanvas());
-
-           mxPngEncodeParam param = mxPngEncodeParam
-                   .getDefaultEncodeParam(image);
-
-           // Saves as a PNG file
-           FileOutputStream outputStream = new FileOutputStream(new File(
-                   filename));
-           try
-           {
-               mxPngImageEncoder encoder = new mxPngImageEncoder(outputStream,
-                       param);
-
-               if (image != null)
-               {
-                   encoder.encode(image);
-
-                   manager.setModified(false);
-                   manager.setCurrentFile(new File(filename));
-                   editor.updateTitle(manager);
-               }
-               else
-               {
-                   JOptionPane.showMessageDialog(graphComponent,
-                           mxResources.get("noImageData"));
-               }
-           }
-           finally
-           {
-               outputStream.close();
-           }
-       }
-
-       /**
         * 
         */
        public void actionPerformed(ActionEvent e)
@@ -686,6 +647,11 @@ public class PetriEditorActions {
            if (editor != null)
            {
                PetriNetManager manager = editor.getActiveGraphManager();
+               
+               if (manager == null) {
+               	return;
+               }
+               
                mxGraphComponent graphComponent = manager.getPetriComponent();
                mxGraph graph = graphComponent.getGraph();
                FileFilter selectedFilter = null;
