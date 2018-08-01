@@ -24,8 +24,10 @@ import java.util.TreeMap;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -203,7 +205,6 @@ public class PetriNetManager extends JPanel {
 
         undoManager.addListener(mxEvent.UNDO, undoHandler);
         undoManager.addListener(mxEvent.REDO, undoHandler);
-		//petriComponent.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
 	}
 	
 	private void init(final PetriGraph graph) {
@@ -377,23 +378,32 @@ public class PetriNetManager extends JPanel {
 	public void createReachabilityGraph() {
 		// Ask user reachability size
 		int iterations = -1;
+		JPanel popupPanel = new JPanel();
 		JTextField iterTF = new JTextField();
+		iterTF.setText("200");
 		
-		int result = JOptionPane.showConfirmDialog(null, iterTF, "Number of iterations",
-                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-	    if (result == JOptionPane.OK_OPTION) {
-	    	try {
-                iterations = Integer.parseInt(iterTF.getText());
-            } catch (Exception e) {
-            }
-	    	if (iterations <= 1) {
-	    		iterations = 200;
-	    		JOptionPane.showMessageDialog(null, "NaN defaulting to 200.");
-	    		return;
-	    	}
-	    } else {
-	    	return;
-	    }
+		popupPanel.setLayout(new BoxLayout(popupPanel, BoxLayout.Y_AXIS));
+		popupPanel.add(new JLabel("Max iterations (1-1000):"));
+		popupPanel.add(iterTF);
+		
+		
+		while (iterations == -1) {
+			int result = JOptionPane.showConfirmDialog(null, popupPanel, "Reachability Graph",
+	                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+		    if (result == JOptionPane.OK_OPTION) {
+		    	try {
+	                iterations = Integer.parseInt(iterTF.getText());
+	            } catch (Exception e) {
+	            }
+		    	if (iterations < 1 || iterations > 1000) {
+		    		iterations = -1;
+		    		JOptionPane.showMessageDialog(null, "Max iterations must be between 1 and 1000.");
+		    	}
+		    } else {
+		    	return;
+		    }
+		}
+		
 		
 		
 		JSplitPane splitPane = this.splitPane;

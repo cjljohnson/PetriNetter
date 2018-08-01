@@ -40,6 +40,9 @@ public class PetriToolBar extends JToolBar {
         add(editor.bind("Save As", PetriEditorActions.getSaveAsAction(),
                 new ImageIcon(
                         PetriEditor.class.getResource("/images/disk_multiple.png"))));
+        add(editor.bind("Export Image", PetriEditorActions.getExportImageAction(),
+                new ImageIcon(
+                        PetriEditor.class.getResource("/images/disk_multiple.png"))));
         
         addSeparator();
         

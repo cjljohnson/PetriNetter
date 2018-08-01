@@ -100,7 +100,7 @@ public class PetriGraph extends mxGraph{
                 Place place = (Place)((mxCell) cell).getValue();
                 int capacity = place.getCapacity();
                 String capacityLabel = capacity == -1 ? "\u03C9" : Integer.toString(capacity);
-                return "k = " + capacityLabel + "\np" + getCellMarkingName(cell);
+                return "p" + getCellMarkingName(cell) +  "\n" + "k = " + capacityLabel;
 			}
 			
 			if (value instanceof Transition)

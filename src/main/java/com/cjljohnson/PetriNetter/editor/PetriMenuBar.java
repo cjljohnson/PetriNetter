@@ -30,6 +30,9 @@ public class PetriMenuBar extends JMenuBar{
         menu.add(editor.bind("Save As...", PetriEditorActions.getSaveAsAction(), 
                 new ImageIcon(
                         PetriEditor.class.getResource("/images/disk_multiple.png"))));
+        menu.add(editor.bind("Export Image", PetriEditorActions.getExportImageAction(),
+                new ImageIcon(
+                        PetriEditor.class.getResource("/images/disk_multiple.png"))));
         UIManager.getIcon("FileView.fileIcon");
         
         // Edit menu

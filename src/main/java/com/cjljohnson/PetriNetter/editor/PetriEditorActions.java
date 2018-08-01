@@ -48,6 +48,7 @@ public class PetriEditorActions {
     private static OpenAction openAction = new OpenAction();
     private static SaveAction saveAction = new SaveAction(false);
     private static SaveAction saveAsAction = new SaveAction(true);
+    private static ExportImageAction exportImageAction = new ExportImageAction();
     private static CreateReachabilityAction createReachabilityAction = new CreateReachabilityAction();
     private static ShowBoundedness showBoundedness = new ShowBoundedness();
     private static ShowLiveness showLiveness = new ShowLiveness();
@@ -72,6 +73,10 @@ public class PetriEditorActions {
 
     public static SaveAction getSaveAsAction() {
         return saveAsAction;
+    }
+    
+    public static ExportImageAction getExportImageAction() {
+        return exportImageAction;
     }
 
     public static CreateReachabilityAction getCreateReachabilityAction() {
@@ -459,7 +464,7 @@ public class PetriEditorActions {
                     fc.addChoosableFileFilter(new DefaultFileFilter.ImageFileFilter(
                             mxResources.get("allImages")));
                     fc.setFileFilter(defaultFilter);
-                    int rc = fc.showDialog(null, mxResources.get("save"));
+                    int rc = fc.showDialog(null, "Save");
                     dialogShown = true;
 
                     if (rc != JFileChooser.APPROVE_OPTION)
@@ -603,6 +608,244 @@ public class PetriEditorActions {
             }
         }
     }
+    
+    /**
+    *
+    */
+   @SuppressWarnings("serial")
+   public static class ExportImageAction extends AbstractAction
+   {
+
+       /**
+        * 
+        */
+       protected String lastDir = null;
+
+       /**
+        * 
+        */
+       public ExportImageAction()
+       {
+       }
+
+       /**
+        * Saves XML+PNG format.
+        */
+       protected void saveXmlPng(PetriEditor editor, String filename,
+               Color bg) throws IOException
+       {
+           PetriNetManager manager = (PetriNetManager)editor.getPane()
+                   .getSelectedComponent();
+           mxGraphComponent graphComponent = manager.getPetriComponent();
+           mxGraph graph = graphComponent.getGraph();
+
+           // Creates the image for the PNG file
+           BufferedImage image = mxCellRenderer.createBufferedImage(graph,
+                   null, 1, bg, graphComponent.isAntiAlias(), null,
+                   graphComponent.getCanvas());
+
+           mxPngEncodeParam param = mxPngEncodeParam
+                   .getDefaultEncodeParam(image);
+
+           // Saves as a PNG file
+           FileOutputStream outputStream = new FileOutputStream(new File(
+                   filename));
+           try
+           {
+               mxPngImageEncoder encoder = new mxPngImageEncoder(outputStream,
+                       param);
+
+               if (image != null)
+               {
+                   encoder.encode(image);
+
+                   manager.setModified(false);
+                   manager.setCurrentFile(new File(filename));
+                   editor.updateTitle(manager);
+               }
+               else
+               {
+                   JOptionPane.showMessageDialog(graphComponent,
+                           mxResources.get("noImageData"));
+               }
+           }
+           finally
+           {
+               outputStream.close();
+           }
+       }
+
+       /**
+        * 
+        */
+       public void actionPerformed(ActionEvent e)
+       {
+
+           PetriEditor editor = (PetriEditor)e.getSource();
+
+           if (editor != null)
+           {
+               PetriNetManager manager = editor.getActiveGraphManager();
+               mxGraphComponent graphComponent = manager.getPetriComponent();
+               mxGraph graph = graphComponent.getGraph();
+               FileFilter selectedFilter = null;
+               DefaultFileFilter xmlPngFilter = new DefaultFileFilter(".png",
+                       "PNG+XML " + mxResources.get("file") + " (.png)");
+               String filename = null;
+               boolean dialogShown = false;
+
+
+               String wd;
+
+               if (lastDir != null)
+               {
+            	   wd = lastDir;
+               }
+               //                  else if (editor.getCurrentFile() != null)
+               //                  {
+               //                      wd = editor.getCurrentFile().getParent();
+               //                  }
+               else
+               {
+            	   wd = System.getProperty("user.dir");
+               }
+
+               JFileChooser fc = new JFileChooser(wd);
+
+               // Adds the default file format
+               FileFilter defaultFilter = xmlPngFilter;
+               fc.addChoosableFileFilter(defaultFilter);
+
+               // Add other image types
+               fc.addChoosableFileFilter(new DefaultFileFilter(".svg",
+            		   "SVG " + mxResources.get("file") + " (.svg)"));
+               
+               // Adds a filter for each supported image format
+               Object[] imageFormats = ImageIO.getReaderFormatNames();
+
+               // Finds all distinct extensions
+               HashSet<String> formats = new HashSet<String>();
+
+               for (int i = 0; i < imageFormats.length; i++)
+               {
+            	   String ext = imageFormats[i].toString().toLowerCase();
+            	   formats.add(ext);
+               }
+
+               imageFormats = formats.toArray();
+
+               for (int i = 0; i < imageFormats.length; i++)
+               {
+            	   String ext = imageFormats[i].toString();
+            	   fc.addChoosableFileFilter(new DefaultFileFilter("."
+            			   + ext, ext.toUpperCase() + " "
+            					   + mxResources.get("file") + " (." + ext + ")"));
+               }
+
+               // Adds filter that accepts all supported image formats
+               fc.addChoosableFileFilter(new DefaultFileFilter.ImageFileFilter(
+            		   mxResources.get("allImages")));
+               fc.setFileFilter(defaultFilter);
+               int rc = fc.showDialog(null, "Save");
+               dialogShown = true;
+
+               if (rc != JFileChooser.APPROVE_OPTION)
+               {
+            	   return;
+               }
+               else
+               {
+            	   lastDir = fc.getSelectedFile().getParent();
+               }
+
+               filename = fc.getSelectedFile().getAbsolutePath();
+               selectedFilter = fc.getFileFilter();
+
+               if (selectedFilter instanceof DefaultFileFilter)
+               {
+            	   String ext = ((DefaultFileFilter) selectedFilter)
+            			   .getExtension();
+
+            	   if (!filename.toLowerCase().endsWith(ext))
+            	   {
+            		   filename += ext;
+            	   }
+               }
+
+               if (new File(filename).exists()
+            		   && JOptionPane.showConfirmDialog(graphComponent,
+            				   mxResources.get("overwriteExistingFile")) != JOptionPane.YES_OPTION)
+               {
+            	   return;
+               }
+
+               try
+               {
+            	   String ext = filename
+            			   .substring(filename.lastIndexOf('.') + 1);
+
+            	   if (ext.equalsIgnoreCase("svg"))
+            	   {
+                       mxSvgCanvas canvas = (mxSvgCanvas) mxCellRenderer
+                               .drawCells(graph, null, 1, null,
+                                       new CanvasFactory()
+                               {
+                                   public mxICanvas createCanvas(
+                                           int width, int height)
+                                   {
+                                       mxSvgCanvas canvas = new mxSvgCanvas(
+                                               mxDomUtils.createSvgDocument(
+                                                       width, height));
+                                       canvas.setEmbedded(true);
+
+                                       return canvas;
+                                   }
+
+                               });
+
+                       mxUtils.writeFile(mxXmlUtils.getXml(canvas.getDocument()),
+                               filename);
+                   }
+                   else
+                   {
+                       Color bg = null;
+
+                       if ((!ext.equalsIgnoreCase("gif") && !ext
+                               .equalsIgnoreCase("png"))
+                               || JOptionPane.showConfirmDialog(
+                                       graphComponent, mxResources
+                                       .get("transparentBackground")) != JOptionPane.YES_OPTION)
+                       {
+                    	   bg = graphComponent.getBackground();
+                       }
+
+
+                       BufferedImage image = mxCellRenderer
+                    		   .createBufferedImage(graph, null, 1, bg,
+                    				   graphComponent.isAntiAlias(), null,
+                    				   graphComponent.getCanvas());
+
+                       if (image != null)
+                       {
+                    	   ImageIO.write(image, ext, new File(filename));
+                       }
+                       else
+                       {
+                    	   JOptionPane.showMessageDialog(graphComponent,
+                    			   mxResources.get("noImageData"));
+                       }
+                   }
+               }
+               catch (Throwable ex)
+               {
+                   ex.printStackTrace();
+                   JOptionPane.showMessageDialog(graphComponent,
+                           ex.toString(), mxResources.get("error"),
+                           JOptionPane.ERROR_MESSAGE);
+               }
+           }
+       }
+   }
 
     @SuppressWarnings("serial")
     public static class CreateReachabilityAction extends AbstractAction

@@ -13,13 +13,26 @@ public class MarkingTableModel extends AbstractTableModel{
 	protected Map<String, Map<String, Integer>> markingMap;
 	protected PetriGraph graph;
 	protected Object[] columnNames;
-	protected Object[] cellIDs;
+	protected String[] cellIDs;
 
 	public MarkingTableModel(Map<String, Map<String, Integer>> markingMap, PetriGraph graph) {
 		this.markingMap = markingMap;
 		this.graph = graph;
-		this.columnNames = columnNames;
-		this.cellIDs = (Object[]) markingMap.get("M0").keySet().toArray();
+		
+		
+		// Sort columns
+		Object[] ids = markingMap.get("M0").keySet().toArray();
+		int[] intIDs = new int[ids.length];
+
+		for (int i = 0; i < ids.length; i++) {
+		    intIDs[i] = Integer.parseInt((String)ids[i]);
+		}
+		Arrays.sort(intIDs);
+		
+		this.cellIDs = new String[intIDs.length];
+		for (int i = 0; i < ids.length; i++) {
+			cellIDs[i] = Integer.toString(intIDs[i]);
+		}
 	}
 
 	public int getColumnCount() {
@@ -31,12 +44,10 @@ public class MarkingTableModel extends AbstractTableModel{
 	}
 
 	public Object getValueAt(int row, int col) {
-		Object[] entries = markingMap.entrySet().toArray();
-		Map.Entry entry=(Map.Entry)entries[row];
 		if (col == 0) {
-			return entry.getKey();
+			return "M" + row;
 		} else {
-			Map<String, Integer> tokenMap = (Map<String, Integer>) entry.getValue();
+			Map<String, Integer> tokenMap = markingMap.get("M" + row);
 			return tokenMap.get(cellIDs[col-1]);
 		}
 	}

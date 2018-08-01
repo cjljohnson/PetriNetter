@@ -400,7 +400,16 @@ public class ReachabilityGraph extends mxGraph{
 				sb.append("<html>");
 				sb.append("<p style=\"font-weight: bold; font-size: 12px\">" + marking + "</p>");
 				//sb.append("<div style=\"background-color: red\">");
-				for (String id : map.keySet()) {
+				
+				Object[] ids = map.keySet().toArray();
+				int[] intIDs = new int[ids.length];
+
+				for (int i = 0; i < ids.length; i++) {
+				    intIDs[i] = Integer.parseInt((String)ids[i]);
+				}
+				Arrays.sort(intIDs);
+				for (int intID : intIDs) {
+					String id = Integer.toString(intID);
 					Object vertex = ((mxGraphModel)graph.getModel()).getCell(id);
 					sb.append("<p style=\"color: \">");
 					sb.append("<span style=\"font-weight: bold\">p");
