@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
@@ -21,6 +22,7 @@ import com.cjljohnson.PetriNetter.model.Arc;
 import com.cjljohnson.PetriNetter.model.PetriGraph;
 import com.cjljohnson.PetriNetter.model.Place;
 import com.cjljohnson.PetriNetter.model.Transition;
+import com.cjljohnson.PetriNetter.reachability.ReachActions;
 
 public class PetriRightClick extends JPopupMenu
 {
@@ -152,6 +154,18 @@ public class PetriRightClick extends JPopupMenu
         capacityPanel.add(capacityL);
         capacityPanel.add(capacityTF);
         add(capacityPanel);
+        
+        JMenu positionMenu = new JMenu("Label position");
+        positionMenu.add(manager.bind("Top", new PetriGraphActions.PositionPlaceLabelAction("Top", cell, 0, -0.7)));
+        positionMenu.add(manager.bind("Top Left", new PetriGraphActions.PositionPlaceLabelAction("Top Left", cell, -1, -0.5)));
+        positionMenu.add(manager.bind("Top Right", new PetriGraphActions.PositionPlaceLabelAction("Top Right", cell, 1, -0.5)));
+        positionMenu.add(manager.bind("Left", new PetriGraphActions.PositionPlaceLabelAction("Left", cell, -1, 0.3)));
+        positionMenu.add(manager.bind("Right", new PetriGraphActions.PositionPlaceLabelAction("Right", cell, 1, 0.3)));
+        positionMenu.add(manager.bind("Bottom", new PetriGraphActions.PositionPlaceLabelAction("Bottom", cell, 0, 1.2)));
+        positionMenu.add(manager.bind("Bottom Left", new PetriGraphActions.PositionPlaceLabelAction("Bottom Left", cell, -1, 1)));
+        positionMenu.add(manager.bind("Bottom Right", new PetriGraphActions.PositionPlaceLabelAction("Bottom Right", cell, 1, 1)));
+
+        add(positionMenu);
 
         addSeparator();
     }
@@ -182,7 +196,19 @@ public class PetriRightClick extends JPopupMenu
         weightPanel.add(weightL);
         weightPanel.add(weightTF);
         add(weightPanel);
+        
+        JMenu positionMenu = new JMenu("Label position");
+        positionMenu.add(manager.bind("Top", new PetriGraphActions.PositionLabelAction("Top", cell, "BC")));
+        positionMenu.add(manager.bind("Top Left", new PetriGraphActions.PositionLabelAction("Top Left", cell, "BR")));
+        positionMenu.add(manager.bind("Top Right", new PetriGraphActions.PositionLabelAction("Top Right", cell, "BL")));
+        positionMenu.add(manager.bind("Left", new PetriGraphActions.PositionLabelAction("Left", cell, "MR")));
+        positionMenu.add(manager.bind("Right", new PetriGraphActions.PositionLabelAction("Right", cell, "ML")));
+        positionMenu.add(manager.bind("Bottom", new PetriGraphActions.PositionLabelAction("Bottom", cell, "TC")));
+        positionMenu.add(manager.bind("Bottom Left", new PetriGraphActions.PositionLabelAction("Bottom Left", cell, "TR")));
+        positionMenu.add(manager.bind("Bottom Right", new PetriGraphActions.PositionLabelAction("Bottom Right", cell, "TL")));
 
+        add(positionMenu);
+        
         addSeparator();
     }
 
@@ -190,8 +216,7 @@ public class PetriRightClick extends JPopupMenu
 
         boolean isFirable = ((PetriGraph)manager.getPetriComponent().getGraph()).isFirable(cell);
 
-        add(
-                manager.bind("Fire Transition", new PetriGraphActions.FireTransitionAction(cell),
+        add(manager.bind("Fire Transition", new PetriGraphActions.FireTransitionAction(cell),
                         "/images/lightning_go.png"))
         .setEnabled(isFirable);
 

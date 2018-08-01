@@ -343,6 +343,86 @@ public class PetriGraphActions {
         }
     }
     
+    public static class PositionLabelAction extends AbstractAction
+    {
+
+        /**
+         * 
+         */
+
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 3887344511242268848L;
+        private Object cell;
+        private String position;
+
+        /**
+         * 
+         * @param name
+         */
+        public PositionLabelAction(String name, Object cell, String position)
+        {
+            super(name);
+            this.cell = cell;
+            this.position = position;
+        }
+
+        /**
+         * 
+         */
+        public void actionPerformed(ActionEvent e)
+        {
+            PetriGraph graph = (PetriGraph) getGraph(e);
+
+            if (graph != null)
+            {
+                graph.setCellLabelPosition(cell, position);
+            }
+        }
+    }
+    
+    public static class PositionPlaceLabelAction extends AbstractAction
+    {
+
+        /**
+         * 
+         */
+
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 3887344511242268848L;
+        private Object cell;
+        private double x;
+        private double y;
+
+        /**
+         * 
+         * @param name
+         */
+        public PositionPlaceLabelAction(String name, Object cell, double x, double y)
+        {
+            super(name);
+            this.cell = cell;
+            this.x = x;
+            this.y = y;
+        }
+
+        /**
+         * 
+         */
+        public void actionPerformed(ActionEvent e)
+        {
+            PetriGraph graph = (PetriGraph) getGraph(e);
+
+            if (graph != null)
+            {
+                graph.setPlaceLabelPosition(cell, x, y);
+            }
+        }
+    }
+    
 	/**
 	 *
 	 */
@@ -861,5 +941,7 @@ public class PetriGraphActions {
 //			}
 		}
 	}
+	
+	
 
 }

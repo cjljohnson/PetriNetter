@@ -267,7 +267,49 @@ public class ReachabilityGraph extends mxGraph{
         edge.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_LEFT);
 	    //edge.put(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, "#ffffff");
 	    //edge.put(mxConstants.STYLE_LABEL_BORDERCOLOR, "#000000");
+        stylesheet.putCellStyle("EDGE", edge);
 		getStylesheet().setDefaultEdgeStyle(edge);
+		
+		// Label position styles		
+		Map<String, Object> alignTC = new HashMap<String, Object>();
+		alignTC.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_TOP);
+		alignTC.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER);
+        stylesheet.putCellStyle("ALIGN_TC", alignTC);
+        
+        Map<String, Object> alignTR = new HashMap<String, Object>();
+        alignTR.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_TOP);
+        alignTR.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_RIGHT);
+        stylesheet.putCellStyle("ALIGN_TR", alignTR);
+        
+        Map<String, Object> alignTL = new HashMap<String, Object>();
+        alignTL.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_TOP);
+        alignTL.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_LEFT);
+        stylesheet.putCellStyle("ALIGN_TL", alignTL);
+        
+        Map<String, Object> alignMR = new HashMap<String, Object>();
+        alignMR.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
+        alignMR.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_RIGHT);
+        stylesheet.putCellStyle("ALIGN_MR", alignMR);
+        
+        Map<String, Object> alignML = new HashMap<String, Object>();
+        alignML.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
+        alignML.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_LEFT);
+        stylesheet.putCellStyle("ALIGN_ML", alignML);
+        
+        Map<String, Object> alignBC = new HashMap<String, Object>();
+        alignBC.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_BOTTOM);
+        alignBC.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER);
+        stylesheet.putCellStyle("ALIGN_BC", alignBC);
+        
+        Map<String, Object> alignBR = new HashMap<String, Object>();
+        alignBR.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_BOTTOM);
+        alignBR.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_RIGHT);
+        stylesheet.putCellStyle("ALIGN_BR", alignBR);
+        
+        Map<String, Object> alignBL = new HashMap<String, Object>();
+        alignBL.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_BOTTOM);
+        alignBL.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_LEFT);
+        stylesheet.putCellStyle("ALIGN_BL", alignBL);
 	}
 	
 	public void setActiveState(Object obj) {
@@ -306,6 +348,17 @@ public class ReachabilityGraph extends mxGraph{
 	        setCellStyle(cell.getStyle() + ";CURRENT", new Object[] {cell});
 	        currentCell = cell;
 	    }
+	}
+	
+	public void setCellLabelPosition(Object obj, String position) {
+	    if (obj instanceof mxCell && ((mxCell)obj).isEdge()) {
+	        mxCell cell = (mxCell)obj;
+            //String style = cell.getStyle().replaceFirst(";ALIGN_..", "");
+            //style += ";ALIGN_" + position;
+            //System.out.println(style);
+	        String style = "EDGE;ALIGN_" + position;
+            setCellStyle(style, new Object[] {cell});
+        }
 	}
 	
 	@Override

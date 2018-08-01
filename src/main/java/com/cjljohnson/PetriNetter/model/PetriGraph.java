@@ -38,7 +38,7 @@ public class PetriGraph extends mxGraph{
 			Object value = ((mxCell) cell).getValue();
 			
 			// Don't allow Place sub-cell to be selected
-			if (value instanceof Place && getCellGeometry(cell).isRelative())
+			if ("PLACE_LABEL".equals(value))
 			{
 				return false;
 			}
@@ -56,7 +56,7 @@ public class PetriGraph extends mxGraph{
 		{
 			Object value = ((mxCell) cell).getValue();
 
-			if (value instanceof Place && getCellGeometry(cell).isRelative())
+			if ("PLACE_LABEL".equals(value))
 			{
 				return false;
 			}
@@ -90,6 +90,19 @@ public class PetriGraph extends mxGraph{
 				    return tokens;
 				}
 			}
+			
+			if ("PLACE_LABEL".equals(value)) 
+			{
+			    while (getCellGeometry(cell).isRelative()) 
+                {
+                    cell = ((mxCell) cell).getParent();
+                }
+                Place place = (Place)((mxCell) cell).getValue();
+                int capacity = place.getCapacity();
+                String capacityLabel = capacity == -1 ? "\u03C9" : Integer.toString(capacity);
+                return "k = " + capacityLabel + "\np" + getCellMarkingName(cell);
+			}
+			
 			if (value instanceof Transition)
 			{
 				return "t" + getCellMarkingName(cell);
@@ -374,7 +387,7 @@ public class PetriGraph extends mxGraph{
 			mxGeometry geo1 = new mxGeometry(0, 1.2, 40,
 					20);
 			geo1.setRelative(true);
-			mxCell capLabel = new mxCell(place, geo1,
+			mxCell capLabel = new mxCell("PLACE_LABEL", geo1,
 					"CAPACITY");
 			capLabel.setVertex(true);
 			addCell(capLabel, cell);
@@ -412,7 +425,7 @@ public class PetriGraph extends mxGraph{
 			value = arc;
 		}
 
-		Object result = super.createEdge(parent, id, value, source, target, "");
+		Object result = super.createEdge(parent, id, value, source, target, "ARC");
 		
 		return result;
 	}
@@ -547,12 +560,16 @@ public class PetriGraph extends mxGraph{
 			Object value = ((mxCell) o).getValue();
 			if (value instanceof Arc)
             {
+			    String style = ((mxCell) o).getStyle();
+			    if (style.isEmpty()) {
+			        style = "ARC";
+			    }
+			    style.replaceAll(";ACTIVETRANSITION", "");
                 if (isFirableArc(o))
             	{
-                	setCellStyle("ACTIVETRANSITION", new Object[] {o});
-            	} else {
-                    setCellStyle(null, new Object[] {o});
-                }
+                    style += ";ACTIVETRANSITION";
+            	}
+                setCellStyle(style, new Object[] {o});
             }
 		}
 		
@@ -850,13 +867,13 @@ public class PetriGraph extends mxGraph{
         activeTransitionStyle.put(mxConstants.STYLE_STROKECOLOR, "#FF0000");
         stylesheet.putCellStyle("ACTIVETRANSITION", activeTransitionStyle);
 		
-		Hashtable<String, Object> arcStyle = new Hashtable<String, Object>();
-		arcStyle.put(mxConstants.STYLE_OPACITY, 100);
-		arcStyle.put(mxConstants.STYLE_FONTCOLOR, "#000000");
-		arcStyle.put(mxConstants.STYLE_FILLCOLOR, "#FFFFFF");
-		arcStyle.put(mxConstants.STYLE_STROKECOLOR, "#000000");
-		arcStyle.put(mxConstants.STYLE_STROKEWIDTH, 5);
-		stylesheet.putCellStyle("ARC", arcStyle);
+//		Hashtable<String, Object> arcStyle = new Hashtable<String, Object>();
+//		arcStyle.put(mxConstants.STYLE_OPACITY, 100);
+//		arcStyle.put(mxConstants.STYLE_FONTCOLOR, "#000000");
+//		arcStyle.put(mxConstants.STYLE_FILLCOLOR, "#FFFFFF");
+//		arcStyle.put(mxConstants.STYLE_STROKECOLOR, "#000000");
+//		arcStyle.put(mxConstants.STYLE_STROKEWIDTH, 5);
+//		stylesheet.putCellStyle("ARC", arcStyle);
 		
 		// Settings for edges
 	    Map<String, Object> edge = new HashMap<String, Object>();
@@ -873,6 +890,48 @@ public class PetriGraph extends mxGraph{
 	    edge.put(mxConstants.STYLE_EDGE, "PETRI_STYLE");
 
 	    stylesheet.setDefaultEdgeStyle(edge);
+	    stylesheet.putCellStyle("ARC", edge);
+	    
+	    // Label position styles       
+        Map<String, Object> alignTC = new HashMap<String, Object>();
+        alignTC.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_TOP);
+        alignTC.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER);
+        stylesheet.putCellStyle("ALIGN_TC", alignTC);
+        
+        Map<String, Object> alignTR = new HashMap<String, Object>();
+        alignTR.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_TOP);
+        alignTR.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_RIGHT);
+        stylesheet.putCellStyle("ALIGN_TR", alignTR);
+        
+        Map<String, Object> alignTL = new HashMap<String, Object>();
+        alignTL.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_TOP);
+        alignTL.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_LEFT);
+        stylesheet.putCellStyle("ALIGN_TL", alignTL);
+        
+        Map<String, Object> alignMR = new HashMap<String, Object>();
+        alignMR.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
+        alignMR.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_RIGHT);
+        stylesheet.putCellStyle("ALIGN_MR", alignMR);
+        
+        Map<String, Object> alignML = new HashMap<String, Object>();
+        alignML.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
+        alignML.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_LEFT);
+        stylesheet.putCellStyle("ALIGN_ML", alignML);
+        
+        Map<String, Object> alignBC = new HashMap<String, Object>();
+        alignBC.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_BOTTOM);
+        alignBC.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER);
+        stylesheet.putCellStyle("ALIGN_BC", alignBC);
+        
+        Map<String, Object> alignBR = new HashMap<String, Object>();
+        alignBR.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_BOTTOM);
+        alignBR.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_RIGHT);
+        stylesheet.putCellStyle("ALIGN_BR", alignBR);
+        
+        Map<String, Object> alignBL = new HashMap<String, Object>();
+        alignBL.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_BOTTOM);
+        alignBL.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_LEFT);
+        stylesheet.putCellStyle("ALIGN_BL", alignBL);
 	}
 	
 	public void highlightActiveTransitions(boolean highlight) {
@@ -890,6 +949,39 @@ public class PetriGraph extends mxGraph{
 		getStylesheet().putCellStyle("ACTIVETRANSITION", style);
 		refresh();
 	}
+	
+	public void setCellLabelPosition(Object obj, String position) {
+        if (obj instanceof mxCell && ((mxCell)obj).isEdge()) {
+            mxCell cell = (mxCell)obj;
+            String style = cell.getStyle().replaceFirst(";ALIGN_..", "");
+            
+            if (style.isEmpty()) {
+                style = "ARC";
+            }
+            
+            style += ";ALIGN_" + position;
+            System.out.println(style);
+            setCellStyle(style, new Object[] {cell});
+        }
+    }
+	
+	public void setPlaceLabelPosition(Object obj, double x, double y) {
+        if (obj instanceof mxCell && ((mxCell)obj).getValue() instanceof Place) {
+            mxCell cell = (mxCell)obj;
+            cell.getChildCount();
+            mxCell placeLabel = (mxCell) cell.getChildAt(0);
+            
+            
+            
+            if (placeLabel != null) {
+                mxGeometry geometry = (mxGeometry) getModel().getGeometry(placeLabel).clone();
+                
+                geometry.setX(x);
+                geometry.setY(y);
+                getModel().setGeometry(placeLabel, geometry);
+            }
+        }
+    }
 	
 
 }

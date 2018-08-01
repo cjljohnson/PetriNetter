@@ -45,7 +45,7 @@ public class PetriMenuBar extends JMenuBar{
         menu = add(new JMenu("View"));
         JCheckBoxMenuItem showHighlight = new JCheckBoxMenuItem("Highlight Active Transitions");
         // Define ActionListener
-        HighlightTransitionsAction highlightAction = new HighlightTransitionsAction(editor);
+        final HighlightTransitionsAction highlightAction = new HighlightTransitionsAction(editor);
         ActionListener highlightListener = new ActionListener() {
           public void actionPerformed(ActionEvent actionEvent) {
             AbstractButton abstractButton = (AbstractButton) actionEvent.getSource();
