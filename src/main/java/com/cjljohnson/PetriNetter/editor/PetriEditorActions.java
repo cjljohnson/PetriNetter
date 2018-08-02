@@ -56,7 +56,10 @@ public class PetriEditorActions {
     private static HistoryAction redoAction = new HistoryAction(false);
     private static FinaliseNetAction finaliseNetAction = new FinaliseNetAction();
     private static RevertToFinalisedNetAction revertToFinaliseNetAction = new RevertToFinalisedNetAction();
-
+    private static ZoomAction zoomIn = new ZoomAction(-1);
+    private static ZoomAction zoomOut = new ZoomAction(1);
+    private static ZoomAction zoomReset = new ZoomAction(0);
+    
     /* GETTERS */
 
     public static NewAction getNewAction() {
@@ -106,6 +109,16 @@ public class PetriEditorActions {
 	public static RevertToFinalisedNetAction getRevertToFinaliseNetAction() {
 		return revertToFinaliseNetAction;
 	}
+	
+	public static ZoomAction getZoomInAction() {
+	    return zoomIn;
+	}
+	public static ZoomAction getZoomOutAction() {
+        return zoomOut;
+    }
+	public static ZoomAction getZoomResetAction() {
+        return zoomReset;
+    }
 
 
 
@@ -1012,6 +1025,41 @@ public class PetriEditorActions {
                if (manager != null)
                {
                    manager.revertToFinalised();
+               }
+           }
+       }
+   }
+   
+   @SuppressWarnings("serial")
+   public static class ZoomAction extends AbstractAction
+   {
+       private int type;
+       
+       public ZoomAction(int type) {
+           this.type = type;
+       }
+
+       /**
+        * 
+        */
+       public void actionPerformed(ActionEvent e)
+       {
+           PetriEditor editor = (PetriEditor)e.getSource();
+           if (editor != null)
+           {
+               PetriNetManager manager = editor.getActiveGraphManager();
+               if (manager != null)
+               {
+                   mxGraphComponent graphComponent = manager.getPetriComponent();
+                   if (graphComponent != null) {
+                       if (type < 0) {
+                           graphComponent.zoomIn();
+                       } else if (type > 0) {
+                           graphComponent.zoomOut();
+                       } else {
+                           graphComponent.zoomTo(1, true);
+                       }
+                   }
                }
            }
        }

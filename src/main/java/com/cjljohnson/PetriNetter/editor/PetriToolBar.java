@@ -54,6 +54,17 @@ public class PetriToolBar extends JToolBar {
                         PetriEditor.class.getResource("/images/arrow_redo.png"))));
         
         addSeparator();
+        add(editor.bind("Reset Zoom", PetriEditorActions.getZoomResetAction(),
+                new ImageIcon(
+                        PetriEditor.class.getResource("/images/magnifier.png"))));
+        add(editor.bind("Zoom In", PetriEditorActions.getZoomInAction(),
+                new ImageIcon(
+                        PetriEditor.class.getResource("/images/magnifier_zoom_in.png"))));
+        add(editor.bind("Zoom Out", PetriEditorActions.getZoomOutAction(),
+                new ImageIcon(
+                        PetriEditor.class.getResource("/images/magnifier_zoom_out.png"))));
+        
+        addSeparator();
         
         JToggleButton cursor = new JToggleButton(new ImageIcon(
                 PetriEditor.class.getResource("/images/cursor.png")));
@@ -117,6 +128,8 @@ public class PetriToolBar extends JToolBar {
         add(editor.bind("Save As", PetriEditorActions.getRevertToFinaliseNetAction(),
         		new ImageIcon(
         				PetriEditor.class.getResource("/images/star_revert.png"))));
+        
+        
         
     }
 }

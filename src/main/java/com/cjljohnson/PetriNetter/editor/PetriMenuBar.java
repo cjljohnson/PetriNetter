@@ -46,6 +46,19 @@ public class PetriMenuBar extends JMenuBar{
         
         // View menu
         menu = add(new JMenu("View"));
+        
+        menu.add(editor.bind("Reset Zoom", PetriEditorActions.getZoomResetAction(),
+                new ImageIcon(
+                        PetriEditor.class.getResource("/images/magnifier.png"))));
+        menu.add(editor.bind("Zoom In", PetriEditorActions.getZoomInAction(),
+                new ImageIcon(
+                        PetriEditor.class.getResource("/images/magnifier_zoom_in.png"))));
+        menu.add(editor.bind("Zoom Out", PetriEditorActions.getZoomOutAction(),
+                new ImageIcon(
+                        PetriEditor.class.getResource("/images/magnifier_zoom_out.png"))));
+        
+        menu.addSeparator();
+        
         JCheckBoxMenuItem showHighlight = new JCheckBoxMenuItem("Highlight Active Transitions");
         // Define ActionListener
         final HighlightTransitionsAction highlightAction = new HighlightTransitionsAction(editor);
