@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -90,20 +92,27 @@ public class PetriEditor extends JPanel{
         PetriNetManager manager = new PetriNetManager();
         
         // Get name
-        int count = 0;
+        int count = 1;
         for (int i = 0; i < pane.getTabCount(); i++) {
         	String title = pane.getTitleAt(i);
-        	System.out.println(title);
         	
-        	if (title.matches("New Petri Net(?:\\((.*)\\))?")) {
-        		title.reg
+        	if (true) {
+        		Pattern pattern = Pattern.compile("New Petri Net \\((\\d+)\\)");
+        		Matcher matcher = pattern.matcher(title);
+        		if (matcher.find()) {
+        			int val = Integer.parseInt(matcher.group(1));
+        			if (count < val) {
+        				count = val;
+        			}
+        		}
+        		
         		count++;
         	}
         }
         
         String newTitle = "New Petri Net";
         if (count > 0) {
-        	newTitle += String.format("(%d)", count);
+        	newTitle += String.format(" (%d)", count);
         }
         
         pane.add(newTitle, manager);
