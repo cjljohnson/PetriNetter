@@ -59,6 +59,8 @@ public class PetriEditor extends JPanel{
         
         newPetriNet();
         
+        new EditorKeyboardHandler(this);
+        
         frame.setJMenuBar(menuBar);
         frame.setContentPane(this);
         frame.setPreferredSize(new Dimension(500, 500));
@@ -86,12 +88,30 @@ public class PetriEditor extends JPanel{
     
     public PetriNetManager newPetriNet() {
         PetriNetManager manager = new PetriNetManager();
-        pane.add("New Petri Net", manager);
+        
+        // Get name
+        int count = 0;
+        for (int i = 0; i < pane.getTabCount(); i++) {
+        	String title = pane.getTitleAt(i);
+        	System.out.println(title);
+        	
+        	if (title.matches("New Petri Net(?:\\((.*)\\))?")) {
+        		title.reg
+        		count++;
+        	}
+        }
+        
+        String newTitle = "New Petri Net";
+        if (count > 0) {
+        	newTitle += String.format("(%d)", count);
+        }
+        
+        pane.add(newTitle, manager);
         pane.setTabComponentAt(pane.getTabCount() - 1, new ButtonTabComponent(this));
         selectedTool.setCursor(manager.getPetriComponent());
         PetriGraph graph = (PetriGraph)manager.getPetriComponent().getGraph();
         graph.highlightActiveTransitions(highlightTransitions);
-        updateTitle(manager);
+        //updateTitle(manager);
         
         return manager;
     }
