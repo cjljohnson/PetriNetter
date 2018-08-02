@@ -14,6 +14,8 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,6 +66,7 @@ import com.mxgraph.model.mxGraphModel.mxChildChange;
 import com.mxgraph.model.mxGraphModel.mxRootChange;
 import com.mxgraph.model.mxGraphModel.mxValueChange;
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.swing.mxGraphOutline;
 import com.mxgraph.swing.handler.mxKeyboardHandler;
 import com.mxgraph.swing.handler.mxRubberband;
 import com.mxgraph.util.mxEvent;
@@ -324,6 +327,29 @@ public class PetriNetManager extends JPanel {
 			}
 
 		});
+		
+		// Zoom listener
+		graphComponent.addMouseWheelListener(new MouseWheelListener()
+        {
+            /**
+             * 
+             */
+            public void mouseWheelMoved(MouseWheelEvent e)
+            {
+                if (e.isControlDown())
+                {
+                    if (e.getWheelRotation() < 0)
+                    {
+                        graphComponent.zoomIn();
+                    }
+                    else
+                    {
+                        graphComponent.zoomOut();
+                    }
+                }
+            }
+
+        });
 
 		new mxRubberband(graphComponent);
 		new mxKeyboardHandler(graphComponent);

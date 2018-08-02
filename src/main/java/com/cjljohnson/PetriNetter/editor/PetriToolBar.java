@@ -42,7 +42,7 @@ public class PetriToolBar extends JToolBar {
                         PetriEditor.class.getResource("/images/disk_multiple.png"))));
         add(editor.bind("Export Image", PetriEditorActions.getExportImageAction(),
                 new ImageIcon(
-                        PetriEditor.class.getResource("/images/disk_multiple.png"))));
+                        PetriEditor.class.getResource("/images/image.png"))));
         
         addSeparator();
         
@@ -113,10 +113,10 @@ public class PetriToolBar extends JToolBar {
         addSeparator();
         add(editor.bind("Save As", PetriEditorActions.getFinaliseNetAction(),
                 new ImageIcon(
-                        PetriEditor.class.getResource("/images/disk_multiple.png"))));
+                        PetriEditor.class.getResource("/images/star.png"))));
         add(editor.bind("Save As", PetriEditorActions.getRevertToFinaliseNetAction(),
         		new ImageIcon(
-        				PetriEditor.class.getResource("/images/disk_multiple.png"))));
+        				PetriEditor.class.getResource("/images/star_revert.png"))));
         
     }
 }
