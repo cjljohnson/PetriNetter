@@ -330,20 +330,22 @@ public class ReachabilityGraph extends mxGraph{
 	public void updateActiveMarking() {
             Map<String, Integer> currentState = graph.getPlaceTokens();
             mxCell cell = nodeMap.get(currentState);
-            if (cell != null) {
                 setCurrentCell(cell);
-            }
 	}
 	
 	public void setCurrentCell(Object obj) {
 	    if (obj == currentCell) {
 	        return;
 	    }
+	    if (currentCell != null) {
+            String style = currentCell.getStyle().replaceFirst(";CURRENT", "");
+            setCellStyle(style, new Object[] {currentCell});
+            currentCell = null;
+        }
+	    
 	    if (obj instanceof mxCell) {
-	        if (currentCell != null) {
-	            String style = currentCell.getStyle().replaceFirst(";CURRENT", "");
-	            setCellStyle(style, new Object[] {currentCell});
-	        }
+	        
+	        
 	        mxCell cell = (mxCell)obj;
 	        setCellStyle(cell.getStyle() + ";CURRENT", new Object[] {cell});
 	        currentCell = cell;

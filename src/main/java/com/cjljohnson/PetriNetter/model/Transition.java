@@ -1,7 +1,11 @@
 package com.cjljohnson.PetriNetter.model;
 
-public class Transition {
+import java.io.Serializable;
 
+public class Transition implements Cloneable, Serializable {
+
+	private static final long serialVersionUID = 4807890452104246723L;
+	
 	private int index;
 	private String name;
 	

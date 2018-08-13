@@ -1,6 +1,10 @@
 package com.cjljohnson.PetriNetter.model;
 
-public class Place implements Cloneable {
+import java.io.Serializable;
+
+public class Place implements Cloneable, Serializable {
+	
+	private static final long serialVersionUID = 1787401395119188690L;
 	
 	private int tokens;
 	private int capacity;

@@ -167,12 +167,14 @@ public class PetriNetManager extends JPanel {
                     if (change instanceof mxValueChange) {
                         boolean isReachableMarking = ((ReachabilityGraph)reachComponent.getGraph())
                                 .isReachableMarking(((PetriGraph)petriComponent.getGraph()).getPlaceTokens());
-                        if (isReachableMarking) {
-                            ((ReachabilityGraph)reachComponent.getGraph()).updateActiveMarking();
-                            return false;
-                        } else {
-                            return true;
-                        }
+                        ((ReachabilityGraph)reachComponent.getGraph()).updateActiveMarking(); // Always update marking
+//                        if (isReachableMarking) {
+//                            
+//                            return false;
+//                        } else {
+//                            return true;
+//                        }
+                        
                     }
                 }
 		    }
@@ -430,7 +432,8 @@ public class PetriNetManager extends JPanel {
 		    }
 		}
 		
-		
+		// Finalise net
+		finaliseNet();
 		
 		JSplitPane splitPane = this.splitPane;
 		if (splitPane == null) 
@@ -508,7 +511,7 @@ public class PetriNetManager extends JPanel {
                  // Reach Right Click
                     Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(),
                             reachComponent);
-                    ReachRightClick menu = new ReachRightClick(reachComponent, pt.x, pt.y);
+                    ReachRightClick menu = new ReachRightClick(PetriNetManager.this, reachComponent, pt.x, pt.y);
                     menu.show(reachComponent, pt.x, pt.y);
 
                     e.consume();
@@ -544,6 +547,9 @@ public class PetriNetManager extends JPanel {
 		//new Dimension(reach.getGraphBounds().getX(), reach.getGraphBounds().getY())
 		reachComponent.setPreferredSize(dim);
 		
+		// Close button
+		
+		
 		JSplitPane reachSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, reachComponent, tableScrollPane);
 		reachSplit.setResizeWeight(1.0);
 		
@@ -556,6 +562,11 @@ public class PetriNetManager extends JPanel {
 		
 		
 		reachSplit.setDividerLocation(0.9);
+		
+//		petriComponent.getGraph().setCellsDisconnectable(false);
+//		petriComponent.getGraph().setCellsDeletable(false);
+//		petriComponent.getGraph().setCellsCloneable(false);
+		
 	}
 	
 	public void calcBoundedness() {
@@ -591,6 +602,10 @@ public class PetriNetManager extends JPanel {
 	public void setReachComponent(boolean reachValid, mxGraphComponent reachComponent, JSplitPane splitPane) {
 		this.reachValid = reachValid;
 		this.reachComponent = reachComponent;
+		
+		petriComponent.setEnabled(!reachValid);
+		petriComponent.setGridVisible(!reachValid);
+		petriComponent.getGraph().setCellsSelectable(!reachValid);
 		
 		if (this.splitPane != splitPane) {
 			if (splitPane == null) {

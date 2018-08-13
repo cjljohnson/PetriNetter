@@ -1,5 +1,6 @@
 package com.cjljohnson.PetriNetter.reachability;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -13,11 +14,13 @@ import com.cjljohnson.PetriNetter.model.PetriGraph;
 import com.cjljohnson.PetriNetter.model.Place;
 import com.cjljohnson.PetriNetter.model.Transition;
 import com.mxgraph.model.mxCell;
+import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxUndoableEdit;
 
 public class ReachRightClick extends JPopupMenu {
     
-    public ReachRightClick(final mxGraphComponent reachComponent, int x, int y)
+    public ReachRightClick(final PetriNetManager manager, final mxGraphComponent reachComponent, int x, int y)
     {
         //final Object cell = hello.getGraphComponent().getCellAt(x, y);
         
@@ -37,6 +40,8 @@ public class ReachRightClick extends JPopupMenu {
                 graph.findNodes();
             }
         });
+        
+        add(manager.bind("Close Reachability Graph", ReachActions.getCloseReachabilityAction(), "/images/cancel.png"));
         
     }
     

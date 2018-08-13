@@ -564,7 +564,7 @@ public class PetriGraph extends mxGraph{
 			    if (style.isEmpty()) {
 			        style = "ARC";
 			    }
-			    style.replaceAll(";ACTIVETRANSITION", "");
+			    style = style.replaceAll(";ACTIVETRANSITION", "");
                 if (isFirableArc(o))
             	{
                     style += ";ACTIVETRANSITION";

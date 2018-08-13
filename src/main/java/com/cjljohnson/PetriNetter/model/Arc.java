@@ -1,7 +1,11 @@
 package com.cjljohnson.PetriNetter.model;
 
-public class Arc implements Cloneable {
+import java.io.Serializable;
 
+public class Arc implements Cloneable, Serializable {
+
+	private static final long serialVersionUID = 1797941979839108515L;
+	
 	private int weight;
 	
 	public Arc() {

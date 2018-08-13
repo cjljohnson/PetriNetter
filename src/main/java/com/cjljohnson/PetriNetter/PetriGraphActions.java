@@ -141,6 +141,13 @@ public class PetriGraphActions {
 
             if (graph != null)
             {
+//            	PetriNetManager manager = getManager(e);
+//            	if (manager != null) {
+//            		if (manager.reachValid()) {
+//            			
+//            		}
+//            	}
+            	
                 graph.addPlace(0, -1, x, y);
             }
         }

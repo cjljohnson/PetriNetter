@@ -43,9 +43,12 @@ public class PetriToolActions {
         public abstract void setCursor(mxGraphComponent graph);
         
         protected void setGraphHandlers(mxGraphComponent graph, boolean enabled) {
-            //graph.getGraphHandler().setEnabled(enabled);
-            //graph.getSelectionCellsHandler().setEnabled(enabled);
-            //graph.getConnectionHandler().setEnabled(enabled);
+        	if (!enabled) {
+        		graph.getGraph().clearSelection();
+        	}
+            graph.getGraphHandler().setEnabled(enabled);
+            graph.getSelectionCellsHandler().setEnabled(enabled);
+            graph.getConnectionHandler().setEnabled(enabled);
         }
         
     }
@@ -91,6 +94,10 @@ public class PetriToolActions {
 
         @Override
         public void onClick(MouseEvent e, PetriNetManager manager) {
+        	if (manager.reachValid()) {
+        		return;
+        	}
+        	
             mxGraphComponent graphComponent = manager.getPetriComponent();
             PetriGraph graph = (PetriGraph)graphComponent.getGraph();
             Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(),
@@ -128,6 +135,10 @@ public class PetriToolActions {
 
         @Override
         public void onClick(MouseEvent e, PetriNetManager manager) {
+        	if (manager.reachValid()) {
+        		return;
+        	}
+        	
             mxGraphComponent graphComponent = manager.getPetriComponent();
             PetriGraph graph = (PetriGraph)graphComponent.getGraph();
             Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(),
@@ -166,6 +177,10 @@ public class PetriToolActions {
 
         @Override
         public void onClick(MouseEvent e, PetriNetManager manager) {
+        	if (manager.reachValid()) {
+        		return;
+        	}
+        	
             mxGraphComponent graphComponent = manager.getPetriComponent();
             PetriGraph graph = (PetriGraph)graphComponent.getGraph();
             Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(),
@@ -204,6 +219,10 @@ public class PetriToolActions {
 
         @Override
         public void onClick(MouseEvent e, PetriNetManager manager) {
+        	if (manager.reachValid()) {
+        		return;
+        	}
+        	
             mxGraphComponent graphComponent = manager.getPetriComponent();
             PetriGraph graph = (PetriGraph)graphComponent.getGraph();
             Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(),

@@ -50,28 +50,30 @@ public class PetriRightClick extends JPopupMenu
             }
         }
 
-        add(manager.bind("Place", PetriGraphActions.getCreatePlaceAction(x, y),
+        if (!manager.reachValid()) {
+        	add(manager.bind("Place", PetriGraphActions.getCreatePlaceAction(x, y),
                 "/images/place.gif"));
 
-        add(manager.bind("Transition", PetriGraphActions.getCreateTransitionAction(x, y),
+        	add(manager.bind("Transition", PetriGraphActions.getCreateTransitionAction(x, y),
                 "/images/transition.gif"));
 
-        addSeparator();
+        	addSeparator();
 
-        add(manager.bind("Reach", PetriGraphActions.getCreateReachabilityAction(),
+        	add(manager.bind("Reach", PetriGraphActions.getCreateReachabilityAction(),
                 "/images/reach.gif"));
+        }
 
         //	    add(manager.bind2("Reach", PetriGraphActions.getCreateReachabilityAction(),
         //	            "/petri/images/reach.gif"));
-
-        addSeparator();
-
-        //		add(hello.bind("undo", new HistoryAction(true),
-        //				"/com/mxgraph/examples/swing/images/undo.gif"));
-
-        add(manager.bind("Delete", mxGraphActions.getDeleteAction(),
-                "/images/cross.png"))
-        .setEnabled(true);
+//
+//        addSeparator();
+//
+//        //		add(hello.bind("undo", new HistoryAction(true),
+//        //				"/com/mxgraph/examples/swing/images/undo.gif"));
+//
+//        add(manager.bind("Delete", mxGraphActions.getDeleteAction(),
+//                "/images/cross.png"))
+//        .setEnabled(true);
 
 
         //		add(manager.bind("New", new PetriGraphActions.NewAction(), 
@@ -84,10 +86,16 @@ public class PetriRightClick extends JPopupMenu
         //				"/com/mxgraph/examples/swing/images/open.gif"));
 
         //		add(hello.bind("Load", new PetriGraphActions.LoadAction(true), "/com/mxgraph/examples/swing/images/load.gif"));
+        
+        if (manager.reachValid()) {
+        	add(manager.bind("Close Reachability Graph", ReachActions.getCloseReachabilityAction(),
+                    "/images/cancel.png"));
+        }
     }
 
     private void placeMenu(final PetriNetManager manager, final Object cell, final Place place) {
 
+    	if (!manager.reachValid()) {
         // Tokens
         JPanel tokensPanel = new JPanel();
         JLabel tokensL = new JLabel("Tokens:  ");
@@ -155,6 +163,8 @@ public class PetriRightClick extends JPopupMenu
         capacityPanel.add(capacityTF);
         add(capacityPanel);
         
+    	}
+        
         JMenu positionMenu = new JMenu("Label position");
         positionMenu.add(manager.bind("Top", new PetriGraphActions.PositionPlaceLabelAction("Top", cell, 0, -0.7)));
         positionMenu.add(manager.bind("Top Left", new PetriGraphActions.PositionPlaceLabelAction("Top Left", cell, -1, -0.5)));
@@ -171,7 +181,10 @@ public class PetriRightClick extends JPopupMenu
     }
 
     private void arcMenu(final PetriNetManager manager, final Object cell, final Arc arc) {
-        // Weight
+    	
+    	// Weight
+    	if (!manager.reachValid()) {
+        
         JPanel weightPanel = new JPanel();
         JLabel weightL = new JLabel("Weight:");
         final JTextField weightTF = new JTextField(5);
@@ -196,6 +209,7 @@ public class PetriRightClick extends JPopupMenu
         weightPanel.add(weightL);
         weightPanel.add(weightTF);
         add(weightPanel);
+    	}
         
         JMenu positionMenu = new JMenu("Label position");
         positionMenu.add(manager.bind("Top", new PetriGraphActions.PositionLabelAction("Top", cell, "BC")));
