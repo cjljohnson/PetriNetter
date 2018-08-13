@@ -458,8 +458,12 @@ public class ReachabilityGraph extends mxGraph{
 	            } catch (Exception e) {
                 }
 	        }
+	        
 	        if (nodeMap.containsKey(goal)) {
+	        	String message = "Marking is at: ";
+	        	message += nodeMap.get(goal).getValue();
 	            setSelectionCell(nodeMap.get(goal));
+	            JOptionPane.showMessageDialog(null, message);
 	        } else {
 	            JOptionPane.showMessageDialog(null, "Marking not in reachability graph.");
 	        }

@@ -120,6 +120,7 @@ public class PetriEditor extends JPanel{
         selectedTool.setCursor(manager.getPetriComponent());
         PetriGraph graph = (PetriGraph)manager.getPetriComponent().getGraph();
         graph.highlightActiveTransitions(highlightTransitions);
+        pane.setSelectedIndex(pane.getTabCount() - 1);
         //updateTitle(manager);
         
         return manager;
@@ -232,6 +233,7 @@ public class PetriEditor extends JPanel{
         PetriGraph graph = (PetriGraph)manager.getPetriComponent().getGraph();
         graph.highlightActiveTransitions(highlightTransitions);
         pane.setTabComponentAt(pane.getTabCount() - 1, new ButtonTabComponent(this));
+        pane.setSelectedIndex(pane.getTabCount() - 1);
         
         return true;
     }

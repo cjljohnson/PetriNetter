@@ -12,6 +12,7 @@ import javax.swing.UIManager;
 
 import com.cjljohnson.PetriNetter.PetriGraphActions;
 import com.cjljohnson.PetriNetter.editor.PetriEditorActions.HighlightTransitionsAction;
+import com.cjljohnson.PetriNetter.editor.examples.ExampleActions;
 
 public class PetriMenuBar extends JMenuBar{
     
@@ -79,6 +80,11 @@ public class PetriMenuBar extends JMenuBar{
         menu.add(editor.bind("Create Reachability Graph", new PetriEditorActions.CreateReachabilityAction(), "/images/reach.gif"));
         menu.add(editor.bind("Boundedness", new PetriEditorActions.ShowBoundedness(), ""));
         menu.add(editor.bind("Liveness", new PetriEditorActions.ShowLiveness(), ""));
+        
+        // Examples menu
+        menu = add(new JMenu("Examples"));
+        menu.add(editor.bind("Lock Example", new ExampleActions.LockExampleAction(), ""));
+        menu.add(editor.bind("Buffer Example", new ExampleActions.BufferExampleAction(), ""));
     }
 
 }
