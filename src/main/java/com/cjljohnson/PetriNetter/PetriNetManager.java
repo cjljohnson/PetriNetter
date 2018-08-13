@@ -19,6 +19,7 @@ import java.awt.event.MouseWheelListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -88,6 +89,7 @@ public class PetriNetManager extends JPanel {
 	private File currentFile;
 	private mxUndoManager undoManager;
 	private Object[] finalisedNet;
+	private JTable initialMarking;
 	
 	static {
 	    mxStyleRegistry.putValue("PETRI_STYLE", new PetriEdgeFunction());
@@ -521,7 +523,9 @@ public class PetriNetManager extends JPanel {
         });
         
         //this.reachComponent = reachComponent;
-		
+        
+        // Initial Marking
+
 		
 		
 		// TABLE
@@ -549,11 +553,40 @@ public class PetriNetManager extends JPanel {
 		
 		// Close button
 		
+
+		
 		
 		JSplitPane reachSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, reachComponent, tableScrollPane);
 		reachSplit.setResizeWeight(1.0);
 		
 		splitPane.setRightComponent(reachSplit);
+		
+		// Initial Marking
+		Map<String, Map<String, Integer>> initialMarking = new HashMap<String, Map<String, Integer>>();
+		initialMarking.put("M0", reach.getInitialMarking());
+		JTable initialTable = new JTable(new MarkingTableModel(initialMarking, graph));
+		
+		StringBuilder markingVector = new StringBuilder("Initial Marking: M0 = <");
+		for (Object obj : places) {
+			if (obj instanceof mxCell) {
+				mxCell cell = (mxCell)obj;
+				Place place = (Place)cell.getValue();
+				markingVector.append(place.getTokens() + ", ");
+			}
+		}
+		markingVector.delete(markingVector.length() - 2, markingVector.length());
+		markingVector.append('>');
+		
+		JLabel markingLabel = new JLabel(markingVector.toString());
+		markingLabel.setBackground(new Color(255, 255, 225));
+		markingLabel.setOpaque(true);
+		
+		
+		JPanel leftPanel = new JPanel();
+		leftPanel.setLayout(new BorderLayout());
+		leftPanel.add(petriComponent, BorderLayout.CENTER);
+		leftPanel.add(markingLabel, BorderLayout.SOUTH);
+		splitPane.setLeftComponent(leftPanel);
 		
 		
 		// Create undoable edit
@@ -614,14 +647,17 @@ public class PetriNetManager extends JPanel {
 				validate();
 			} else {
 				removeAll();
-				add(splitPane, BorderLayout.CENTER);
-				splitPane.setLeftComponent(petriComponent);
+				((JPanel)splitPane.getLeftComponent()).add(petriComponent, BorderLayout.CENTER);
+				add(splitPane, BorderLayout.CENTER);				
+				
+				
 				validate();
-				System.out.println(splitPane.getLeftComponent());
+				splitPane.updateUI();
 			}
 			this.splitPane = splitPane;
 		}
 	}
+	
 	
 	public void finaliseNet() {
 		mxGraph graph = petriComponent.getGraph();
@@ -688,62 +724,62 @@ public class PetriNetManager extends JPanel {
 	}
 
 	public static void main(String[] args) {
-		try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (UnsupportedLookAndFeelException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-		
-		PetriNetManager manager = new PetriNetManager();
-		PetriGraph graph = (PetriGraph)manager.getPetriComponent().getGraph();
-		Object parent = graph.getDefaultParent();
-		Arc arc1 = new Arc(3);
-		Arc arc2 = new Arc(2);
-		Arc arc3 = new Arc(2);
-		Arc arc4 = new Arc(4);
-		Arc arc5 = new Arc(4);
-		Arc arc6 = new Arc(4);
-		try
-		{
-			graph.getModel().beginUpdate();
-			Object v1 = graph.addPlace(5, 10, 20, 20);
-			Object v2 = graph.addTransition(240, 150);
-			Object v3 = graph.addTransition(140, 150);
-			Object t3 = graph.addTransition(60, 200);
-			Object v4 = graph.addPlace(3, 20, 280, 280);
-			graph.insertEdge(parent, null, arc1, v1, v2, null);
-			graph.insertEdge(parent, null, arc2, v3, v1, null);
-			graph.insertEdge(parent, null, arc3, v2, v4, null);
-			graph.insertEdge(parent, null, arc4, v4, v3, null);
-			
-			graph.insertEdge(parent, null, arc5, v4, t3, null);
-			graph.insertEdge(parent, null, arc6, t3, v1, null);
-			
-		}
-		finally
-		{
-			graph.getModel().endUpdate();
-		}
-		
-		JFrame frame = new JFrame("Petri Netter");
-		frame.setContentPane(manager);
-		frame.setJMenuBar(new JMenuBar());
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.pack();
-		frame.setSize(600, 600);
-		frame.setLocationRelativeTo(null);
-		//frame.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
-		frame.setVisible(true);
+//		try {
+//            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//        } catch (ClassNotFoundException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        } catch (InstantiationException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        } catch (IllegalAccessException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        } catch (UnsupportedLookAndFeelException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//		
+//		PetriNetManager manager = new PetriNetManager();
+//		PetriGraph graph = (PetriGraph)manager.getPetriComponent().getGraph();
+//		Object parent = graph.getDefaultParent();
+//		Arc arc1 = new Arc(3);
+//		Arc arc2 = new Arc(2);
+//		Arc arc3 = new Arc(2);
+//		Arc arc4 = new Arc(4);
+//		Arc arc5 = new Arc(4);
+//		Arc arc6 = new Arc(4);
+//		try
+//		{
+//			graph.getModel().beginUpdate();
+//			Object v1 = graph.addPlace(5, 10, 20, 20);
+//			Object v2 = graph.addTransition(240, 150);
+//			Object v3 = graph.addTransition(140, 150);
+//			Object t3 = graph.addTransition(60, 200);
+//			Object v4 = graph.addPlace(3, 20, 280, 280);
+//			graph.insertEdge(parent, null, arc1, v1, v2, null);
+//			graph.insertEdge(parent, null, arc2, v3, v1, null);
+//			graph.insertEdge(parent, null, arc3, v2, v4, null);
+//			graph.insertEdge(parent, null, arc4, v4, v3, null);
+//			
+//			graph.insertEdge(parent, null, arc5, v4, t3, null);
+//			graph.insertEdge(parent, null, arc6, t3, v1, null);
+//			
+//		}
+//		finally
+//		{
+//			graph.getModel().endUpdate();
+//		}
+//		
+//		JFrame frame = new JFrame("Petri Netter");
+//		frame.setContentPane(manager);
+//		frame.setJMenuBar(new JMenuBar());
+//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		frame.pack();
+//		frame.setSize(600, 600);
+//		frame.setLocationRelativeTo(null);
+//		//frame.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+//		frame.setVisible(true);
 		
 	}
 

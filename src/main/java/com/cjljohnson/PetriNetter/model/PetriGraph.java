@@ -320,6 +320,13 @@ public class PetriGraph extends mxGraph{
             if (sourceValue instanceof Transition
             		&& targetValue instanceof Place)
             	return null;
+            
+            if (sourceValue instanceof Transition
+            		&& targetValue instanceof Transition)
+            	return "Transitions can only be connected to places.";
+            if (sourceValue instanceof Place
+            		&& targetValue instanceof Place)
+            	return "Places can only be connected to transitions.";
 	    }
 	    return "";
 	}
@@ -816,10 +823,9 @@ public class PetriGraph extends mxGraph{
 	public Object[] getPlaces() {
 		List<mxCell> places = new ArrayList<mxCell>();
 		
-		mxGraphModel model = (mxGraphModel) getModel();
-		Map<String, Object> cells = model.getCells();
-		for (String id : cells.keySet()) {
-			mxCell cell = (mxCell)cells.get(id);
+		Object[] vertices = getChildVertices(getDefaultParent());
+		for (Object vertex : vertices) {
+			mxCell cell = (mxCell)vertex;
 
 			if (cell.getValue() instanceof Place) {
 				Place place = (Place)cell.getValue();

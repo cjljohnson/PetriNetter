@@ -497,6 +497,10 @@ public class ReachabilityGraph extends mxGraph{
 		return null;
 	}
 	
+	public Map<String, Integer> getInitialMarking() {
+		return markingMap.get("M0");
+	}
+	
 	public boolean isReachableMarking(Map<String, Integer> marking) {
 	    return nodeMap.get(marking) != null;
 	}

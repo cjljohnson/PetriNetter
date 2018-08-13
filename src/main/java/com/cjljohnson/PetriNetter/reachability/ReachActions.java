@@ -103,7 +103,6 @@ public class ReachActions {
         	Component component = (Component)e.getSource();
             while (!(component instanceof PetriNetManager) && component != null) {
             	component = component.getParent();
-            	System.out.println("YEE");
             }
             if (component == null) {
             	return;
@@ -112,16 +111,23 @@ public class ReachActions {
             
             // Add reach change to undoable edit
 		    mxGraphModel model = (mxGraphModel)manager.getPetriComponent().getGraph().getModel();
+		    try {
+		    	model.beginUpdate();
+		    	model.execute(new ReachabilityChange(manager, false, null, null));
+		    	manager.revertToFinalised();
+		    } finally {
+		    	model.endUpdate();
+		    }
 		    
-		    ReachabilityChange reachChange = new ReachabilityChange(manager, false, null, null);
-		    reachChange.execute();
-		    
-		    mxUndoableEdit edit = new mxUndoableEdit(this);
-		    edit.add(reachChange);
-		    
-		    manager.getUndoManager().undoableEditHappened(edit);
-		    
-		    manager.revertToFinalised();
+//		    ReachabilityChange reachChange = new ReachabilityChange(manager, false, null, null);
+//		    reachChange.execute();
+//		    
+//		    mxUndoableEdit edit = new mxUndoableEdit(this);
+//		    edit.add(reachChange);
+//		    
+//		    manager.getUndoManager().undoableEditHappened(edit);
+//		    
+//		    manager.revertToFinalised();
 
         }
     }
