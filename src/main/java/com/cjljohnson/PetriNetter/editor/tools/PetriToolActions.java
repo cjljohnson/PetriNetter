@@ -3,10 +3,12 @@ package com.cjljohnson.PetriNetter.editor.tools;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 
 import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 
 import com.cjljohnson.PetriNetter.PetriNetManager;
@@ -118,6 +120,9 @@ public class PetriToolActions {
             setGraphHandlers(graph, false);
             graph.getGraphControl().setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
             graph.getGraphHandler().DEFAULT_CURSOR = new Cursor(Cursor.CROSSHAIR_CURSOR);
+            graph.getGraphControl().setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
+            		new ImageIcon(PetriEditor.class.getResource("/images/place.gif")).getImage(),
+            		new Point(0,0),"custom cursor"));
         }
     }
     
@@ -160,6 +165,9 @@ public class PetriToolActions {
             setGraphHandlers(graph, false);
             graph.getGraphControl().setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
             graph.getGraphHandler().DEFAULT_CURSOR = new Cursor(Cursor.CROSSHAIR_CURSOR);
+            graph.getGraphControl().setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
+            		new ImageIcon(PetriEditor.class.getResource("/images/transition.gif")).getImage(),
+            		new Point(0,0),"custom cursor"));
         }
     }
     
@@ -227,8 +235,9 @@ public class PetriToolActions {
         @Override
         public void setCursor(mxGraphComponent graph) {
             setGraphHandlers(graph, false);
-            graph.getGraphControl().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            graph.getGraphControl().setCursor(new Cursor(Cursor.HAND_CURSOR));
             graph.getGraphHandler().DEFAULT_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR);
+
         }
     }
     
@@ -269,7 +278,7 @@ public class PetriToolActions {
         @Override
         public void setCursor(mxGraphComponent graph) {
             setGraphHandlers(graph, false);
-            graph.getGraphControl().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            graph.getGraphControl().setCursor(new Cursor(Cursor.HAND_CURSOR));
             graph.getGraphHandler().DEFAULT_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR);
         }
     }

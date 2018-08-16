@@ -361,6 +361,7 @@ public class PetriNetManager extends JPanel {
 		//new mxPanningHandler(graphComponent);
 		new PetriKeyboardHandler(graphComponent);
 		
+		//graphComponent.getConnectionHandler().getMarker().setHotspot(0.9);
 		//graphComponent.getConnectionHandler().getMarker().setHotspotEnabled(true);
 		//graphComponent.getConnectionHandler().setConnectIcon(new ImageIcon(
         //        PetriEditor.class.getResource("/images/transition.gif")));
