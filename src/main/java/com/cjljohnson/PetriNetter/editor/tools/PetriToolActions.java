@@ -74,6 +74,7 @@ public class PetriToolActions {
         @Override
         public void setCursor(mxGraphComponent graph) {
             setGraphHandlers(graph, true);
+            graph.getConnectionHandler().getMarker().setHotspotEnabled(true);
             graph.getGraphControl().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
             graph.getGraphHandler().DEFAULT_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR);
         }
@@ -157,6 +158,33 @@ public class PetriToolActions {
         @Override
         public void setCursor(mxGraphComponent graph) {
             setGraphHandlers(graph, false);
+            graph.getGraphControl().setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+            graph.getGraphHandler().DEFAULT_CURSOR = new Cursor(Cursor.CROSSHAIR_CURSOR);
+        }
+    }
+    
+    public static class CreateArcAction extends ToolAction
+    {
+        private static final long serialVersionUID = 3887344511242268848L;
+
+        /**
+         * 
+         * @param name
+         */
+        public CreateArcAction(PetriEditor editor)
+        {
+            super(editor);
+        }
+
+        @Override
+        public void onClick(MouseEvent e, PetriNetManager manager) {
+            
+        }
+
+        @Override
+        public void setCursor(mxGraphComponent graph) {
+            setGraphHandlers(graph, true);
+            graph.getConnectionHandler().getMarker().setHotspotEnabled(false);
             graph.getGraphControl().setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
             graph.getGraphHandler().DEFAULT_CURSOR = new Cursor(Cursor.CROSSHAIR_CURSOR);
         }

@@ -8,6 +8,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import com.cjljohnson.PetriNetter.editor.tools.PetriToolActions;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.handler.mxKeyboardHandler;
 
@@ -35,10 +36,13 @@ public class EditorKeyboardHandler {
 			map.put(KeyStroke.getKeyStroke("control S"), "save");
 			map.put(KeyStroke.getKeyStroke("control shift S"), "saveAs");
 			map.put(KeyStroke.getKeyStroke("control N"), "new");
+			map.put(KeyStroke.getKeyStroke("control T"), "new");
 			map.put(KeyStroke.getKeyStroke("control O"), "open");
+			map.put(KeyStroke.getKeyStroke("control I"), "image");
 
 			map.put(KeyStroke.getKeyStroke("control Z"), "undo");
 			map.put(KeyStroke.getKeyStroke("control Y"), "redo");
+			map.put(KeyStroke.getKeyStroke("control shift Z"), "undo");
 		return map;
 	}
 	
@@ -53,6 +57,7 @@ public class EditorKeyboardHandler {
 		map.put("saveAs", editor.bind("Save As", PetriEditorActions.getSaveAsAction(), (String)null));
 		map.put("new", editor.bind("New", PetriEditorActions.getNewAction(), (String)null));
 		map.put("open", editor.bind("Open", PetriEditorActions.getOpenAction(), (String)null));
+		map.put("image", editor.bind("Open", PetriEditorActions.getExportImageAction(), (String)null));
 		map.put("undo", editor.bind("Undo", PetriEditorActions.getUndoAction(), (String)null));
 		map.put("redo", editor.bind("Redo", PetriEditorActions.getRedoAction(), (String)null));
 

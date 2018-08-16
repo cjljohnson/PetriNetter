@@ -59,6 +59,7 @@ import com.mxgraph.layout.mxEdgeLabelLayout;
 import com.mxgraph.layout.mxFastOrganicLayout;
 import com.mxgraph.layout.mxGraphLayout;
 import com.mxgraph.layout.mxIGraphLayout;
+import com.mxgraph.layout.mxOrganicLayout;
 import com.mxgraph.layout.mxParallelEdgeLayout;
 import com.mxgraph.layout.mxPartitionLayout;
 import com.mxgraph.model.mxCell;
@@ -69,6 +70,7 @@ import com.mxgraph.model.mxGraphModel.mxValueChange;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.mxGraphOutline;
 import com.mxgraph.swing.handler.mxKeyboardHandler;
+import com.mxgraph.swing.handler.mxPanningHandler;
 import com.mxgraph.swing.handler.mxRubberband;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
@@ -356,7 +358,12 @@ public class PetriNetManager extends JPanel {
         });
 
 		new mxRubberband(graphComponent);
-		new mxKeyboardHandler(graphComponent);
+		//new mxPanningHandler(graphComponent);
+		new PetriKeyboardHandler(graphComponent);
+		
+		//graphComponent.getConnectionHandler().getMarker().setHotspotEnabled(true);
+		//graphComponent.getConnectionHandler().setConnectIcon(new ImageIcon(
+        //        PetriEditor.class.getResource("/images/transition.gif")));
 	}
 	
 	private void doToolAction(MouseEvent e) {
@@ -452,11 +459,16 @@ public class PetriNetManager extends JPanel {
 		final ReachabilityGraph reach = new ReachabilityGraph((PetriGraph)petriComponent.getGraph(), iterations);
 		
 		// define layout
+		//mxOrganicLayout layout = new mxOrganicLayout(reach);
 		mxFastOrganicLayout layout = new mxFastOrganicLayout(reach);
 		//mxIGraphLayout layout = new mxEdgeLabelLayout(reach);
         
+		//layout.setForceConstant(50);
+		//layout.setMinDistanceLimit(5);
+		//layout.setMinDistanceLimit(1);
         layout.setDisableEdgeStyle(false);
-        //layout.setForceConstant(reach.getChildVertices(reach.getDefaultParent()).length * 2);
+        layout.setForceConstant(20);
+        //layout.setForceConstant(20 + reach.getChildVertices(reach.getDefaultParent()).length * 2);
         //layout.setMinDistanceLimit(40);
         // layout graph
         layout.execute(reach.getDefaultParent());
@@ -724,62 +736,62 @@ public class PetriNetManager extends JPanel {
 	}
 
 	public static void main(String[] args) {
-//		try {
-//            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-//        } catch (ClassNotFoundException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        } catch (InstantiationException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        } catch (IllegalAccessException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        } catch (UnsupportedLookAndFeelException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//		
-//		PetriNetManager manager = new PetriNetManager();
-//		PetriGraph graph = (PetriGraph)manager.getPetriComponent().getGraph();
-//		Object parent = graph.getDefaultParent();
-//		Arc arc1 = new Arc(3);
-//		Arc arc2 = new Arc(2);
-//		Arc arc3 = new Arc(2);
-//		Arc arc4 = new Arc(4);
-//		Arc arc5 = new Arc(4);
-//		Arc arc6 = new Arc(4);
-//		try
-//		{
-//			graph.getModel().beginUpdate();
-//			Object v1 = graph.addPlace(5, 10, 20, 20);
-//			Object v2 = graph.addTransition(240, 150);
-//			Object v3 = graph.addTransition(140, 150);
-//			Object t3 = graph.addTransition(60, 200);
-//			Object v4 = graph.addPlace(3, 20, 280, 280);
-//			graph.insertEdge(parent, null, arc1, v1, v2, null);
-//			graph.insertEdge(parent, null, arc2, v3, v1, null);
-//			graph.insertEdge(parent, null, arc3, v2, v4, null);
-//			graph.insertEdge(parent, null, arc4, v4, v3, null);
-//			
-//			graph.insertEdge(parent, null, arc5, v4, t3, null);
-//			graph.insertEdge(parent, null, arc6, t3, v1, null);
-//			
-//		}
-//		finally
-//		{
-//			graph.getModel().endUpdate();
-//		}
-//		
-//		JFrame frame = new JFrame("Petri Netter");
-//		frame.setContentPane(manager);
-//		frame.setJMenuBar(new JMenuBar());
-//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		frame.pack();
-//		frame.setSize(600, 600);
-//		frame.setLocationRelativeTo(null);
-//		//frame.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
-//		frame.setVisible(true);
+		try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (UnsupportedLookAndFeelException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+		
+		PetriNetManager manager = new PetriNetManager();
+		PetriGraph graph = (PetriGraph)manager.getPetriComponent().getGraph();
+		Object parent = graph.getDefaultParent();
+		Arc arc1 = new Arc(3);
+		Arc arc2 = new Arc(2);
+		Arc arc3 = new Arc(2);
+		Arc arc4 = new Arc(4);
+		Arc arc5 = new Arc(4);
+		Arc arc6 = new Arc(4);
+		try
+		{
+			graph.getModel().beginUpdate();
+			Object v1 = graph.addPlace(5, 10, 20, 20);
+			Object v2 = graph.addTransition(240, 150);
+			Object v3 = graph.addTransition(140, 150);
+			Object t3 = graph.addTransition(60, 200);
+			Object v4 = graph.addPlace(3, 20, 280, 280);
+			graph.insertEdge(parent, null, arc1, v1, v2, null);
+			graph.insertEdge(parent, null, arc2, v3, v1, null);
+			graph.insertEdge(parent, null, arc3, v2, v4, null);
+			graph.insertEdge(parent, null, arc4, v4, v3, null);
+			
+			graph.insertEdge(parent, null, arc5, v4, t3, null);
+			graph.insertEdge(parent, null, arc6, t3, v1, null);
+			
+		}
+		finally
+		{
+			graph.getModel().endUpdate();
+		}
+		
+		JFrame frame = new JFrame("Petri Netter");
+		frame.setContentPane(manager);
+		frame.setJMenuBar(new JMenuBar());
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.pack();
+		frame.setSize(600, 600);
+		frame.setLocationRelativeTo(null);
+		//frame.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+		frame.setVisible(true);
 		
 	}
 

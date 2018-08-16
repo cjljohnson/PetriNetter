@@ -78,6 +78,10 @@ public class PetriToolBar extends JToolBar {
                 PetriEditor.class.getResource("/images/transition.gif")));
         addTransition.setToolTipText("Add Transition");
         add(addTransition);
+        JToggleButton addArc = new JToggleButton(new ImageIcon(
+                PetriEditor.class.getResource("/images/transition.gif")));
+        addTransition.setToolTipText("Add Arc");
+        add(addArc);
         JToggleButton addToken = new JToggleButton(new ImageIcon(
                 PetriEditor.class.getResource("/images/add.png")));
         addToken.setToolTipText("Add Token to Place");
@@ -91,12 +95,14 @@ public class PetriToolBar extends JToolBar {
         bGroup.add(cursor);
         bGroup.add(addPlace);
         bGroup.add(addTransition);
+        bGroup.add(addArc);
         bGroup.add(addToken);
         bGroup.add(removeToken);
         
         cursor.addActionListener(new PetriToolActions.CursorAction(editor));
         addPlace.addActionListener(new PetriToolActions.CreatePlaceAction(editor));
         addTransition.addActionListener(new PetriToolActions.CreateTransitionAction(editor));
+        addArc.addActionListener(new PetriToolActions.CreateArcAction(editor));
         addToken.addActionListener(new PetriToolActions.AddTokenAction(editor));
         removeToken.addActionListener(new PetriToolActions.RemoveTokenAction(editor));
         

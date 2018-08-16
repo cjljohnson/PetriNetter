@@ -76,12 +76,6 @@ public class PetriEditor extends JPanel{
             	if (closeWindow) {
             		System.exit(0);
             	}
-//                String ObjButtons[] = {"Yes","No"};
-//                int PromptResult = JOptionPane.showOptionDialog(null,"Are you sure you want to exit?","Online Examination System",JOptionPane.DEFAULT_OPTION,JOptionPane.WARNING_MESSAGE,null,ObjButtons,ObjButtons[1]);
-//                if(PromptResult==JOptionPane.YES_OPTION)
-//                {
-//                    System.exit(0);
-//                }
             }
         });
         frame.setLocationRelativeTo(null);

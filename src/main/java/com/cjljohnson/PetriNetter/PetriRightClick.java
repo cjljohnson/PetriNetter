@@ -1,6 +1,8 @@
 package com.cjljohnson.PetriNetter;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
@@ -105,7 +107,7 @@ public class PetriRightClick extends JPopupMenu
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 int newTokens;
                 try {
-                    newTokens = Integer.parseInt(tokensTF.getText());
+                    newTokens = Integer.parseInt(tokensTF.getText().trim());
                     int capacity = place.getCapacity();
                     if (newTokens != place.getTokens() && newTokens >= 0 
                             && (newTokens <= capacity || capacity == -1)) {
@@ -122,6 +124,12 @@ public class PetriRightClick extends JPopupMenu
         tokensPanel.add(tokensL);
         tokensPanel.add(tokensTF);
         add(tokensPanel);
+        
+        tokensTF.addFocusListener(new FocusAdapter() {
+            public void focusLost(FocusEvent e) {
+                tokensTF.postActionEvent();
+            }
+        });
 
         // Capacity
         JPanel capacityPanel = new JPanel();
@@ -136,10 +144,10 @@ public class PetriRightClick extends JPopupMenu
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 int newCapacity;
                 try {
-                    if (capacityTF.getText().equalsIgnoreCase("n")) {
+                    if (capacityTF.getText().trim().equalsIgnoreCase("n")) {
                         newCapacity = -1;
                     } else {
-                        newCapacity = Integer.parseInt(capacityTF.getText());
+                        newCapacity = Integer.parseInt(capacityTF.getText().trim());
                     }
                     if (newCapacity != place.getCapacity() && 
                             (newCapacity > 0 && newCapacity >= place.getTokens()) 
@@ -162,6 +170,12 @@ public class PetriRightClick extends JPopupMenu
         capacityPanel.add(capacityL);
         capacityPanel.add(capacityTF);
         add(capacityPanel);
+        
+        capacityTF.addFocusListener(new FocusAdapter() {
+            public void focusLost(FocusEvent e) {
+                capacityTF.postActionEvent();
+            }
+        });
         
     	}
         
@@ -193,7 +207,7 @@ public class PetriRightClick extends JPopupMenu
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 int newWeight;
                 try {
-                    newWeight = Integer.parseInt(weightTF.getText());
+                    newWeight = Integer.parseInt(weightTF.getText().trim());
                     if (arc.getWeight() != newWeight && newWeight > 0) {
                         PetriGraph graph = (PetriGraph)manager.getPetriComponent().getGraph();
                         graph.setArcWeight(cell, newWeight);
@@ -209,6 +223,12 @@ public class PetriRightClick extends JPopupMenu
         weightPanel.add(weightL);
         weightPanel.add(weightTF);
         add(weightPanel);
+        
+        weightTF.addFocusListener(new FocusAdapter() {
+            public void focusLost(FocusEvent e) {
+                weightTF.postActionEvent();
+            }
+        });
     	}
         
         JMenu positionMenu = new JMenu("Label position");

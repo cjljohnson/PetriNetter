@@ -43,6 +43,9 @@ import com.mxgraph.util.png.mxPngTextDecoder;
 import com.mxgraph.view.mxGraph;
 
 public class PetriEditorActions {
+	
+	private static String OVERWRITE_EXISTING_FILE = "Overwrite existing file?";
+	private static String TRANSPARENT_BACKGROUND = "Set background to transparent?";
 
     private static NewAction newAction = new NewAction();
     private static OpenAction openAction = new OpenAction();
@@ -201,7 +204,7 @@ public class PetriEditorActions {
 
             if (new File(filename).exists()
                     && JOptionPane.showConfirmDialog(null,
-                            mxResources.get("overwriteExistingFile")) != JOptionPane.YES_OPTION)
+                    		OVERWRITE_EXISTING_FILE) != JOptionPane.YES_OPTION)
             {
                 return;
             }
@@ -513,7 +516,7 @@ public class PetriEditorActions {
 
                     if (new File(filename).exists()
                             && JOptionPane.showConfirmDialog(graphComponent,
-                                    mxResources.get("overwriteExistingFile")) != JOptionPane.YES_OPTION)
+                            		OVERWRITE_EXISTING_FILE) != JOptionPane.YES_OPTION)
                     {
                         return;
                     }
@@ -584,12 +587,20 @@ public class PetriEditorActions {
                     else
                     {
                         Color bg = null;
+                        
+                        int option = JOptionPane.NO_OPTION;
+                        
+                        if (ext.equalsIgnoreCase("gif") || ext
+                                .equalsIgnoreCase("png")) {
+                        	option = JOptionPane.showConfirmDialog(graphComponent, 
+                        			TRANSPARENT_BACKGROUND);
+                        	
+                        	if (option == JOptionPane.CANCEL_OPTION) {
+                        		return;
+                        	}
+                        }
 
-                        if ((!ext.equalsIgnoreCase("gif") && !ext
-                                .equalsIgnoreCase("png"))
-                                || JOptionPane.showConfirmDialog(
-                                        graphComponent, mxResources
-                                        .get("transparentBackground")) != JOptionPane.YES_OPTION)
+                        if (option == JOptionPane.NO_OPTION)
                         {
                             bg = graphComponent.getBackground();
                         }
@@ -753,7 +764,7 @@ public class PetriEditorActions {
 
                if (new File(filename).exists()
             		   && JOptionPane.showConfirmDialog(graphComponent,
-            				   mxResources.get("overwriteExistingFile")) != JOptionPane.YES_OPTION)
+            				   OVERWRITE_EXISTING_FILE) != JOptionPane.YES_OPTION)
                {
             	   return;
                }
@@ -789,13 +800,21 @@ public class PetriEditorActions {
                    {
                        Color bg = null;
 
-                       if ((!ext.equalsIgnoreCase("gif") && !ext
-                               .equalsIgnoreCase("png"))
-                               || JOptionPane.showConfirmDialog(
-                                       graphComponent, mxResources
-                                       .get("transparentBackground")) != JOptionPane.YES_OPTION)
+                       int option = JOptionPane.NO_OPTION;
+                       
+                       if (ext.equalsIgnoreCase("gif") || ext
+                               .equalsIgnoreCase("png")) {
+                       	option = JOptionPane.showConfirmDialog(graphComponent, 
+                       			TRANSPARENT_BACKGROUND);
+                       	
+                       	if (option == JOptionPane.CANCEL_OPTION) {
+                       		return;
+                       	}
+                       }
+
+                       if (option == JOptionPane.NO_OPTION)
                        {
-                    	   bg = graphComponent.getBackground();
+                           bg = graphComponent.getBackground();
                        }
 
 
