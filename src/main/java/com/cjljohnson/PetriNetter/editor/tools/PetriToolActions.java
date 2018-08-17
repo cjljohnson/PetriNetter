@@ -121,7 +121,7 @@ public class PetriToolActions {
             graph.getGraphControl().setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
             graph.getGraphHandler().DEFAULT_CURSOR = new Cursor(Cursor.CROSSHAIR_CURSOR);
             graph.getGraphControl().setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
-            		new ImageIcon(PetriEditor.class.getResource("/images/place.gif")).getImage(),
+            		new ImageIcon(PetriEditor.class.getResource("/images/placetool.gif")).getImage(),
             		new Point(0,0),"custom cursor"));
         }
     }
@@ -166,7 +166,7 @@ public class PetriToolActions {
             graph.getGraphControl().setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
             graph.getGraphHandler().DEFAULT_CURSOR = new Cursor(Cursor.CROSSHAIR_CURSOR);
             graph.getGraphControl().setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
-            		new ImageIcon(PetriEditor.class.getResource("/images/transition.gif")).getImage(),
+            		new ImageIcon(PetriEditor.class.getResource("/images/transitiontool.gif")).getImage(),
             		new Point(0,0),"custom cursor"));
         }
     }
@@ -195,6 +195,9 @@ public class PetriToolActions {
             graph.getConnectionHandler().getMarker().setHotspotEnabled(false);
             graph.getGraphControl().setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
             graph.getGraphHandler().DEFAULT_CURSOR = new Cursor(Cursor.CROSSHAIR_CURSOR);
+            graph.getGraphControl().setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
+            		new ImageIcon(PetriEditor.class.getResource("/images/arctool2.gif")).getImage(),
+            		new Point(0,0),"custom cursor"));
         }
     }
     

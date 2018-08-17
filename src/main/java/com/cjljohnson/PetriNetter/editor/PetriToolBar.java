@@ -79,7 +79,7 @@ public class PetriToolBar extends JToolBar {
         addTransition.setToolTipText("Add Transition");
         add(addTransition);
         JToggleButton addArc = new JToggleButton(new ImageIcon(
-                PetriEditor.class.getResource("/images/transition.gif")));
+                PetriEditor.class.getResource("/images/arc.gif")));
         addTransition.setToolTipText("Add Arc");
         add(addArc);
         JToggleButton addToken = new JToggleButton(new ImageIcon(

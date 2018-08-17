@@ -468,8 +468,8 @@ public class PetriNetManager extends JPanel {
 		//layout.setMinDistanceLimit(5);
 		//layout.setMinDistanceLimit(1);
         layout.setDisableEdgeStyle(false);
-        layout.setForceConstant(20);
-        //layout.setForceConstant(20 + reach.getChildVertices(reach.getDefaultParent()).length * 2);
+        //layout.setForceConstant(20);
+        layout.setForceConstant(20 + reach.getChildVertices(reach.getDefaultParent()).length * 2);
         //layout.setMinDistanceLimit(40);
         // layout graph
         layout.execute(reach.getDefaultParent());
