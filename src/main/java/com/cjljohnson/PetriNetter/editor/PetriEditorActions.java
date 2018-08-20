@@ -1,12 +1,14 @@
 package com.cjljohnson.PetriNetter.editor;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashSet;
@@ -15,8 +17,11 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
+import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileFilter;
 
 import org.w3c.dom.Document;
@@ -24,6 +29,7 @@ import org.w3c.dom.Document;
 import com.cjljohnson.PetriNetter.DefaultFileFilter;
 import com.cjljohnson.PetriNetter.PetriNetManager;
 import com.cjljohnson.PetriNetter.model.PetriGraph;
+import com.cjljohnson.PetriNetter.reachability.ReachabilityChange;
 import com.mxgraph.canvas.mxICanvas;
 import com.mxgraph.canvas.mxSvgCanvas;
 import com.mxgraph.io.mxCodec;
@@ -859,7 +865,22 @@ public class PetriEditorActions {
                 PetriNetManager manager = editor.getActiveGraphManager();
                 if (manager != null)
                 {
-                    manager.createReachabilityGraph();
+                	if (manager.reachValid())
+                	{
+                		// Close reachability graph
+            		    mxGraphModel model = (mxGraphModel)manager.getPetriComponent().getGraph().getModel();
+            		    try {
+            		    	model.beginUpdate();
+            		    	model.execute(new ReachabilityChange(manager, false, null, null));
+            		    	manager.revertToFinalised();
+            		    } finally {
+            		    	model.endUpdate();
+            		    }
+                	}
+                	else 
+                	{
+                		manager.createReachabilityGraph();
+                	}
                 } else 
                 {
                     JOptionPane.showMessageDialog(editor, "A Petri Net must be selected to "
@@ -1081,6 +1102,35 @@ public class PetriEditorActions {
                    }
                }
            }
+       }
+   }
+   
+   @SuppressWarnings("serial")
+   public static class OpenTutotorialAction extends AbstractAction
+   {
+       /**
+        * 
+        */
+       public void actionPerformed(ActionEvent e)
+       {
+    	   JEditorPane editorpane= new JEditorPane();
+           JScrollPane editorScrollPane = new JScrollPane(editorpane);
+           editorScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+           File file = new File(getClass().getClassLoader().getResource("tutorial/bsl-XHTML.html").getFile());
+           try {
+			editorpane.setPage(file.toURI().toURL());
+		} catch (MalformedURLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+           editorpane.setEditable(true);
+           JFrame frame = new JFrame("Tutorial");
+           frame.add(editorScrollPane);
+           frame.pack();
+           frame.setVisible(true);
        }
    }
 

@@ -75,6 +75,7 @@ import com.mxgraph.swing.handler.mxRubberband;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
+import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxUndoManager;
 import com.mxgraph.util.mxUndoableEdit;
 import com.mxgraph.util.mxUndoableEdit.mxUndoableChange;
@@ -382,7 +383,9 @@ public class PetriNetManager extends JPanel {
 	{
 		Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(),
 				petriComponent);
-		PetriRightClick menu = new PetriRightClick(this, pt.x, pt.y);
+		
+		mxPoint graphPoint = petriComponent.getPointForEvent(e);
+		PetriRightClick menu = new PetriRightClick(this, (int)graphPoint.getX(), (int)graphPoint.getY());
 		menu.show(petriComponent, pt.x, pt.y);
 
 		e.consume();
@@ -481,7 +484,8 @@ public class PetriNetManager extends JPanel {
 
             public void mouseReleased(MouseEvent e)
             {
-                Object obj = reachComponent.getCellAt(e.getX(), e.getY());
+            	mxPoint graphPoint = reachComponent.getPointForEvent(e);
+                Object obj = reachComponent.getCellAt((int)graphPoint.getX(), (int)graphPoint.getY());
 
                 if (reachValid && obj != null && obj instanceof mxCell && e.getClickCount() == 2)
                 {
@@ -526,7 +530,8 @@ public class PetriNetManager extends JPanel {
                  // Reach Right Click
                     Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(),
                             reachComponent);
-                    ReachRightClick menu = new ReachRightClick(PetriNetManager.this, reachComponent, pt.x, pt.y);
+                    mxPoint graphPoint = reachComponent.getPointForEvent(e);
+                    ReachRightClick menu = new ReachRightClick(PetriNetManager.this, reachComponent, (int)graphPoint.getX(), (int)graphPoint.getY());
                     menu.show(reachComponent, pt.x, pt.y);
 
                     e.consume();

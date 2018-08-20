@@ -75,25 +75,23 @@ public class ReachabilityGraph extends mxGraph{
 		
 		
 		calcReachability();
-		
-		//showLive();
-		//showBounded();
+
 	}
 	
 	public void showLive() {
 		String message = "The following transitions are live:\n";
 		
 		for (Object vertex : liveSet) {
-			message += " t" + graph.getCellMarkingName(vertex);
+			message += " t" + graph2.getCellMarkingName(vertex);
 			
 		}
 		message += "\nThe following transitions are dead:\n";
 		
-		for (Object vertex : graph.getChildVertices(graph.getDefaultParent())) {
+		for (Object vertex : graph2.getChildVertices(graph2.getDefaultParent())) {
 			if (vertex instanceof mxCell) {
 				Object value = ((mxCell) vertex).getValue();
 				if (value instanceof Transition && !liveSet.contains(vertex)) {
-					message += " t" + graph.getCellMarkingName(vertex);
+					message += " t" + graph2.getCellMarkingName(vertex);
 				}
 			}
 		}
@@ -108,7 +106,7 @@ public class ReachabilityGraph extends mxGraph{
 	}
 	
 	public void showBounded() {
-		String message = "Boundedness for all places:\n";
+		String message = "Place boundedness for all places:\n";
 		for (Map<String, Integer> map : nodeMap.keySet()) {
 			for (String id : map.keySet()) {
 				int val = map.get(id);
@@ -401,7 +399,6 @@ public class ReachabilityGraph extends mxGraph{
 				StringBuilder sb = new StringBuilder();
 				sb.append("<html>");
 				sb.append("<p style=\"font-weight: bold; font-size: 12px\">" + marking + "</p>");
-				//sb.append("<div style=\"background-color: red\">");
 				
 				Object[] ids = map.keySet().toArray();
 				int[] intIDs = new int[ids.length];

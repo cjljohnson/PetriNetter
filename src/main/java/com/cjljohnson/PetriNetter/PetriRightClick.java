@@ -1,10 +1,13 @@
 package com.cjljohnson.PetriNetter;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
 import javax.swing.AbstractAction;
+import javax.swing.BoxLayout;
+import javax.swing.CellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -29,232 +32,276 @@ import com.cjljohnson.PetriNetter.reachability.ReachActions;
 public class PetriRightClick extends JPopupMenu
 {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 4149390414490130748L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4149390414490130748L;
 
-    public PetriRightClick(final PetriNetManager manager, int x, int y)
-    {
-        //		boolean selected = !hello.getGraphComponent().getGraph()
-        //				.isSelectionEmpty();
+	public PetriRightClick(final PetriNetManager manager, int x, int y)
+	{
+		//		boolean selected = !hello.getGraphComponent().getGraph()
+		//				.isSelectionEmpty();
 
-        final Object cell = manager.getPetriComponent().getCellAt(x, y);
+		final Object cell = manager.getPetriComponent().getCellAt(x, y);
 
-        if (cell != null) {
-            Object value = ((mxCell)cell).getValue();
-            if (value instanceof Place) {
-                placeMenu(manager, cell, (Place)value);
-            } else if (value instanceof Arc) {
-                arcMenu(manager, cell, (Arc)value);
-            } else if (value instanceof Transition) {
-                transitionMenu(manager, cell, (Transition)value);
-            }
-        }
+		if (cell != null) {
+			Object value = ((mxCell)cell).getValue();
+			if (value instanceof Place) {
+				placeMenu(manager, cell, (Place)value);
+			} else if (value instanceof Arc) {
+				arcMenu(manager, cell, (Arc)value);
+			} else if (value instanceof Transition) {
+				transitionMenu(manager, cell, (Transition)value);
+			}
+		}
 
-        if (!manager.reachValid()) {
-        	add(manager.bind("Place", PetriGraphActions.getCreatePlaceAction(x, y),
-                "/images/place.gif"));
+		if (!manager.reachValid()) {
+			add(manager.bind("Add Place", PetriGraphActions.getCreatePlaceAction(x, y),
+					"/images/place.gif"));
 
-        	add(manager.bind("Transition", PetriGraphActions.getCreateTransitionAction(x, y),
-                "/images/transition.gif"));
+			add(manager.bind("Add Transition", PetriGraphActions.getCreateTransitionAction(x, y),
+					"/images/transition.gif"));
 
-        	addSeparator();
+			addSeparator();
 
-        	add(manager.bind("Reach", PetriGraphActions.getCreateReachabilityAction(),
-                "/images/reach.gif"));
-        }
+			add(manager.bind("Reachability Graph", PetriGraphActions.getCreateReachabilityAction(),
+					"/images/reach.gif"));
+		}
 
-        //	    add(manager.bind2("Reach", PetriGraphActions.getCreateReachabilityAction(),
-        //	            "/petri/images/reach.gif"));
-//
-//        addSeparator();
-//
-//        //		add(hello.bind("undo", new HistoryAction(true),
-//        //				"/com/mxgraph/examples/swing/images/undo.gif"));
-//
-//        add(manager.bind("Delete", mxGraphActions.getDeleteAction(),
-//                "/images/cross.png"))
-//        .setEnabled(true);
+		//	    add(manager.bind2("Reach", PetriGraphActions.getCreateReachabilityAction(),
+		//	            "/petri/images/reach.gif"));
+		//
+		//        addSeparator();
+		//
+		//        //		add(hello.bind("undo", new HistoryAction(true),
+		//        //				"/com/mxgraph/examples/swing/images/undo.gif"));
+		//
+		//        add(manager.bind("Delete", mxGraphActions.getDeleteAction(),
+		//                "/images/cross.png"))
+		//        .setEnabled(true);
 
 
-        //		add(manager.bind("New", new PetriGraphActions.NewAction(), 
-        //				"/com/mxgraph/examples/swing/images/new.gif"));
-        //		
-        //		add(manager.bind("Save As", new PetriGraphActions.SaveAction(true), 
-        //				"/com/mxgraph/examples/swing/images/save.gif"));
-        //		
-        //		add(manager.bind("Open", new PetriGraphActions.OpenAction(),
-        //				"/com/mxgraph/examples/swing/images/open.gif"));
+		//		add(manager.bind("New", new PetriGraphActions.NewAction(), 
+		//				"/com/mxgraph/examples/swing/images/new.gif"));
+		//		
+		//		add(manager.bind("Save As", new PetriGraphActions.SaveAction(true), 
+		//				"/com/mxgraph/examples/swing/images/save.gif"));
+		//		
+		//		add(manager.bind("Open", new PetriGraphActions.OpenAction(),
+		//				"/com/mxgraph/examples/swing/images/open.gif"));
 
-        //		add(hello.bind("Load", new PetriGraphActions.LoadAction(true), "/com/mxgraph/examples/swing/images/load.gif"));
-        
-        if (manager.reachValid()) {
-        	add(manager.bind("Close Reachability Graph", ReachActions.getCloseReachabilityAction(),
-                    "/images/cancel.png"));
-        }
-    }
+		//		add(hello.bind("Load", new PetriGraphActions.LoadAction(true), "/com/mxgraph/examples/swing/images/load.gif"));
 
-    private void placeMenu(final PetriNetManager manager, final Object cell, final Place place) {
+		if (manager.reachValid()) {
+			add(manager.bind("Close Reachability Graph", ReachActions.getCloseReachabilityAction(),
+					"/images/cancel.png"));
+		}
+	}
 
-    	if (!manager.reachValid()) {
-        // Tokens
-        JPanel tokensPanel = new JPanel();
-        JLabel tokensL = new JLabel("Tokens:  ");
-        final JTextField tokensTF = new JTextField(5);
-        tokensTF.setText(Integer.toString(place.getTokens()));
-        tokensTF.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                int newTokens;
-                try {
-                    newTokens = Integer.parseInt(tokensTF.getText().trim());
-                    int capacity = place.getCapacity();
-                    if (newTokens != place.getTokens() && newTokens >= 0 
-                            && (newTokens <= capacity || capacity == -1)) {
-                        PetriGraph graph = (PetriGraph)manager.getPetriComponent().getGraph();
-                        graph.setTokens(cell, newTokens);
-                    }
-                } catch (Exception exc) {
-                }
-                tokensTF.setText(Integer.toString(((Place)((mxCell)cell).getValue()).getTokens()));
-                return;
+	private void placeMenu(final PetriNetManager manager, final Object cell, final Place place) {
 
-            }
-        });
-        tokensPanel.add(tokensL);
-        tokensPanel.add(tokensTF);
-        add(tokensPanel);
-        
-        tokensTF.addFocusListener(new FocusAdapter() {
-            public void focusLost(FocusEvent e) {
-                tokensTF.postActionEvent();
-            }
-        });
+		if (!manager.reachValid()) {
+			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+			setAlignmentX(Component.LEFT_ALIGNMENT);
+			// Name
+			JPanel namePanel = new JPanel();
+			//namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.X_AXIS));
+			//namePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+			JLabel nameL = new JLabel(" Name:    ");
+			final JTextField nameTF = new JTextField(7);
+			nameTF.setText(place.getName());
+			nameTF.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					
+					String newName = nameTF.getText().trim();
+					if (newName.isEmpty()) {
+						newName = null;
+					}
+					if (newName != place.getName()) {
+						PetriGraph graph = (PetriGraph)manager.getPetriComponent().getGraph();
+						graph.setPlaceName(cell, newName);
+						graph.refresh();
+					}
+					return;
 
-        // Capacity
-        JPanel capacityPanel = new JPanel();
-        JLabel capacityL = new JLabel("Capacity:");
-        final JTextField capacityTF = new JTextField(5);
-        if (place.getCapacity() == -1) {
-            capacityTF.setText("n");
-        } else {
-            capacityTF.setText(Integer.toString(place.getCapacity()));
-        }
-        capacityTF.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                int newCapacity;
-                try {
-                    if (capacityTF.getText().trim().equalsIgnoreCase("n")) {
-                        newCapacity = -1;
-                    } else {
-                        newCapacity = Integer.parseInt(capacityTF.getText().trim());
-                    }
-                    if (newCapacity != place.getCapacity() && 
-                            (newCapacity > 0 && newCapacity >= place.getTokens()) 
-                            || newCapacity == -1) {
-                        PetriGraph graph = (PetriGraph)manager.getPetriComponent().getGraph();
-                        graph.setCapacity(cell, newCapacity);
-                    }
-                } catch (Exception exc) {
+				}
+			});
+			namePanel.add(nameL);
+			namePanel.add(nameTF);
+			add(namePanel);
 
-                }
-                if (((Place)((mxCell)cell).getValue()).getCapacity() == -1) {
-                    capacityTF.setText("n");
-                } else {
-                    capacityTF.setText(Integer.toString(((Place)((mxCell)cell).getValue()).getCapacity()));
-                }
-                return;
+			nameTF.addFocusListener(new FocusAdapter() {
+				public void focusLost(FocusEvent e) {
+					nameTF.postActionEvent();
+				}
+			});
+			
+			
+			// Tokens
+			JPanel tokensPanel = new JPanel();
+			//tokensPanel.setLayout(new BoxLayout(tokensPanel, BoxLayout.X_AXIS));
+			//tokensPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+			JLabel tokensL = new JLabel("Tokens:  ");
+			final JTextField tokensTF = new JTextField(7);
+			tokensTF.setText(Integer.toString(place.getTokens()));
+			tokensTF.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					int newTokens;
+					try {
+						newTokens = Integer.parseInt(tokensTF.getText().trim());
+						int capacity = place.getCapacity();
+						if (newTokens != place.getTokens() && newTokens >= 0 
+								&& (newTokens <= capacity || capacity == -1)) {
+							PetriGraph graph = (PetriGraph)manager.getPetriComponent().getGraph();
+							graph.setTokens(cell, newTokens);
+							graph.refresh();
+						}
+					} catch (Exception exc) {
+					}
+					tokensTF.setText(Integer.toString(((Place)((mxCell)cell).getValue()).getTokens()));
+					return;
 
-            }
-        });
-        capacityPanel.add(capacityL);
-        capacityPanel.add(capacityTF);
-        add(capacityPanel);
-        
-        capacityTF.addFocusListener(new FocusAdapter() {
-            public void focusLost(FocusEvent e) {
-                capacityTF.postActionEvent();
-            }
-        });
-        
-    	}
-        
-        JMenu positionMenu = new JMenu("Label position");
-        positionMenu.add(manager.bind("Top", new PetriGraphActions.PositionPlaceLabelAction("Top", cell, 0, -0.7)));
-        positionMenu.add(manager.bind("Top Left", new PetriGraphActions.PositionPlaceLabelAction("Top Left", cell, -1, -0.5)));
-        positionMenu.add(manager.bind("Top Right", new PetriGraphActions.PositionPlaceLabelAction("Top Right", cell, 1, -0.5)));
-        positionMenu.add(manager.bind("Left", new PetriGraphActions.PositionPlaceLabelAction("Left", cell, -1, 0.3)));
-        positionMenu.add(manager.bind("Right", new PetriGraphActions.PositionPlaceLabelAction("Right", cell, 1, 0.3)));
-        positionMenu.add(manager.bind("Bottom", new PetriGraphActions.PositionPlaceLabelAction("Bottom", cell, 0, 1.2)));
-        positionMenu.add(manager.bind("Bottom Left", new PetriGraphActions.PositionPlaceLabelAction("Bottom Left", cell, -1, 1)));
-        positionMenu.add(manager.bind("Bottom Right", new PetriGraphActions.PositionPlaceLabelAction("Bottom Right", cell, 1, 1)));
+				}
+			});
+			tokensPanel.add(tokensL);
+			tokensPanel.add(tokensTF);
+			add(tokensPanel);
 
-        add(positionMenu);
+			tokensTF.addFocusListener(new FocusAdapter() {
+				public void focusLost(FocusEvent e) {
+					tokensTF.postActionEvent();
+				}
+			});
 
-        addSeparator();
-    }
+			// Capacity
+			JPanel capacityPanel = new JPanel();
+			//capacityPanel.setLayout(new BoxLayout(capacityPanel, BoxLayout.X_AXIS));
+			//capacityPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+			JLabel capacityL = new JLabel("Capacity:");
+			final JTextField capacityTF = new JTextField(7);
+			if (place.getCapacity() == -1) {
+				capacityTF.setText("n");
+			} else {
+				capacityTF.setText(Integer.toString(place.getCapacity()));
+			}
+			capacityTF.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					int newCapacity;
+					try {
+						if (capacityTF.getText().trim().equalsIgnoreCase("n")) {
+							newCapacity = -1;
+						} else {
+							newCapacity = Integer.parseInt(capacityTF.getText().trim());
+						}
+						if (newCapacity != place.getCapacity() && 
+								(newCapacity > 0 && newCapacity >= place.getTokens()) 
+								|| newCapacity == -1) {
+							PetriGraph graph = (PetriGraph)manager.getPetriComponent().getGraph();
+							graph.setCapacity(cell, newCapacity);
+							graph.refresh();
+						}
+					} catch (Exception exc) {
 
-    private void arcMenu(final PetriNetManager manager, final Object cell, final Arc arc) {
-    	
-    	// Weight
-    	if (!manager.reachValid()) {
-        
-        JPanel weightPanel = new JPanel();
-        JLabel weightL = new JLabel("Weight:");
-        final JTextField weightTF = new JTextField(5);
-        weightTF.setText(Integer.toString(arc.getWeight()));
-        weightTF.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                int newWeight;
-                try {
-                    newWeight = Integer.parseInt(weightTF.getText().trim());
-                    if (arc.getWeight() != newWeight && newWeight > 0) {
-                        PetriGraph graph = (PetriGraph)manager.getPetriComponent().getGraph();
-                        graph.setArcWeight(cell, newWeight);
-                    }
-                } catch (Exception exc) {
+					}
+					if (((Place)((mxCell)cell).getValue()).getCapacity() == -1) {
+						capacityTF.setText("n");
+					} else {
+						capacityTF.setText(Integer.toString(((Place)((mxCell)cell).getValue()).getCapacity()));
+					}
+					return;
 
-                }
-                weightTF.setText(Integer.toString(((Arc)((mxCell)cell).getValue()).getWeight()));
-                return;
+				}
+			});
+			capacityPanel.add(capacityL);
+			capacityPanel.add(capacityTF);
+			add(capacityPanel);
 
-            }
-        });
-        weightPanel.add(weightL);
-        weightPanel.add(weightTF);
-        add(weightPanel);
-        
-        weightTF.addFocusListener(new FocusAdapter() {
-            public void focusLost(FocusEvent e) {
-                weightTF.postActionEvent();
-            }
-        });
-    	}
-        
-        JMenu positionMenu = new JMenu("Label position");
-        positionMenu.add(manager.bind("Top", new PetriGraphActions.PositionLabelAction("Top", cell, "BC")));
-        positionMenu.add(manager.bind("Top Left", new PetriGraphActions.PositionLabelAction("Top Left", cell, "BR")));
-        positionMenu.add(manager.bind("Top Right", new PetriGraphActions.PositionLabelAction("Top Right", cell, "BL")));
-        positionMenu.add(manager.bind("Left", new PetriGraphActions.PositionLabelAction("Left", cell, "MR")));
-        positionMenu.add(manager.bind("Right", new PetriGraphActions.PositionLabelAction("Right", cell, "ML")));
-        positionMenu.add(manager.bind("Bottom", new PetriGraphActions.PositionLabelAction("Bottom", cell, "TC")));
-        positionMenu.add(manager.bind("Bottom Left", new PetriGraphActions.PositionLabelAction("Bottom Left", cell, "TR")));
-        positionMenu.add(manager.bind("Bottom Right", new PetriGraphActions.PositionLabelAction("Bottom Right", cell, "TL")));
+			capacityTF.addFocusListener(new FocusAdapter() {
+				public void focusLost(FocusEvent e) {
+					capacityTF.postActionEvent();
+				}
+			});
+			
+			addSeparator();
+		}
 
-        add(positionMenu);
-        
-        addSeparator();
-    }
+		JMenu positionMenu = new JMenu("Label position");
+		positionMenu.add(manager.bind("Top", new PetriGraphActions.PositionPlaceLabelAction("Top", cell, 0, -0.7)));
+		positionMenu.add(manager.bind("Top Left", new PetriGraphActions.PositionPlaceLabelAction("Top Left", cell, -1, -0.5)));
+		positionMenu.add(manager.bind("Top Right", new PetriGraphActions.PositionPlaceLabelAction("Top Right", cell, 1, -0.5)));
+		positionMenu.add(manager.bind("Left", new PetriGraphActions.PositionPlaceLabelAction("Left", cell, -1, 0.3)));
+		positionMenu.add(manager.bind("Right", new PetriGraphActions.PositionPlaceLabelAction("Right", cell, 1, 0.3)));
+		positionMenu.add(manager.bind("Bottom", new PetriGraphActions.PositionPlaceLabelAction("Bottom", cell, 0, 1.2)));
+		positionMenu.add(manager.bind("Bottom Left", new PetriGraphActions.PositionPlaceLabelAction("Bottom Left", cell, -1, 1)));
+		positionMenu.add(manager.bind("Bottom Right", new PetriGraphActions.PositionPlaceLabelAction("Bottom Right", cell, 1, 1)));
 
-    private void transitionMenu(PetriNetManager manager, Object cell, Transition transition) {
+		add(positionMenu);
 
-        boolean isFirable = ((PetriGraph)manager.getPetriComponent().getGraph()).isFirable(cell);
+		addSeparator();
+	}
 
-        add(manager.bind("Fire Transition", new PetriGraphActions.FireTransitionAction(cell),
-                        "/images/lightning_go.png"))
-        .setEnabled(isFirable);
+	private void arcMenu(final PetriNetManager manager, final Object cell, final Arc arc) {
 
-        addSeparator();
-    }
+		// Weight
+		if (!manager.reachValid()) {
+
+			JPanel weightPanel = new JPanel();
+			JLabel weightL = new JLabel("Weight:");
+			final JTextField weightTF = new JTextField(7);
+			weightTF.setText(Integer.toString(arc.getWeight()));
+			weightTF.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					int newWeight;
+					try {
+						newWeight = Integer.parseInt(weightTF.getText().trim());
+						if (arc.getWeight() != newWeight && newWeight > 0) {
+							PetriGraph graph = (PetriGraph)manager.getPetriComponent().getGraph();
+							graph.setArcWeight(cell, newWeight);
+						}
+					} catch (Exception exc) {
+
+					}
+					weightTF.setText(Integer.toString(((Arc)((mxCell)cell).getValue()).getWeight()));
+					return;
+
+				}
+			});
+			weightPanel.add(weightL);
+			weightPanel.add(weightTF);
+			add(weightPanel);
+
+			weightTF.addFocusListener(new FocusAdapter() {
+				public void focusLost(FocusEvent e) {
+					weightTF.postActionEvent();
+				}
+			});
+			addSeparator();
+		}
+
+		JMenu positionMenu = new JMenu("Label position");
+		positionMenu.add(manager.bind("Top", new PetriGraphActions.PositionLabelAction("Top", cell, "BC")));
+		positionMenu.add(manager.bind("Top Left", new PetriGraphActions.PositionLabelAction("Top Left", cell, "BR")));
+		positionMenu.add(manager.bind("Top Right", new PetriGraphActions.PositionLabelAction("Top Right", cell, "BL")));
+		positionMenu.add(manager.bind("Left", new PetriGraphActions.PositionLabelAction("Left", cell, "MR")));
+		positionMenu.add(manager.bind("Right", new PetriGraphActions.PositionLabelAction("Right", cell, "ML")));
+		positionMenu.add(manager.bind("Bottom", new PetriGraphActions.PositionLabelAction("Bottom", cell, "TC")));
+		positionMenu.add(manager.bind("Bottom Left", new PetriGraphActions.PositionLabelAction("Bottom Left", cell, "TR")));
+		positionMenu.add(manager.bind("Bottom Right", new PetriGraphActions.PositionLabelAction("Bottom Right", cell, "TL")));
+
+		add(positionMenu);
+
+		addSeparator();
+	}
+
+	private void transitionMenu(PetriNetManager manager, Object cell, Transition transition) {
+
+		boolean isFirable = ((PetriGraph)manager.getPetriComponent().getGraph()).isFirable(cell);
+
+		add(manager.bind("Fire Transition", new PetriGraphActions.FireTransitionAction(cell),
+				"/images/lightning_go.png"))
+		.setEnabled(isFirable);
+
+		addSeparator();
+	}
 
 }

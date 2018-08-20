@@ -2,6 +2,7 @@ package com.cjljohnson.PetriNetter.editor;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
@@ -22,45 +23,49 @@ public class PetriMenuBar extends JMenuBar{
         
         // File menu
         menu = add(new JMenu("File"));
+        menu.setMnemonic(KeyEvent.VK_F);
         
-        menu.add(editor.bind("New", PetriEditorActions.getNewAction(), UIManager.getIcon("FileView.fileIcon")));
-        menu.add(editor.bind("Open", PetriEditorActions.getOpenAction(), UIManager.getIcon("FileChooser.newFolderIcon")));
+        menu.add(editor.bind("New", PetriEditorActions.getNewAction(), UIManager.getIcon("FileView.fileIcon"))).setMnemonic(KeyEvent.VK_N);
+        menu.add(editor.bind("Open", PetriEditorActions.getOpenAction(), UIManager.getIcon("FileChooser.newFolderIcon"))).setMnemonic(KeyEvent.VK_O);
         menu.add(editor.bind("Save", PetriEditorActions.getSaveAction(), 
                 new ImageIcon(
-                        PetriEditor.class.getResource("/images/disk.png"))));
+                        PetriEditor.class.getResource("/images/disk.png")))).setMnemonic(KeyEvent.VK_S);
         menu.add(editor.bind("Save As...", PetriEditorActions.getSaveAsAction(), 
                 new ImageIcon(
-                        PetriEditor.class.getResource("/images/disk_multiple.png"))));
+                        PetriEditor.class.getResource("/images/disk_multiple.png")))).setMnemonic(KeyEvent.VK_A);
         menu.add(editor.bind("Export Image", PetriEditorActions.getExportImageAction(),
                 new ImageIcon(
-                        PetriEditor.class.getResource("/images/disk_multiple.png"))));
+                		PetriEditor.class.getResource("/images/image.png")))).setMnemonic(KeyEvent.VK_I);
         UIManager.getIcon("FileView.fileIcon");
         
         // Edit menu
         menu = add(new JMenu("Edit"));
+        menu.setMnemonic(KeyEvent.VK_E);
         menu.add(editor.bind("Undo", PetriEditorActions.getUndoAction(),
                 new ImageIcon(
-                        PetriEditor.class.getResource("/images/arrow_undo.png"))));
+                        PetriEditor.class.getResource("/images/arrow_undo.png")))).setMnemonic(KeyEvent.VK_U);
         menu.add(editor.bind("Redo", PetriEditorActions.getRedoAction(),
                 new ImageIcon(
-                        PetriEditor.class.getResource("/images/arrow_redo.png"))));
+                        PetriEditor.class.getResource("/images/arrow_redo.png")))).setMnemonic(KeyEvent.VK_R);
         
         // View menu
         menu = add(new JMenu("View"));
+        menu.setMnemonic(KeyEvent.VK_V);
         
         menu.add(editor.bind("Reset Zoom", PetriEditorActions.getZoomResetAction(),
                 new ImageIcon(
-                        PetriEditor.class.getResource("/images/magnifier.png"))));
+                        PetriEditor.class.getResource("/images/magnifier.png")))).setMnemonic(KeyEvent.VK_R);
         menu.add(editor.bind("Zoom In", PetriEditorActions.getZoomInAction(),
                 new ImageIcon(
-                        PetriEditor.class.getResource("/images/magnifier_zoom_in.png"))));
+                        PetriEditor.class.getResource("/images/magnifier_zoom_in.png")))).setMnemonic(KeyEvent.VK_I);
         menu.add(editor.bind("Zoom Out", PetriEditorActions.getZoomOutAction(),
                 new ImageIcon(
-                        PetriEditor.class.getResource("/images/magnifier_zoom_out.png"))));
+                        PetriEditor.class.getResource("/images/magnifier_zoom_out.png")))).setMnemonic(KeyEvent.VK_O);
         
         menu.addSeparator();
         
         JCheckBoxMenuItem showHighlight = new JCheckBoxMenuItem("Highlight Active Transitions");
+        showHighlight.setMnemonic(KeyEvent.VK_H);
         // Define ActionListener
         final HighlightTransitionsAction highlightAction = new HighlightTransitionsAction(editor);
         ActionListener highlightListener = new ActionListener() {
@@ -77,14 +82,21 @@ public class PetriMenuBar extends JMenuBar{
         
         // Analysis menu
         menu = add(new JMenu("Analysis"));
-        menu.add(editor.bind("Create Reachability Graph", new PetriEditorActions.CreateReachabilityAction(), "/images/reach.gif"));
-        menu.add(editor.bind("Boundedness", new PetriEditorActions.ShowBoundedness(), ""));
-        menu.add(editor.bind("Liveness", new PetriEditorActions.ShowLiveness(), ""));
+        menu.setMnemonic(KeyEvent.VK_A);
+        menu.add(editor.bind("Create Reachability Graph", new PetriEditorActions.CreateReachabilityAction(), "/images/reach.gif")).setMnemonic(KeyEvent.VK_R);
+        menu.add(editor.bind("Place Boundedness", new PetriEditorActions.ShowBoundedness(), "")).setMnemonic(KeyEvent.VK_B);
+//        menu.add(editor.bind("Liveness", new PetriEditorActions.ShowLiveness(), "")).setMnemonic(KeyEvent.VK_L);
         
         // Examples menu
         menu = add(new JMenu("Examples"));
-        menu.add(editor.bind("Lock Example", new ExampleActions.LockExampleAction(), ""));
-        menu.add(editor.bind("Buffer Example", new ExampleActions.BufferExampleAction(), ""));
+        menu.setMnemonic(KeyEvent.VK_X);
+        menu.add(editor.bind("Lock Example", new ExampleActions.LockExampleAction(), "")).setMnemonic(KeyEvent.VK_L);
+        menu.add(editor.bind("Buffer Example", new ExampleActions.BufferExampleAction(), "")).setMnemonic(KeyEvent.VK_B);
+        
+        // Help menu
+        menu = add(new JMenu("Help"));
+        menu.setMnemonic(KeyEvent.VK_H);
+        menu.add(editor.bind("Tutorial", new PetriEditorActions.OpenTutotorialAction(), "")).setMnemonic(KeyEvent.VK_T);
     }
 
 }

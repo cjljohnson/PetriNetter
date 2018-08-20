@@ -31,6 +31,14 @@ public class ExampleActions {
             	Object p3= graph.addPlace(0, -1, 210, 380);
             	Object p4= graph.addPlace(1, -1, 150, 290);
             	
+            	graph.setPlaceName(p1, "Idle");
+            	graph.setPlaceName(p2, "Read");
+            	graph.setPlaceName(p3, "Write");
+            	graph.setPlaceName(p4, "Lock");
+            	
+            	graph.setPlaceLabelPosition(p1, -1, 0.3);
+            	graph.setPlaceLabelPosition(p2, 0, -0.7);
+            	
             	Object t1= graph.addTransition(250, 170);
             	Object t2= graph.addTransition(60, 50);
             	Object t3= graph.addTransition(250, 260);
@@ -79,6 +87,12 @@ public class ExampleActions {
             	Object p4= graph.addPlace(1, -1, 460, 50);
             	Object p5= graph.addPlace(0, -1, 460, 210);
             	
+            	graph.setPlaceName(p1, "Idle");
+            	graph.setPlaceName(p2, "Producing");
+            	graph.setPlaceName(p3, "Buffer");
+            	graph.setPlaceName(p4, "Idle");
+            	graph.setPlaceName(p5, "Consuming");
+            	
             	Object t1= graph.addTransition(20, 130);
             	Object t2= graph.addTransition(180, 130);
             	Object t3= graph.addTransition(380, 130);
@@ -89,7 +103,7 @@ public class ExampleActions {
             	graph.insertEdge(graph.getDefaultParent(), null, new Arc(), p2, t2, "ARC");
             	graph.insertEdge(graph.getDefaultParent(), null, new Arc(), t2, p1, "ARC");
             	graph.insertEdge(graph.getDefaultParent(), null, new Arc(), t2, p3, "ARC");
-            	graph.insertEdge(graph.getDefaultParent(), null, new Arc(3), p3, t3, "ARC");
+            	graph.insertEdge(graph.getDefaultParent(), null, new Arc(3), p3, t3, "ARC;ALIGN_BC");
             	graph.insertEdge(graph.getDefaultParent(), null, new Arc(), t3, p5, "ARC");
             	graph.insertEdge(graph.getDefaultParent(), null, new Arc(), p5, t4, "ARC");
             	graph.insertEdge(graph.getDefaultParent(), null, new Arc(), t4, p4, "ARC");

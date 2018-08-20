@@ -7,6 +7,7 @@ import javax.swing.AbstractAction;
 
 import com.cjljohnson.PetriNetter.PetriNetManager;
 import com.cjljohnson.PetriNetter.model.PetriGraph;
+import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxUndoableEdit;
@@ -70,6 +71,49 @@ public class ReachActions {
             if (reach != null)
             {
                 reach.setCellLabelPosition(cell, position);
+            }
+        }
+    }
+    
+    public static class GoToNodeAction extends AbstractAction
+    {
+
+        /**
+         * 
+         */
+
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 3887344511242268848L;
+        private mxGraphComponent reachComponent;
+        private Object cell;
+
+        /**
+         * 
+         * @param name
+         */
+        public GoToNodeAction(String name, mxGraphComponent reachComponent, 
+                Object cell)
+        {
+            super(name);
+            this.reachComponent = reachComponent;
+            this.cell = cell;
+        }
+
+        /**
+         * 
+         */
+        public void actionPerformed(ActionEvent e)
+        {
+            ReachabilityGraph reach = (ReachabilityGraph)reachComponent.getGraph();
+
+            if (reach != null)
+            {
+                if (reach.getMarkingMap(cell) != null)
+                {
+                    reach.setActiveState(cell);
+                }
             }
         }
     }

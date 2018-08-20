@@ -28,6 +28,10 @@ public class ReachRightClick extends JPopupMenu {
 
         if (cell != null && ((mxCell)cell).isEdge()) {
             edgeMenu(reachComponent, cell);
+        } else if (cell != null && ((mxCell)cell).isVertex()) {
+        	vertexMenu(manager, reachComponent, cell);
+        } else {
+        	System.out.println("YEE");
         }
         
         add(new AbstractAction("Find Marking", null) {
@@ -45,6 +49,10 @@ public class ReachRightClick extends JPopupMenu {
         
     }
     
+    private void vertexMenu(PetriNetManager manager, mxGraphComponent reachComponent, Object cell) {
+    	add(manager.bind("Go to Marking", new ReachActions.GoToNodeAction("goto", reachComponent, cell), "/images/place.gif"));
+    }
+    
     private void edgeMenu(mxGraphComponent reachComponent, Object cell) {
         
         JMenu positionMenu = new JMenu("Label position");
@@ -60,7 +68,7 @@ public class ReachRightClick extends JPopupMenu {
 
         add(positionMenu);
         
-        addSeparator();
+        
         
 //        add(manager.bind("Fire Transition", new PetriGraphActions.FireTransitionAction(cell),
 //                        "/images/lightning_go.png"))

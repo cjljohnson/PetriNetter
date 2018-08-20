@@ -31,38 +31,40 @@ public class PetriToolBar extends JToolBar {
         setRollover(true);
 
         add(editor.bind("New", PetriEditorActions.getNewAction(),
-        		UIManager.getIcon("FileView.fileIcon")));
+        		UIManager.getIcon("FileView.fileIcon"))).setToolTipText("New");
         add(editor.bind("Open", PetriEditorActions.getOpenAction(),
-        		UIManager.getIcon("FileChooser.newFolderIcon")));
+        		UIManager.getIcon("FileChooser.newFolderIcon"))).setToolTipText("Open");
         add(editor.bind("Save", PetriEditorActions.getSaveAction(),
                 new ImageIcon(
-                        PetriEditor.class.getResource("/images/disk.png"))));
+                        PetriEditor.class.getResource("/images/disk.png")))).setToolTipText("Save");
         add(editor.bind("Save As", PetriEditorActions.getSaveAsAction(),
                 new ImageIcon(
-                        PetriEditor.class.getResource("/images/disk_multiple.png"))));
+                        PetriEditor.class.getResource("/images/disk_multiple.png")))).setToolTipText("Save As");
         add(editor.bind("Export Image", PetriEditorActions.getExportImageAction(),
                 new ImageIcon(
-                        PetriEditor.class.getResource("/images/image.png"))));
+                        PetriEditor.class.getResource("/images/image.png")))).setToolTipText("Export image");
         
         addSeparator();
         
         add(editor.bind("Undo", PetriEditorActions.getUndoAction(),
                 new ImageIcon(
-                        PetriEditor.class.getResource("/images/arrow_undo.png"))));
+                        PetriEditor.class.getResource("/images/arrow_undo.png")))).setToolTipText("Undo");
         add(editor.bind("Redo", PetriEditorActions.getRedoAction(),
                 new ImageIcon(
-                        PetriEditor.class.getResource("/images/arrow_redo.png"))));
+                        PetriEditor.class.getResource("/images/arrow_redo.png")))).setToolTipText("Redo");
         
         addSeparator();
         add(editor.bind("Reset Zoom", PetriEditorActions.getZoomResetAction(),
                 new ImageIcon(
-                        PetriEditor.class.getResource("/images/magnifier.png"))));
+                        PetriEditor.class.getResource("/images/magnifier.png")))).setToolTipText("Reset Zoom level");
         add(editor.bind("Zoom In", PetriEditorActions.getZoomInAction(),
                 new ImageIcon(
-                        PetriEditor.class.getResource("/images/magnifier_zoom_in.png"))));
+                        PetriEditor.class.getResource("/images/magnifier_zoom_in.png")))).setToolTipText("Zoom in");
         add(editor.bind("Zoom Out", PetriEditorActions.getZoomOutAction(),
                 new ImageIcon(
-                        PetriEditor.class.getResource("/images/magnifier_zoom_out.png"))));
+                        PetriEditor.class.getResource("/images/magnifier_zoom_out.png")))).setToolTipText("Zoom out");
+        
+        
         
         addSeparator();
         
@@ -80,7 +82,7 @@ public class PetriToolBar extends JToolBar {
         add(addTransition);
         JToggleButton addArc = new JToggleButton(new ImageIcon(
                 PetriEditor.class.getResource("/images/arc.gif")));
-        addTransition.setToolTipText("Add Arc");
+        addArc.setToolTipText("Add Arc");
         add(addArc);
         JToggleButton addToken = new JToggleButton(new ImageIcon(
                 PetriEditor.class.getResource("/images/add.png")));
@@ -88,7 +90,7 @@ public class PetriToolBar extends JToolBar {
         add(addToken);
         JToggleButton removeToken = new JToggleButton(new ImageIcon(
                 PetriEditor.class.getResource("/images/delete.png")));
-        removeToken.setToolTipText("Remove Token to Place");
+        removeToken.setToolTipText("Remove Token from Place");
         add(removeToken);
         
         ButtonGroup bGroup = new ButtonGroup();
@@ -117,23 +119,23 @@ public class PetriToolBar extends JToolBar {
         reach.putValue(Action.SHORT_DESCRIPTION, "Create Reachability Graph");
         add(reach);
         
-        Action boundedness = editor.bind("Boundedness", new PetriEditorActions.ShowBoundedness(),
+        Action boundedness = editor.bind("Place Boundedness", new PetriEditorActions.ShowBoundedness(),
         		UIManager.getIcon("Tree.leafIcon"));
         boundedness.putValue(Action.SHORT_DESCRIPTION, "Calculate Boundedness");
         add(boundedness);
         
-        Action liveness = editor.bind("Liveness", new PetriEditorActions.ShowLiveness(),
-        		UIManager.getIcon("Tree.closedIcon"));
-        liveness.putValue(Action.SHORT_DESCRIPTION, "Calculate Liveness");
-        add(liveness);
+//        Action liveness = editor.bind("Liveness", new PetriEditorActions.ShowLiveness(),
+//        		UIManager.getIcon("Tree.closedIcon"));
+//        liveness.putValue(Action.SHORT_DESCRIPTION, "Calculate Liveness");
+//        add(liveness);
         
-        addSeparator();
-        add(editor.bind("Save As", PetriEditorActions.getFinaliseNetAction(),
-                new ImageIcon(
-                        PetriEditor.class.getResource("/images/star.png"))));
-        add(editor.bind("Save As", PetriEditorActions.getRevertToFinaliseNetAction(),
-        		new ImageIcon(
-        				PetriEditor.class.getResource("/images/star_revert.png"))));
+//        addSeparator();
+//        add(editor.bind("Finalise net", PetriEditorActions.getFinaliseNetAction(),
+//                new ImageIcon(
+//                        PetriEditor.class.getResource("/images/star.png"))));
+//        add(editor.bind("Revert to finalised net", PetriEditorActions.getRevertToFinaliseNetAction(),
+//        		new ImageIcon(
+//        				PetriEditor.class.getResource("/images/star_revert.png"))));
         
         
         

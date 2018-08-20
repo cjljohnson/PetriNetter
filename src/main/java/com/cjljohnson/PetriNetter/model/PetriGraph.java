@@ -98,9 +98,16 @@ public class PetriGraph extends mxGraph{
                     cell = ((mxCell) cell).getParent();
                 }
                 Place place = (Place)((mxCell) cell).getValue();
+                String name = place.getName();
+                if (name == null) {
+                	name = "p" + getCellMarkingName(cell);
+                } else {
+                	name += "(p" + getCellMarkingName(cell) + ")";
+                }
+                
                 int capacity = place.getCapacity();
                 String capacityLabel = capacity == -1 ? "\u03C9" : Integer.toString(capacity);
-                return "p" + getCellMarkingName(cell) +  "\n" + "k = " + capacityLabel;
+                return  name + "\n" + "k = " + capacityLabel;
 			}
 			
 			if (value instanceof Transition)
@@ -730,6 +737,36 @@ public class PetriGraph extends mxGraph{
 			}
 		}
 		return 0;
+	}
+	
+	public boolean setPlaceName(Object cell, String newName) {
+		if (cell == null || !(cell instanceof mxCell) ||
+				!(((mxCell)cell).getValue() instanceof Place)) {
+			return false;
+		}
+		Place place = (Place)((mxCell)cell).getValue();
+
+		if (newName.isEmpty()) {
+			newName = null;
+		}
+
+		if (!(newName == null ? place.getName() == null : newName.equals(place.getName()))) {
+			
+			System.out.println(newName);
+			System.out.println(place.getName());
+
+			try {
+				model.beginUpdate();
+				Place newPlace = place.clone();
+				newPlace.setName(newName);
+				model.setValue(cell, newPlace);
+			} finally {
+				model.endUpdate();
+			}
+			return true;
+		}
+
+		return false;
 	}
 	
 	public boolean setTokens(Object cell, int tokens) {
