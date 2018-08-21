@@ -1,0 +1,108 @@
+/* General style */
+body {
+   background-color: #C7C1C1;
+   padding: 0px;
+   font-family: "Palatino Linotype";
+}
+
+h1 {
+   color: white;
+   font-family: "Lucida Sans Unicode";
+   margin: 20px;
+}
+
+h2 {
+   color: #004B83;
+   font-family: "Lucida Sans Unicode";
+   padding-top: 10px;
+}
+
+h3 {
+   color: #004B83;
+   font-family: "Lucida Sans Unicode";
+   padding-top: 30px;
+}
+
+hr {
+  background-color: #004B83;
+  height: 20px;
+  border: none;
+}
+
+legend {
+   color: #004B83;
+   font-family: "Lucida Sans Unicode";
+   font-weight: bold;
+}
+
+fieldset {
+	border-color: #004B83;
+	border-width: 5px;
+	border-style: solid;
+}
+
+/* Form field styles */
+input, select {
+	border-color: #004B83;
+	border-style: solid;
+}
+
+/* Form buttons */
+input[type=submit], input[type=reset] {
+  color: #ffffff;
+  border-style: none;
+  background: #004B83;
+  padding: 10px 20px 10px 20px;
+}
+
+img {
+  margin-top: 10px;
+}
+
+/* Content container */
+.content {
+   position: relative;
+   margin: auto;
+   padding-top: 20px;
+   background-color: #004B83;
+}
+
+.section {
+  margin-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 10px;
+  padding-top: 20px;
+  background-color: white;
+}
+
+#quiz {
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-bottom: 10px;
+	background-color: white;
+	background-image: url("https://internal.cs.ncl.ac.uk/modules/2017-18/csc8004/bsl/css/sign_language.png");
+  background-repeat: no-repeat;
+  background-position: 98% 5px;
+}
+
+/* Bold quiz questions */
+#UserInfo, #Q1, #Q2, #Q3, #Q4 {
+	font-weight: bold;
+}
+
+/* Footer */
+#footer {
+  margin: 0px;
+  height: 40px;
+  margin-top: 20px;
+  padding-top: 5px;
+  background-color: white;
+}
+
+#footer p {
+  text-align: right;
+  margin-top: 5px;
+  margin-right: 10px;
+  font-size: 13px;
+}

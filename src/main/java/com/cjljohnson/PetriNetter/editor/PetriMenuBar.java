@@ -85,18 +85,19 @@ public class PetriMenuBar extends JMenuBar{
         menu.setMnemonic(KeyEvent.VK_A);
         menu.add(editor.bind("Create Reachability Graph", new PetriEditorActions.CreateReachabilityAction(), "/images/reach.gif")).setMnemonic(KeyEvent.VK_R);
         menu.add(editor.bind("Place Boundedness", new PetriEditorActions.ShowBoundedness(), "")).setMnemonic(KeyEvent.VK_B);
-//        menu.add(editor.bind("Liveness", new PetriEditorActions.ShowLiveness(), "")).setMnemonic(KeyEvent.VK_L);
+        menu.add(editor.bind("Semi-Liveness", new PetriEditorActions.ShowLiveness(), "")).setMnemonic(KeyEvent.VK_L);
         
         // Examples menu
         menu = add(new JMenu("Examples"));
         menu.setMnemonic(KeyEvent.VK_X);
         menu.add(editor.bind("Lock Example", new ExampleActions.LockExampleAction(), "")).setMnemonic(KeyEvent.VK_L);
         menu.add(editor.bind("Buffer Example", new ExampleActions.BufferExampleAction(), "")).setMnemonic(KeyEvent.VK_B);
+        menu.add(editor.bind("Dining Philosophers Example", new ExampleActions.DiningExampleAction(), "")).setMnemonic(KeyEvent.VK_D);
         
         // Help menu
         menu = add(new JMenu("Help"));
         menu.setMnemonic(KeyEvent.VK_H);
-        menu.add(editor.bind("Tutorial", new PetriEditorActions.OpenTutotorialAction(), "")).setMnemonic(KeyEvent.VK_T);
+        menu.add(editor.bind("User Guide", new PetriEditorActions.OpenTutotorialAction(), "")).setMnemonic(KeyEvent.VK_G);
     }
 
 }

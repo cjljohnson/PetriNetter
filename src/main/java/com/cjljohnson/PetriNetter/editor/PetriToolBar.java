@@ -124,10 +124,10 @@ public class PetriToolBar extends JToolBar {
         boundedness.putValue(Action.SHORT_DESCRIPTION, "Calculate Boundedness");
         add(boundedness);
         
-//        Action liveness = editor.bind("Liveness", new PetriEditorActions.ShowLiveness(),
-//        		UIManager.getIcon("Tree.closedIcon"));
-//        liveness.putValue(Action.SHORT_DESCRIPTION, "Calculate Liveness");
-//        add(liveness);
+        Action liveness = editor.bind("Semi-Liveness", new PetriEditorActions.ShowLiveness(),
+        		UIManager.getIcon("Tree.leafIcon"));
+        liveness.putValue(Action.SHORT_DESCRIPTION, "Calculate Semi-Liveness");
+        add(liveness);
         
 //        addSeparator();
 //        add(editor.bind("Finalise net", PetriEditorActions.getFinaliseNetAction(),

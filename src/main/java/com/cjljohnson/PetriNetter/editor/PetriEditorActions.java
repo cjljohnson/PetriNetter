@@ -2,6 +2,7 @@ package com.cjljohnson.PetriNetter.editor;
 
 import java.awt.Color;
 import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -17,6 +18,7 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
+import javax.swing.ImageIcon;
 import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -52,6 +54,8 @@ public class PetriEditorActions {
 	
 	private static String OVERWRITE_EXISTING_FILE = "Overwrite existing file?";
 	private static String TRANSPARENT_BACKGROUND = "Set background to transparent?";
+	private static String FILE = "File";
+	private static String ALL_SUPPORTED_FORMATS = "All Supported Formats";
 
     private static NewAction newAction = new NewAction();
     private static OpenAction openAction = new OpenAction();
@@ -237,37 +241,37 @@ public class PetriEditorActions {
 
             // Adds file filter for supported file format
             DefaultFileFilter defaultFilter = new DefaultFileFilter(
-                    ".mxe", mxResources.get("allSupportedFormats")
-                    + " (.mxe, .png, .vdx)")
+                    ".pnet", "PetriNetter File"
+                    + " (.pnet)")
             {
 
-                public boolean accept(File file)
-                {
-                    String lcase = file.getName().toLowerCase();
-
-                    return super.accept(file)
-                            || lcase.endsWith(".png")
-                            || lcase.endsWith(".vdx");
-                }
+//                public boolean accept(File file)
+//                {
+//                    String lcase = file.getName().toLowerCase();
+//
+//                    return super.accept(file)
+//                            || lcase.endsWith(".png")
+//                            || lcase.endsWith(".vdx");
+//                }
             };
             fc.addChoosableFileFilter(defaultFilter);
 
-            fc.addChoosableFileFilter(new DefaultFileFilter(".mxe",
-                    "mxGraph Editor " + mxResources.get("file")
-                    + " (.mxe)"));
-            fc.addChoosableFileFilter(new DefaultFileFilter(".png",
-                    "PNG+XML  " + mxResources.get("file")
-                    + " (.png)"));
-
-            // Adds file filter for VDX import
-            fc.addChoosableFileFilter(new DefaultFileFilter(".vdx",
-                    "XML Drawing  " + mxResources.get("file")
-                    + " (.vdx)"));
-
-            // Adds file filter for GD import
-            fc.addChoosableFileFilter(new DefaultFileFilter(".txt",
-                    "Graph Drawing  " + mxResources.get("file")
-                    + " (.txt)"));
+//            fc.addChoosableFileFilter(new DefaultFileFilter(".mxe",
+//                    "mxGraph Editor " + FILE
+//                    + " (.mxe)"));
+//            fc.addChoosableFileFilter(new DefaultFileFilter(".png",
+//                    "PNG+XML  " + FILE
+//                    + " (.png)"));
+//
+//            // Adds file filter for VDX import
+//            fc.addChoosableFileFilter(new DefaultFileFilter(".vdx",
+//                    "XML Drawing  " + FILE
+//                    + " (.vdx)"));
+//
+//            // Adds file filter for GD import
+//            fc.addChoosableFileFilter(new DefaultFileFilter(".txt",
+//                    "Graph Drawing  " + FILE
+//                    + " (.txt)"));
 
             fc.setFileFilter(defaultFilter);
 
@@ -425,10 +429,12 @@ public class PetriEditorActions {
                 mxGraphComponent graphComponent = manager.getPetriComponent();
                 mxGraph graph = graphComponent.getGraph();
                 FileFilter selectedFilter = null;
-                DefaultFileFilter xmlPngFilter = new DefaultFileFilter(".png",
-                        "PNG+XML " + mxResources.get("file") + " (.png)");
-                FileFilter vmlFileFilter = new DefaultFileFilter(".html",
-                        "VML " + mxResources.get("file") + " (.html)");
+                DefaultFileFilter pnetFilter = new DefaultFileFilter(".pnet",
+                      "PetriNetter " + FILE + " (.pnet)");
+//                DefaultFileFilter xmlPngFilter = new DefaultFileFilter(".png",
+//                        "PNG+XML " + FILE + " (.png)");
+//                FileFilter vmlFileFilter = new DefaultFileFilter(".html",
+//                        "VML " + FILE + " (.html)");
                 String filename = null;
                 boolean dialogShown = false;
 
@@ -452,47 +458,48 @@ public class PetriEditorActions {
                     JFileChooser fc = new JFileChooser(wd);
 
                     // Adds the default file format
-                    FileFilter defaultFilter = xmlPngFilter;
+                    FileFilter defaultFilter = pnetFilter;
                     fc.addChoosableFileFilter(defaultFilter);
 
-                    // Adds special vector graphics formats and HTML
-                    fc.addChoosableFileFilter(new DefaultFileFilter(".mxe",
-                            "mxGraph Editor " + mxResources.get("file")
-                            + " (.mxe)"));
-                    fc.addChoosableFileFilter(new DefaultFileFilter(".txt",
-                            "Graph Drawing " + mxResources.get("file")
-                            + " (.txt)"));
-                    fc.addChoosableFileFilter(new DefaultFileFilter(".svg",
-                            "SVG " + mxResources.get("file") + " (.svg)"));
-                    fc.addChoosableFileFilter(vmlFileFilter);
-                    fc.addChoosableFileFilter(new DefaultFileFilter(".html",
-                            "HTML " + mxResources.get("file") + " (.html)"));
-
-                    // Adds a filter for each supported image format
-                    Object[] imageFormats = ImageIO.getReaderFormatNames();
-
-                    // Finds all distinct extensions
-                    HashSet<String> formats = new HashSet<String>();
-
-                    for (int i = 0; i < imageFormats.length; i++)
-                    {
-                        String ext = imageFormats[i].toString().toLowerCase();
-                        formats.add(ext);
-                    }
-
-                    imageFormats = formats.toArray();
-
-                    for (int i = 0; i < imageFormats.length; i++)
-                    {
-                        String ext = imageFormats[i].toString();
-                        fc.addChoosableFileFilter(new DefaultFileFilter("."
-                                + ext, ext.toUpperCase() + " "
-                                        + mxResources.get("file") + " (." + ext + ")"));
-                    }
-
-                    // Adds filter that accepts all supported image formats
-                    fc.addChoosableFileFilter(new DefaultFileFilter.ImageFileFilter(
-                            mxResources.get("allImages")));
+//                    // Adds special vector graphics formats and HTML
+//                    fc.addChoosableFileFilter(new DefaultFileFilter(".mxe",
+//                            "mxGraph Editor " + FILE
+//                            + " (.mxe)"));
+//                    fc.addChoosableFileFilter(new DefaultFileFilter(".txt",
+//                            "Graph Drawing " + FILE
+//                            + " (.txt)"));
+//                    fc.addChoosableFileFilter(new DefaultFileFilter(".svg",
+//                            "SVG " + FILE + " (.svg)"));
+//                    fc.addChoosableFileFilter(vmlFileFilter);
+//                    fc.addChoosableFileFilter(new DefaultFileFilter(".html",
+//                            "HTML " + FILE + " (.html)"));
+//
+//                    // Adds a filter for each supported image format
+//                    Object[] imageFormats = ImageIO.getReaderFormatNames();
+//
+//                    // Finds all distinct extensions
+//                    HashSet<String> formats = new HashSet<String>();
+//
+//                    for (int i = 0; i < imageFormats.length; i++)
+//                    {
+//                        String ext = imageFormats[i].toString().toLowerCase();
+//                        formats.add(ext);
+//                    }
+//
+//                    imageFormats = formats.toArray();
+//
+//                    for (int i = 0; i < imageFormats.length; i++)
+//                    {
+//                        String ext = imageFormats[i].toString();
+//                        fc.addChoosableFileFilter(new DefaultFileFilter("."
+//                                + ext, ext.toUpperCase() + " "
+//                                        + FILE + " (." + ext + ")"));
+//                    }
+//
+//                    // Adds filter that accepts all supported image formats
+//                    fc.addChoosableFileFilter(new DefaultFileFilter.ImageFileFilter(
+//                            mxResources.get("allImages")));
+                    
                     fc.setFileFilter(defaultFilter);
                     int rc = fc.showDialog(null, "Save");
                     dialogShown = true;
@@ -559,12 +566,12 @@ public class PetriEditorActions {
                         mxUtils.writeFile(mxXmlUtils.getXml(canvas.getDocument()),
                                 filename);
                     }
-                    else if (selectedFilter == vmlFileFilter)
-                    {
-                        mxUtils.writeFile(mxXmlUtils.getXml(mxCellRenderer
-                                .createVmlDocument(graph, null, 1, null, null)
-                                .getDocumentElement()), filename);
-                    }
+//                    else if (selectedFilter == vmlFileFilter)
+//                    {
+//                        mxUtils.writeFile(mxXmlUtils.getXml(mxCellRenderer
+//                                .createVmlDocument(graph, null, 1, null, null)
+//                                .getDocumentElement()), filename);
+//                    }
                     else if (ext.equalsIgnoreCase("html"))
                     {
                         mxUtils.writeFile(mxXmlUtils.getXml(mxCellRenderer
@@ -584,6 +591,18 @@ public class PetriEditorActions {
                         manager.setCurrentFile(new File(filename));
                         editor.updateTitle(manager);
                     }
+                    else if (ext.equalsIgnoreCase("pnet"))
+                    {
+                        mxCodec codec = new mxCodec();
+                        String xml = mxXmlUtils.getXml(codec.encode(graph
+                                .getModel()));
+
+                        mxUtils.writeFile(xml, filename);
+
+                        manager.setCurrentFile(new File(filename));
+                        manager.setModified(false);
+                        editor.updateTitle(manager);
+                    }
                     else if (ext.equalsIgnoreCase("txt"))
                     {
                         String content = mxGdCodec.encode(graph);
@@ -592,48 +611,48 @@ public class PetriEditorActions {
                     }
                     else
                     {
-                        Color bg = null;
-                        
-                        int option = JOptionPane.NO_OPTION;
-                        
-                        if (ext.equalsIgnoreCase("gif") || ext
-                                .equalsIgnoreCase("png")) {
-                        	option = JOptionPane.showConfirmDialog(graphComponent, 
-                        			TRANSPARENT_BACKGROUND);
-                        	
-                        	if (option == JOptionPane.CANCEL_OPTION) {
-                        		return;
-                        	}
-                        }
-
-                        if (option == JOptionPane.NO_OPTION)
-                        {
-                            bg = graphComponent.getBackground();
-                        }
-
-                        if (selectedFilter == xmlPngFilter
-                                || (manager.getCurrentFile() != null
-                                && ext.equalsIgnoreCase("png") && !dialogShown))
-                        {
-                            saveXmlPng(editor, filename, bg);
-                        }
-                        else
-                        {
-                            BufferedImage image = mxCellRenderer
-                                    .createBufferedImage(graph, null, 1, bg,
-                                            graphComponent.isAntiAlias(), null,
-                                            graphComponent.getCanvas());
-
-                            if (image != null)
-                            {
-                                ImageIO.write(image, ext, new File(filename));
-                            }
-                            else
-                            {
-                                JOptionPane.showMessageDialog(graphComponent,
-                                        mxResources.get("noImageData"));
-                            }
-                        }
+//                        Color bg = null;
+//                        
+//                        int option = JOptionPane.NO_OPTION;
+//                        
+//                        if (ext.equalsIgnoreCase("gif") || ext
+//                                .equalsIgnoreCase("png")) {
+//                        	option = JOptionPane.showConfirmDialog(graphComponent, 
+//                        			TRANSPARENT_BACKGROUND);
+//                        	
+//                        	if (option == JOptionPane.CANCEL_OPTION) {
+//                        		return;
+//                        	}
+//                        }
+//
+//                        if (option == JOptionPane.NO_OPTION)
+//                        {
+//                            bg = graphComponent.getBackground();
+//                        }
+//
+//                        if (selectedFilter == xmlPngFilter
+//                                || (manager.getCurrentFile() != null
+//                                && ext.equalsIgnoreCase("png") && !dialogShown))
+//                        {
+//                            saveXmlPng(editor, filename, bg);
+//                        }
+//                        else
+//                        {
+//                            BufferedImage image = mxCellRenderer
+//                                    .createBufferedImage(graph, null, 1, bg,
+//                                            graphComponent.isAntiAlias(), null,
+//                                            graphComponent.getCanvas());
+//
+//                            if (image != null)
+//                            {
+//                                ImageIO.write(image, ext, new File(filename));
+//                            }
+//                            else
+//                            {
+//                                JOptionPane.showMessageDialog(graphComponent,
+//                                        mxResources.get("noImageData"));
+//                            }
+//                        }
                     }
                 }
                 catch (Throwable ex)
@@ -686,7 +705,7 @@ public class PetriEditorActions {
                mxGraph graph = graphComponent.getGraph();
                FileFilter selectedFilter = null;
                DefaultFileFilter xmlPngFilter = new DefaultFileFilter(".png",
-                       "PNG+XML " + mxResources.get("file") + " (.png)");
+                       "PNG+XML " + FILE + " (.png)");
                String filename = null;
                boolean dialogShown = false;
 
@@ -714,7 +733,7 @@ public class PetriEditorActions {
 
                // Add other image types
                fc.addChoosableFileFilter(new DefaultFileFilter(".svg",
-            		   "SVG " + mxResources.get("file") + " (.svg)"));
+            		   "SVG " + FILE + " (.svg)"));
                
                // Adds a filter for each supported image format
                Object[] imageFormats = ImageIO.getReaderFormatNames();
@@ -735,7 +754,7 @@ public class PetriEditorActions {
             	   String ext = imageFormats[i].toString();
             	   fc.addChoosableFileFilter(new DefaultFileFilter("."
             			   + ext, ext.toUpperCase() + " "
-            					   + mxResources.get("file") + " (." + ext + ")"));
+            					   + FILE + " (." + ext + ")"));
                }
 
                // Adds filter that accepts all supported image formats
@@ -1116,7 +1135,7 @@ public class PetriEditorActions {
     	   JEditorPane editorpane= new JEditorPane();
            JScrollPane editorScrollPane = new JScrollPane(editorpane);
            editorScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-           File file = new File(getClass().getClassLoader().getResource("tutorial/bsl-XHTML.html").getFile());
+           File file = new File(getClass().getClassLoader().getResource("tutorial/petri-tutorial.html").getFile());
            try {
 			editorpane.setPage(file.toURI().toURL());
 		} catch (MalformedURLException e1) {
@@ -1126,10 +1145,15 @@ public class PetriEditorActions {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-           editorpane.setEditable(true);
-           JFrame frame = new JFrame("Tutorial");
+           editorpane.setEditable(false);
+           JFrame frame = new JFrame("User Guide");
+           ImageIcon img = new ImageIcon(PetriEditor.class.getResource("/images/place.gif"));
+           frame.setIconImage(img.getImage());
            frame.add(editorScrollPane);
+           
+           frame.setLocationRelativeTo(null);
            frame.pack();
+           frame.setSize(800, 500);
            frame.setVisible(true);
        }
    }

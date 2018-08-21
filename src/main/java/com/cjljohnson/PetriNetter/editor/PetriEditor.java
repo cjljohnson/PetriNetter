@@ -54,7 +54,6 @@ public class PetriEditor extends JPanel{
         
         this.highlightTransitions = true;
         
-        //add(menuBar);
         setLayout(new BorderLayout());
         add(toolBar, BorderLayout.NORTH);
         add(pane);

@@ -746,7 +746,7 @@ public class PetriGraph extends mxGraph{
 		}
 		Place place = (Place)((mxCell)cell).getValue();
 
-		if (newName.isEmpty()) {
+		if (newName != null && newName.isEmpty()) {
 			newName = null;
 		}
 

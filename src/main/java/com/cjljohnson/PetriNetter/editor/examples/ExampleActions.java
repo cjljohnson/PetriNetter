@@ -1,14 +1,21 @@
 package com.cjljohnson.PetriNetter.editor.examples;
 
 import java.awt.event.ActionEvent;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 import javax.swing.AbstractAction;
+
+import org.w3c.dom.Document;
 
 import com.cjljohnson.PetriNetter.PetriNetManager;
 import com.cjljohnson.PetriNetter.editor.PetriEditor;
 import com.cjljohnson.PetriNetter.model.Arc;
 import com.cjljohnson.PetriNetter.model.PetriGraph;
+import com.mxgraph.io.mxCodec;
 import com.mxgraph.model.mxCell;
+import com.mxgraph.util.mxUtils;
+import com.mxgraph.util.mxXmlUtils;
 
 public class ExampleActions {
 	
@@ -118,6 +125,43 @@ public class ExampleActions {
             
             PetriNetManager manager = new PetriNetManager(graph);
             editor.addPetriNet(manager);
+        }
+    }
+	
+	@SuppressWarnings("serial")
+    public static class DiningExampleAction extends AbstractAction
+    {
+        /**
+         * 
+         */
+        public void actionPerformed(ActionEvent e)
+        {
+            PetriEditor editor = (PetriEditor)e.getSource();
+            PetriGraph graph = new PetriGraph();
+            
+            //FileInputStream stream = new FileInputStream(new FIle());
+            
+            
+            
+            Document document;
+			try {
+				document = mxXmlUtils
+				        .parseXml(mxUtils.readInputStream(this.getClass().getResourceAsStream("/tutorial/diningPhilosophers.pnet")));
+			
+
+            mxCodec codec = new mxCodec(document);
+            codec.decode(
+                    document.getDocumentElement(),
+                    graph.getModel());
+            
+            
+            PetriNetManager manager = new PetriNetManager(graph);
+            editor.addPetriNet(manager);
+            
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
         }
     }
 

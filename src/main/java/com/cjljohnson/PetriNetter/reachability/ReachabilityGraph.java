@@ -79,7 +79,7 @@ public class ReachabilityGraph extends mxGraph{
 	}
 	
 	public void showLive() {
-		String message = "The following transitions are live:\n";
+		String message = "The following transitions are semi-live:\n";
 		
 		for (Object vertex : liveSet) {
 			message += " t" + graph2.getCellMarkingName(vertex);
