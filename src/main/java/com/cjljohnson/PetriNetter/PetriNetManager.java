@@ -498,6 +498,9 @@ public class PetriNetManager extends JPanel {
                 }
             }
         });
+        
+        
+        
         reachComponent.setConnectable(false);
         reachComponent.setToolTips(true);
         //reachComponent.setGridVisible(true);
@@ -539,6 +542,29 @@ public class PetriNetManager extends JPanel {
             }
 
         });
+        
+        // Zoom listener
+        reachComponent.addMouseWheelListener(new MouseWheelListener()
+             {
+                 /**
+                  * 
+                  */
+                 public void mouseWheelMoved(MouseWheelEvent e)
+                 {
+                     if (e.isControlDown())
+                     {
+                         if (e.getWheelRotation() < 0)
+                         {
+                        	 reachComponent.zoomIn();
+                         }
+                         else
+                         {
+                        	 reachComponent.zoomOut();
+                         }
+                     }
+                 }
+
+             });
         
         //this.reachComponent = reachComponent;
         
