@@ -332,22 +332,22 @@ public class ReachabilityGraph extends mxGraph{
 	}
 	
 	public void setCurrentCell(Object obj) {
-	    if (obj == currentCell) {
-	        return;
-	    }
-	    if (currentCell != null) {
-            String style = currentCell.getStyle().replaceFirst(";CURRENT", "");
-            setCellStyle(style, new Object[] {currentCell});
-            currentCell = null;
-        }
-	    
-	    if (obj instanceof mxCell) {
-	        
-	        
-	        mxCell cell = (mxCell)obj;
-	        setCellStyle(cell.getStyle() + ";CURRENT", new Object[] {cell});
-	        currentCell = cell;
-	    }
+//	    if (obj == currentCell) {
+//	        return;
+//	    }
+//	    if (currentCell != null) {
+//            String style = currentCell.getStyle().replaceFirst(";CURRENT", "");
+//            setCellStyle(style, new Object[] {currentCell});
+//            currentCell = null;
+//        }
+//	    
+//	    if (obj instanceof mxCell) {
+//	        
+//	        
+//	        mxCell cell = (mxCell)obj;
+//	        setCellStyle(cell.getStyle() + ";CURRENT", new Object[] {cell});
+//	        currentCell = cell;
+//	    }
 	}
 	
 	public void setCellLabelPosition(Object obj, String position) {

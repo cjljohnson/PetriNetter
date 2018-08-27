@@ -266,7 +266,7 @@ public class PetriNetManager extends JPanel {
             }
         });
 		
-		graph.getModel().addListener(mxEvent.CHANGE, changeTracker);
+		//graph.getModel().addListener(mxEvent.CHANGE, changeTracker);
 	}
 	
 	public void initialiseGraphComponent(final mxGraphComponent graphComponent) {
@@ -479,25 +479,25 @@ public class PetriNetManager extends JPanel {
         
         final mxGraphComponent reachComponent = new mxGraphComponent(reach);
         
-        reachComponent.getGraphControl().addMouseListener(new MouseAdapter()
-        {
-
-            public void mouseReleased(MouseEvent e)
-            {
-            	mxPoint graphPoint = reachComponent.getPointForEvent(e);
-                Object obj = reachComponent.getCellAt((int)graphPoint.getX(), (int)graphPoint.getY());
-
-                if (reachValid && obj != null && obj instanceof mxCell && e.getClickCount() == 2)
-                {
-                    
-                    Object value = ((mxCell) obj).getValue();
-                    if (reach.getMarkingMap(obj) != null)
-                    {
-                        reach.setActiveState(obj);
-                    }
-                }
-            }
-        });
+//        reachComponent.getGraphControl().addMouseListener(new MouseAdapter()
+//        {
+//
+//            public void mouseReleased(MouseEvent e)
+//            {
+//            	mxPoint graphPoint = reachComponent.getPointForEvent(e);
+//                Object obj = reachComponent.getCellAt((int)graphPoint.getX(), (int)graphPoint.getY());
+//
+//                if (reachValid && obj != null && obj instanceof mxCell && e.getClickCount() == 2)
+//                {
+//                    
+//                    Object value = ((mxCell) obj).getValue();
+//                    if (reach.getMarkingMap(obj) != null)
+//                    {
+//                        reach.setActiveState(obj);
+//                    }
+//                }
+//            }
+//        });
         
         
         
