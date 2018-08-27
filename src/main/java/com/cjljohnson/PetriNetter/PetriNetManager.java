@@ -384,7 +384,9 @@ public class PetriNetManager extends JPanel {
 		Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(),
 				petriComponent);
 		
-		mxPoint graphPoint = petriComponent.getPointForEvent(e);
+		mxPoint graphPoint = petriComponent.getPointForEvent(e, true);
+		System.out.println(graphPoint);
+		
 		PetriRightClick menu = new PetriRightClick(this, (int)graphPoint.getX(), (int)graphPoint.getY());
 		menu.show(petriComponent, pt.x, pt.y);
 

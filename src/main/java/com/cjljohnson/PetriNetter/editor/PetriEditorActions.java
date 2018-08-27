@@ -10,6 +10,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashSet;
@@ -1135,13 +1137,18 @@ public class PetriEditorActions {
     	   JEditorPane editorpane= new JEditorPane();
            JScrollPane editorScrollPane = new JScrollPane(editorpane);
            editorScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-           File file = new File(getClass().getClassLoader().getResource("tutorial/petri-tutorial.html").getFile());
+           //File file = new File(getClass().getClassLoader().getResource("tutorial/petri-tutorial.html").getur);
+           
            try {
-			editorpane.setPage(file.toURI().toURL());
+        	URI uri = getClass().getClassLoader().getResource("tutorial/petri-tutorial.html").toURI();
+			editorpane.setPage(uri.toURL());
 		} catch (MalformedURLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (URISyntaxException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
