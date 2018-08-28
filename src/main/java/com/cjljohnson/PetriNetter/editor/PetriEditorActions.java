@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashSet;
@@ -1165,34 +1166,33 @@ public class PetriEditorActions {
         */
        public void actionPerformed(ActionEvent e)
        {
-    	   JEditorPane editorpane= new JEditorPane();
-           JScrollPane editorScrollPane = new JScrollPane(editorpane);
-           editorScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+    	   
            //File file = new File(getClass().getClassLoader().getResource("tutorial/petri-tutorial.html").getur);
-           
            try {
-        	URI uri = getClass().getClassLoader().getResource("tutorial/petri-tutorial.html").toURI();
-			editorpane.setPage(uri.toURL());
+        	//URI uri = getClass().getClassLoader().getResource("tutorial/petri-tutorial.html").toURI();
+               URL url = getClass().getClassLoader().getResource("tutorial/petri-tutorial.html");
+			//editorpane.setPage(url);
+               JEditorPane editorpane = new JEditorPane(url);
+               JScrollPane editorScrollPane = new JScrollPane(editorpane);
+               editorScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+               editorpane.setEditable(false);
+               JFrame frame = new JFrame("User Guide");
+               ImageIcon img = new ImageIcon(PetriEditor.class.getResource("/images/place.gif"));
+               frame.setIconImage(img.getImage());
+               frame.add(editorScrollPane);
+               
+               frame.setLocationRelativeTo(null);
+               frame.pack();
+               frame.setSize(800, 500);
+               frame.setVisible(true);
 		} catch (MalformedURLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		} catch (URISyntaxException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
 		}
-           editorpane.setEditable(false);
-           JFrame frame = new JFrame("User Guide");
-           ImageIcon img = new ImageIcon(PetriEditor.class.getResource("/images/place.gif"));
-           frame.setIconImage(img.getImage());
-           frame.add(editorScrollPane);
            
-           frame.setLocationRelativeTo(null);
-           frame.pack();
-           frame.setSize(800, 500);
-           frame.setVisible(true);
        }
    }
 
