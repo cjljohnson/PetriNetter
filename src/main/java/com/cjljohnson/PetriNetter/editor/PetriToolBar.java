@@ -129,6 +129,11 @@ public class PetriToolBar extends JToolBar {
         liveness.putValue(Action.SHORT_DESCRIPTION, "Calculate Semi-Liveness");
         add(liveness);
         
+        Action deadlock = editor.bind("Deadlock", new PetriEditorActions.ShowDeadlock(),
+                UIManager.getIcon("Tree.leafIcon"));
+        deadlock.putValue(Action.SHORT_DESCRIPTION, "Calculate Deadlock");
+        add(deadlock);
+        
 //        addSeparator();
 //        add(editor.bind("Finalise net", PetriEditorActions.getFinaliseNetAction(),
 //                new ImageIcon(

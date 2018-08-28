@@ -662,6 +662,13 @@ public class PetriNetManager extends JPanel {
 		}
 	}
 	
+	public void calcDeadlock() {
+        if (reachValid) {
+            ReachabilityGraph reach = (ReachabilityGraph) reachComponent.getGraph();
+            reach.showDeadlock();
+        }
+    }
+	
 	public void disableReachComponent() {
 		reachValid = false;
 		if (reachComponent != null) {

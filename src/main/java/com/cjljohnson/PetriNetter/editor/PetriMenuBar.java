@@ -86,6 +86,7 @@ public class PetriMenuBar extends JMenuBar{
         menu.add(editor.bind("Create Reachability Graph", new PetriEditorActions.CreateReachabilityAction(), "/images/reach.gif")).setMnemonic(KeyEvent.VK_R);
         menu.add(editor.bind("Place Boundedness", new PetriEditorActions.ShowBoundedness(), "")).setMnemonic(KeyEvent.VK_B);
         menu.add(editor.bind("Semi-Liveness", new PetriEditorActions.ShowLiveness(), "")).setMnemonic(KeyEvent.VK_L);
+        menu.add(editor.bind("Deadlock", new PetriEditorActions.ShowDeadlock(), "")).setMnemonic(KeyEvent.VK_D);
         
         // Examples menu
         menu = add(new JMenu("Examples"));

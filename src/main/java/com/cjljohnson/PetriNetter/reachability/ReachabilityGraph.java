@@ -49,6 +49,7 @@ public class ReachabilityGraph extends mxGraph{
 	private boolean isComplete;
 	private Map<String, Integer> boundedness;
 	private mxCell currentCell;
+	private List<String> deadList;
 	
 	public ReachabilityGraph(PetriGraph graph, int size) {
 		markingMap = new TreeMap<String, Map<String, Integer>>();
@@ -56,6 +57,7 @@ public class ReachabilityGraph extends mxGraph{
 		this.size = size;
 		this.graph = graph;
 		liveSet = new HashSet<Object>();
+		deadList = new ArrayList<String>();
 		isComplete = false;
 		boundedness = new TreeMap<String, Integer>();
 		
@@ -104,6 +106,30 @@ public class ReachabilityGraph extends mxGraph{
 		
 		JOptionPane.showMessageDialog(null, message);
 	}
+
+	public void showDeadlock() {
+	    String message;
+
+	    if (deadList.size() > 0) {
+
+	        message = "The following transitions are in deadlock:\n";
+
+	        for (String marking : deadList) {
+	            message += " " + marking;
+
+	        }
+	    } else {
+	        message = "No states of deadlock found in reachable markings.\n";
+	    }
+
+	    if (!isComplete) {
+	        message += "\nNOTE: Reachability graph was terminated after " 
+	                + i + " markings were assessed. There may be unexplored dead markings.";
+	    }
+
+        
+        JOptionPane.showMessageDialog(null, message);
+    }
 	
 	public void showBounded() {
 		String message = "Place boundedness for all places:\n";
@@ -175,6 +201,7 @@ public class ReachabilityGraph extends mxGraph{
 	private void calcNodeReachability(Map<String, Integer> state, Queue<Map<String, Integer>> queue) {
 		graph2.setPlaceTokens(state);
 		mxCell node1 = nodeMap.get(state);
+		int enabledCount = 0;
 		int j = 0;
 		for (Object vertex : graph2.getChildVertices(graph2.getDefaultParent())) {
 			if (vertex instanceof mxCell) {
@@ -202,6 +229,7 @@ public class ReachabilityGraph extends mxGraph{
 	                		insertEdge(getDefaultParent(), null, "t" + graph2.getCellMarkingName(vertex), node1, node, "");
 	                	}
 	                	
+	                	enabledCount++;	                	
 	                	
 	                	graph2.setPlaceTokens(state);
 	                	j++;
@@ -213,6 +241,11 @@ public class ReachabilityGraph extends mxGraph{
 			}
 		}
 		setCellStyle(node1.getStyle() + ";COMPLETE", new Object[] {node1});
+		if (enabledCount == 0) {
+		    String marking = (String)node1.getValue();
+		    deadList.add(marking);
+		}
+		        
 	}
 	
 	private void initStyles() {

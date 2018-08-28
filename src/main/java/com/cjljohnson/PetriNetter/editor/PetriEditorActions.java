@@ -972,6 +972,37 @@ public class PetriEditorActions {
             }
         }
     }
+    
+    @SuppressWarnings("serial")
+    public static class ShowDeadlock extends AbstractAction
+    {
+        /**
+         * 
+         */
+        public void actionPerformed(ActionEvent e)
+        {
+            PetriEditor editor = (PetriEditor)e.getSource();
+            if (editor != null)
+            {
+                PetriNetManager manager = editor.getActiveGraphManager();
+                if (manager != null)
+                {
+                    if (manager.reachValid() == true)
+                    {
+                        manager.calcDeadlock();
+                    } else 
+                    {
+                        JOptionPane.showMessageDialog(editor, "Reachability must be calculated "
+                                + "before deadlock.");
+                    }
+                } else 
+                {
+                    JOptionPane.showMessageDialog(editor, "A Petri Net must be selected to "
+                            + "calculate deadlock.");
+                }
+            }
+        }
+    }
 
     /**
      *
