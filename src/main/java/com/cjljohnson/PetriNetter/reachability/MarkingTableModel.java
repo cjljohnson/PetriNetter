@@ -1,3 +1,12 @@
+/*
+ * Table model for the marking table.
+ * 
+ * Calculates the row and column labels.
+ * 
+ * @author Chris Johnson
+ * @version v1.0
+ */
+
 package com.cjljohnson.PetriNetter.reachability;
 
 import java.util.Arrays;

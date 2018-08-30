@@ -1,3 +1,10 @@
+/*
+ * Contains actions that create example Petri nets in a new tab.
+ * 
+ * @author Chris Johnson
+ * @version v1.0
+ */
+
 package com.cjljohnson.PetriNetter.editor.examples;
 
 import java.awt.event.ActionEvent;

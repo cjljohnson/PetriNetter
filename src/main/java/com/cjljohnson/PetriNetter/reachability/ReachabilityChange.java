@@ -1,3 +1,12 @@
+/*
+ * An undoable change for showing and hiding the reachability graph.
+ * Can be added to the PetriGraph model's active edit to keep the undo and 
+ * redo actions atomic when the graphs are created or closed.
+ * 
+ * @author Chris Johnson
+ * @version v1.0
+ */
+
 package com.cjljohnson.PetriNetter.reachability;
 
 import javax.swing.JSplitPane;

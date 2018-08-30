@@ -1,3 +1,14 @@
+/*
+ * The top level lightweight swing component.
+ * Encapsulates all the other components such as the menu bar,
+ * tool bar and PetriNetManager components.
+ * 
+ * Also responsible for configuring the JFrame the program runs in.
+ * 
+ * @author Chris Johnson
+ * @version v1.0
+ */
+
 package com.cjljohnson.PetriNetter.editor;
 
 import java.awt.BorderLayout;
@@ -114,7 +125,6 @@ public class PetriEditor extends JPanel{
         PetriGraph graph = (PetriGraph)manager.getPetriComponent().getGraph();
         graph.highlightActiveTransitions(highlightTransitions);
         pane.setSelectedIndex(pane.getTabCount() - 1);
-        //updateTitle(manager);
         
         return manager;
     }
@@ -144,7 +154,6 @@ public class PetriEditor extends JPanel{
     }
     
     public boolean closeAllTabs() {
-    	//pane.getTreeLock();
     	while (pane.getTabCount() > 0) {
     		boolean successful = closeTab(0);
     		if (!successful) {
@@ -194,6 +203,12 @@ public class PetriEditor extends JPanel{
     	}
     }
     
+   /*
+    * Binds actions to this component so this component is the event source.
+    * 
+    * Adapted from JGraphX example code:
+    * https://github.com/jgraph/jgraphx/blob/master/examples/com/mxgraph/examples/swing/editor/BasicGraphEditor.java
+    */
     @SuppressWarnings("serial")
     public Action bind(String name, final Action action, String iconUrl)
     {        		
@@ -203,11 +218,16 @@ public class PetriEditor extends JPanel{
         return bind(name, action, icon);
     }
     
+    /*
+     * Binds actions to this component so this component is the event source.
+     * 
+     * Adapted from JGraphX example code:
+     * https://github.com/jgraph/jgraphx/blob/master/examples/com/mxgraph/examples/swing/editor/BasicGraphEditor.java
+     */
     @SuppressWarnings("serial")
     public Action bind(String name, final Action action, Icon icon)
     {
         AbstractAction newAction = new AbstractAction(name, icon)
-//        AbstractAction newAction = new AbstractAction(name, (iconUrl != null) ? null : null)
         {
             public void actionPerformed(ActionEvent e)
             {
@@ -286,14 +306,5 @@ public class PetriEditor extends JPanel{
         
         PetriEditor editor = new PetriEditor("PetriNetter");
         
-        //JTabbedPane pane = new JTabbedPane();
-//        pane.add("Petri Net 1", new PetriNetManager());
-//        pane.setTabComponentAt(0, new ButtonTabComponent(pane));
-//        pane.add("Petri Net 2", new PetriNetManager());
-//        pane.setTabComponentAt(1, new ButtonTabComponent(pane));
-//        frame.add(pane);
-//        frame.pack();
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        frame.setVisible(true);
     }
 }

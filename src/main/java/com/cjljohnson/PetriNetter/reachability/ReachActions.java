@@ -1,3 +1,11 @@
+/*
+ * Contains the actions relating to the ReachabilityGraph component.
+ * Mainly contains actions that are accessible by right clicking the Reachability Graph.
+ * 
+ * @author Chris Johnson
+ * @version v1.0
+ */
+
 package com.cjljohnson.PetriNetter.reachability;
 
 import java.awt.Component;
@@ -35,14 +43,6 @@ public class ReachActions {
 
     public static class PositionLabelAction extends AbstractAction
     {
-
-        /**
-         * 
-         */
-
-        /**
-         * 
-         */
         private static final long serialVersionUID = 3887344511242268848L;
         private mxGraphComponent reachComponent;
         private Object cell;
@@ -121,15 +121,7 @@ public class ReachActions {
     public static class CloseReachabilityAction extends AbstractAction
     {
 
-        /**
-         * 
-         */
         private static final long serialVersionUID = 938191175262154014L;
-
-        /**
-         * 
-         */
-
         /**
          * 
          * @param name
@@ -162,17 +154,6 @@ public class ReachActions {
 		    } finally {
 		    	model.endUpdate();
 		    }
-		    
-//		    ReachabilityChange reachChange = new ReachabilityChange(manager, false, null, null);
-//		    reachChange.execute();
-//		    
-//		    mxUndoableEdit edit = new mxUndoableEdit(this);
-//		    edit.add(reachChange);
-//		    
-//		    manager.getUndoManager().undoableEditHappened(edit);
-//		    
-//		    manager.revertToFinalised();
-
         }
     }
 }

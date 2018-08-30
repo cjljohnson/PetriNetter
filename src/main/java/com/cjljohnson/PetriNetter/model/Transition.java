@@ -1,3 +1,14 @@
+/*
+ * The properties related to Transition objects.
+ * 
+ * In the editor these should be treated as immutable so as 
+ * not to corrupt the undo history.  There are setters so that 
+ * the file codecs can load nets from XML.
+ * 
+ * @author Chris Johnson
+ * @version v1.0
+ */
+
 package com.cjljohnson.PetriNetter.model;
 
 import java.io.Serializable;

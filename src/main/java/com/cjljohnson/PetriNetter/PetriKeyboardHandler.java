@@ -1,5 +1,9 @@
-/**
- * Copyright (c) 2008, Gaudenz Alder
+/*
+ * Keyboard handler for PetriGraph component.
+ * Sets the key bindings for the component.
+ * 
+ * @author Chris Johnson
+ * @version v1.0
  */
 
 package com.cjljohnson.PetriNetter;

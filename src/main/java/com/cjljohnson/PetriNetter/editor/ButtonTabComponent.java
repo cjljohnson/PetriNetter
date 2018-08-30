@@ -1,6 +1,3 @@
-package com.cjljohnson.PetriNetter.editor;
-
-
 /*
  * Copyright (c) 1995, 2008, Oracle and/or its affiliates. All rights reserved.
  *
@@ -31,6 +28,8 @@ package com.cjljohnson.PetriNetter.editor;
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+package com.cjljohnson.PetriNetter.editor;
  
 import javax.swing.*;
 import javax.swing.*;
@@ -41,7 +40,11 @@ import java.awt.event.*;
 /**
  * Component to be used as tabComponent;
  * Contains a JLabel to show the text and 
- * a JButton to close the tab it belongs to 
+ * a JButton to close the tab it belongs to
+ * 
+ * Modified from:
+ *  https://docs.oracle.com/javase/tutorial/uiswing/examples
+ *    /components/TabComponentsDemoProject/src/components/ButtonTabComponent.java
  */
 public class ButtonTabComponent extends JPanel {
     private final JTabbedPane pane;

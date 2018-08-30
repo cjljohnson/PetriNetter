@@ -1,3 +1,18 @@
+/*
+ * The graph object for Petri nets.
+ * 
+ * Acts as an interface for creating modifications to the graph.
+ * Any changes should be made using these methods rather than on 
+ * the objects them selves to maintain the integrity of the graph.
+ * 
+ * The Petri net specific methods such as addPlace should be used 
+ * instead of the generic JGraphX methods so as not to create an 
+ * invalid Petri net.
+ * 
+ * @author Chris Johnson
+ * @version v1.0
+ */
+
 package com.cjljohnson.PetriNetter.model;
 
 import java.util.ArrayList;

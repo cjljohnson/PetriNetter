@@ -1,3 +1,12 @@
+/*
+ * Custom edge style function that draws opposing edges with opposite curves 
+ * so they do not overlap.
+ * 
+ * 
+ * @author Chris Johnson
+ * @version v1.0
+ */
+
 package com.cjljohnson.PetriNetter.view;
 
 import java.util.List;
@@ -26,9 +35,6 @@ public class PetriEdgeFunction implements mxEdgeStyleFunction{
         if (!isBidirectional)
             return;
         
-        
-//        mxPoint p0 = state.getAbsolutePoint(0);
-//        mxPoint pe = state.getAbsolutePoint(state.getAbsolutePointCount() - 1);
         double midX = (source.getCenterX() + target.getCenterX()) / 2;
         double midY = (source.getCenterY() + target.getCenterY()) / 2;
         

@@ -1,3 +1,11 @@
+/*
+ * Keyboard handler for PetriEditor component
+ * Sets the key bindings for the editor component.
+ * 
+ * @author Chris Johnson
+ * @version v1.0
+ */
+
 package com.cjljohnson.PetriNetter.editor;
 
 import javax.swing.ActionMap;

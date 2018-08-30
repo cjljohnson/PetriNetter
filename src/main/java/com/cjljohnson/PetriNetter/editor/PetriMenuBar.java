@@ -1,3 +1,11 @@
+/*
+ * Builds a JMenuBar of the menu actions for the editor.
+ * Contains actions available from the menu.
+ * 
+ * @author Chris Johnson
+ * @version v1.0
+ */
+
 package com.cjljohnson.PetriNetter.editor;
 
 import java.awt.event.ActionEvent;

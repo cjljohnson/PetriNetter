@@ -1,3 +1,11 @@
+/*
+ * Contains ToolActions that change the mouse look and 
+ * behaviour when clicking on the PetriGraph.
+ * 
+ * @author Chris Johnson
+ * @version v1.0
+ */
+
 package com.cjljohnson.PetriNetter.editor.tools;
 
 import java.awt.Component;

@@ -1,3 +1,11 @@
+/*
+ * Builds a contextual JPopupMenu when the PetriGraph is right clicked.
+ * Contains actions available on right click and component property fields.
+ * 
+ * @author Chris Johnson
+ * @version v1.0
+ */
+
 package com.cjljohnson.PetriNetter;
 
 import java.awt.Component;
@@ -39,8 +47,6 @@ public class PetriRightClick extends JPopupMenu
 
 	public PetriRightClick(final PetriNetManager manager, int x, int y)
 	{
-		//		boolean selected = !hello.getGraphComponent().getGraph()
-		//				.isSelectionEmpty();
 
 		final Object cell = manager.getPetriComponent().getCellAt(x, y);
 
@@ -67,30 +73,6 @@ public class PetriRightClick extends JPopupMenu
 			add(manager.bind("Reachability Graph", PetriGraphActions.getCreateReachabilityAction(),
 					"/images/reach.gif"));
 		}
-
-		//	    add(manager.bind2("Reach", PetriGraphActions.getCreateReachabilityAction(),
-		//	            "/petri/images/reach.gif"));
-		//
-		//        addSeparator();
-		//
-		//        //		add(hello.bind("undo", new HistoryAction(true),
-		//        //				"/com/mxgraph/examples/swing/images/undo.gif"));
-		//
-		//        add(manager.bind("Delete", mxGraphActions.getDeleteAction(),
-		//                "/images/cross.png"))
-		//        .setEnabled(true);
-
-
-		//		add(manager.bind("New", new PetriGraphActions.NewAction(), 
-		//				"/com/mxgraph/examples/swing/images/new.gif"));
-		//		
-		//		add(manager.bind("Save As", new PetriGraphActions.SaveAction(true), 
-		//				"/com/mxgraph/examples/swing/images/save.gif"));
-		//		
-		//		add(manager.bind("Open", new PetriGraphActions.OpenAction(),
-		//				"/com/mxgraph/examples/swing/images/open.gif"));
-
-		//		add(hello.bind("Load", new PetriGraphActions.LoadAction(true), "/com/mxgraph/examples/swing/images/load.gif"));
 
 		if (manager.reachValid()) {
 			add(manager.bind("Close Reachability Graph", ReachActions.getCloseReachabilityAction(),
@@ -175,8 +157,6 @@ public class PetriRightClick extends JPopupMenu
 
 			// Capacity
 			JPanel capacityPanel = new JPanel();
-			//capacityPanel.setLayout(new BoxLayout(capacityPanel, BoxLayout.X_AXIS));
-			//capacityPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 			JLabel capacityL = new JLabel("Capacity:");
 			final JTextField capacityTF = new JTextField(7);
 			if (place.getCapacity() == -1) {

@@ -1,3 +1,14 @@
+/*
+ * The graph object for Reachability graphs.
+ * 
+ * Generates a reachability graph based off the PetriGraph passed 
+ * as a parameter.  Also responsible for analysis options that are 
+ * based off the reachability graph.
+ * 
+ * @author Chris Johnson
+ * @version v1.0
+ */
+
 package com.cjljohnson.PetriNetter.reachability;
 
 import java.awt.GridLayout;
@@ -44,7 +55,7 @@ public class ReachabilityGraph extends mxGraph{
 	private int size;
 	private PetriGraph graph;
 	private PetriGraph graph2;
-	int i;
+	private int i;
 	private Set<Object> liveSet;
 	private boolean isComplete;
 	private Map<String, Integer> boundedness;
@@ -186,7 +197,6 @@ public class ReachabilityGraph extends mxGraph{
 				i++;
 			}
 			setCellStyle(node.getStyle() + ";INITIAL", new Object[] {node});
-			System.out.println("YEE");
 			graph2.setPlaceTokens(s1);
 			graph2.refresh();
 			setCurrentCell(node);
@@ -250,14 +260,6 @@ public class ReachabilityGraph extends mxGraph{
 	
 	private void initStyles() {
 		mxStylesheet stylesheet = getStylesheet();
-//		Hashtable<String, Object> nodeStyle = new Hashtable<String, Object>();
-//		nodeStyle.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_RECTANGLE);
-//		nodeStyle.put(mxConstants.STYLE_OPACITY, 100);
-//		nodeStyle.put(mxConstants.STYLE_FONTCOLOR, "#000000");
-//		nodeStyle.put(mxConstants.STYLE_FILLCOLOR, "#FFFFFF");
-//		nodeStyle.put(mxConstants.STYLE_STROKECOLOR, "#FF0000");
-//		nodeStyle.put(mxConstants.STYLE_STROKEWIDTH, 2);
-//		stylesheet.putCellStyle("NODE", nodeStyle);
 		
 		Hashtable<String, Object> nodeStyle = new Hashtable<String, Object>();
 		nodeStyle.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_ELLIPSE);
@@ -275,13 +277,10 @@ public class ReachabilityGraph extends mxGraph{
 		
 		Hashtable<String, Object> currentStyle = new Hashtable<String, Object>();
         currentStyle.put(mxConstants.STYLE_FILLCOLOR, "#00FF00");
-        //currentStyle.put(mxConstants.STYLE_STROKEWIDTH, 4);
         stylesheet.putCellStyle("CURRENT", currentStyle);
         
         Hashtable<String, Object> initialStyle = new Hashtable<String, Object>();
-        //initialStyle.put(mxConstants.STYLE_FILLCOLOR, "#00FF00");
         initialStyle.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_DOUBLE_ELLIPSE);
-        //initialStyle.put(mxConstants.STYLE_STROKEWIDTH, 4);
         stylesheet.putCellStyle("INITIAL", initialStyle);
 		
 		Map<String, Object> edge = new HashMap<String, Object>();
@@ -296,8 +295,6 @@ public class ReachabilityGraph extends mxGraph{
 	    
 	    edge.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_BOTTOM);
         edge.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_LEFT);
-	    //edge.put(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, "#ffffff");
-	    //edge.put(mxConstants.STYLE_LABEL_BORDERCOLOR, "#000000");
         stylesheet.putCellStyle("EDGE", edge);
 		getStylesheet().setDefaultEdgeStyle(edge);
 		
@@ -386,38 +383,9 @@ public class ReachabilityGraph extends mxGraph{
 	public void setCellLabelPosition(Object obj, String position) {
 	    if (obj instanceof mxCell && ((mxCell)obj).isEdge()) {
 	        mxCell cell = (mxCell)obj;
-            //String style = cell.getStyle().replaceFirst(";ALIGN_..", "");
-            //style += ";ALIGN_" + position;
-            //System.out.println(style);
 	        String style = "EDGE;ALIGN_" + position;
             setCellStyle(style, new Object[] {cell});
         }
-	}
-	
-	@Override
-	public String convertValueToString(Object cell)
-	{
-//		if (cell instanceof mxCell)
-//		{
-//			Object value = ((mxCell) cell).getValue();
-//
-//			if (value instanceof Map<?,?>)
-//			{	
-//				Map<String, Integer> map = (Map<String, Integer>)value;
-//				StringBuilder sb = new StringBuilder();
-//				for (String id : map.keySet()) {
-//					Object vertex = ((mxGraphModel)graph.getModel()).getCell(id);
-//					sb.append('p');
-//					sb.append(graph.getCellMarkingName(vertex));
-//					sb.append(": ");
-//					sb.append(map.get(id));
-//					sb.append('\n');
-//				}
-//				return sb.toString();
-//			}
-//		}
-
-		return super.convertValueToString(cell);
 	}
 	
 	@Override

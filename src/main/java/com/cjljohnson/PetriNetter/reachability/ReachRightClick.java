@@ -1,3 +1,11 @@
+/*
+ * Builds a contextual JPopupMenu when the ReachabilityGraph is right clicked.
+ * Contains actions available on right click and component property fields.
+ * 
+ * @author Chris Johnson
+ * @version v1.0
+ */
+
 package com.cjljohnson.PetriNetter.reachability;
 
 import java.awt.Component;

@@ -1,3 +1,13 @@
+/*
+ * Builds a JToolBar of the toolbar actions for the editor.
+ * Contains actions available from the toolbar.
+ * 
+ * Tool modes are part of a button group and can be toggled between.
+ * 
+ * @author Chris Johnson
+ * @version v1.0
+ */
+
 package com.cjljohnson.PetriNetter.editor;
 
 import java.awt.BorderLayout;
