@@ -6,6 +6,7 @@
  * See LICENSE file for license details. If you are unable to locate
  * this file please contact info (at) jgraph (dot) com.
  */
+
 package com.cjljohnson.PetriNetter;
 
 import java.io.File;

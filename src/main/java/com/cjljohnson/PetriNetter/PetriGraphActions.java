@@ -1,3 +1,7 @@
+/*
+ * 
+ */
+
 package com.cjljohnson.PetriNetter;
 
 import java.awt.Color;

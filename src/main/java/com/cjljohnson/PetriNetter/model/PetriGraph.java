@@ -124,95 +124,7 @@ public class PetriGraph extends mxGraph{
 		return super.convertValueToString(cell);
 	}
 	
-//	// Overrides method to store a cell label in the model
-//	public void cellLabelChanged(Object cell, Object newValue,
-//			boolean autoSize)
-//	{
-//		if (cell instanceof mxCell && newValue != null)
-//		{
-//			Object value = ((mxCell) cell).getValue();
-//
-//			if (value instanceof Node)
-//			{
-//				String label = newValue.toString().trim();
-//				Element elt = (Element) value;
-//
-//				if (elt.getTagName().equalsIgnoreCase("place"))
-//				{
-//
-//					try {
-//						int val = Integer.parseInt(label);
-//						if (!getCellGeometry(cell).isRelative()) { // Capacity label
-//							if (val < 0) return;
-//						} else {
-//							if (val < -1) return;
-//						}
-//					} catch (Exception e) {
-//						return;
-//					}
-//
-//					// Clones the value for correct undo/redo
-//					//elt = (Element) elt.cloneNode(true);
-//					
-//					if (!getCellGeometry(cell).isRelative()) { // Capacity label
-//						elt.setAttribute("tokens", label);
-//					} else {
-//						elt.setAttribute("capacity", label);	
-//					}
-//
-//					newValue = elt;
-//										
-//				}
-//				
-//				if (elt.getTagName().equalsIgnoreCase("arc"))
-//				{
-//					try {
-//						int weight = Integer.parseInt(label);
-//						if (weight < 1
-//								) return;
-//					} catch (Exception e) {
-//						return;
-//					}
-//
-//					// Clones the value for correct undo/redo
-//					elt = (Element) elt.cloneNode(true);
-//
-//					elt.setAttribute("weight", label);
-//
-//					newValue = elt;
-//				}
-//			}
-//		}
-//
-//		super.cellLabelChanged(cell, newValue, autoSize);
-//		
-//		// Update active transitions
-//		if (cell instanceof mxCell && newValue != null)
-//		{
-//			Object value = ((mxCell) cell).getValue();
-//
-//			if (value instanceof Node)
-//			{
-//				String label = newValue.toString().trim();
-//				Element elt = (Element) value;
-//
-//				if (elt.getTagName().equalsIgnoreCase("place"))
-//				{
-//					if (!getCellGeometry(cell).isRelative()) { // Capacity label
-//						checkEnabledFromPlace(cell);
-//						
-//					} else {
-//						checkEnabledFromPlace(((mxCell)cell).getParent());
-//					}
-//					
-//				} else if (elt.getTagName().equalsIgnoreCase("arc"))
-//				{
-//					checkEnabledFromEdge(cell);
-//				}
-//			}
-//		}
-//	}
-	
+
 	/**
 	 * Returns the validation error message to be displayed when inserting or
 	 * changing an edges' connectivity. A return value of null means the edge
@@ -688,7 +600,6 @@ public class PetriGraph extends mxGraph{
 				}
 			}
 		}
-		System.out.println(tokenMap.toString());
 		return tokenMap;
 	}
 	
@@ -808,7 +719,7 @@ public class PetriGraph extends mxGraph{
 	public boolean setCapacity(Object cell, int capacity) {
         if (cell == null || !(cell instanceof mxCell) ||
                 !(((mxCell)cell).getValue() instanceof Place)
-                || capacity < -1) {
+                || capacity < -1 || capacity == 0) {
             return false;
         }
         Place place = (Place)((mxCell)cell).getValue();
@@ -873,6 +784,21 @@ public class PetriGraph extends mxGraph{
 		}
 		return places.toArray();
 	}
+	
+	public Object[] getTransitions() {
+		List<mxCell> transitions = new ArrayList<mxCell>();
+		
+		Object[] vertices = getChildVertices(getDefaultParent());
+		for (Object vertex : vertices) {
+			mxCell cell = (mxCell)vertex;
+
+			if (cell.getValue() instanceof Transition) {
+				Transition transition = (Transition)cell.getValue();
+				transitions.add(cell);
+			}
+		}
+		return transitions.toArray();
+	}
 
 	private void initStyles() {
 	    mxStylesheet stylesheet = getStylesheet();
@@ -910,17 +836,10 @@ public class PetriGraph extends mxGraph{
         activeTransitionStyle.put(mxConstants.STYLE_STROKECOLOR, "#FF0000");
         stylesheet.putCellStyle("ACTIVETRANSITION", activeTransitionStyle);
 		
-//		Hashtable<String, Object> arcStyle = new Hashtable<String, Object>();
-//		arcStyle.put(mxConstants.STYLE_OPACITY, 100);
-//		arcStyle.put(mxConstants.STYLE_FONTCOLOR, "#000000");
-//		arcStyle.put(mxConstants.STYLE_FILLCOLOR, "#FFFFFF");
-//		arcStyle.put(mxConstants.STYLE_STROKECOLOR, "#000000");
-//		arcStyle.put(mxConstants.STYLE_STROKEWIDTH, 5);
-//		stylesheet.putCellStyle("ARC", arcStyle);
+
 		
 		// Settings for edges
 	    Map<String, Object> edge = new HashMap<String, Object>();
-	    //edge.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CURVE);
 	    edge.put(mxConstants.STYLE_ORTHOGONAL, false);
 	    edge.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CONNECTOR);
 	    edge.put(mxConstants.STYLE_ENDARROW, mxConstants.ARROW_CLASSIC);
