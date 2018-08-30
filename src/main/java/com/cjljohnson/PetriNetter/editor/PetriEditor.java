@@ -37,10 +37,10 @@ import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import com.cjljohnson.PetriNetter.PetriNetManager;
 import com.cjljohnson.PetriNetter.editor.tools.PetriToolActions;
 import com.cjljohnson.PetriNetter.editor.tools.PetriToolActions.ToolAction;
 import com.cjljohnson.PetriNetter.model.PetriGraph;
+import com.cjljohnson.PetriNetter.petri.PetriNetManager;
 import com.mxgraph.util.mxResources;
 
 public class PetriEditor extends JPanel{

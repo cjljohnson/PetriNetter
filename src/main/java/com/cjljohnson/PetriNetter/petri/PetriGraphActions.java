@@ -7,7 +7,7 @@
  */
 
 
-package com.cjljohnson.PetriNetter;
+package com.cjljohnson.PetriNetter.petri;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -39,6 +39,7 @@ import javax.swing.filechooser.FileFilter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.cjljohnson.PetriNetter.editor.DefaultFileFilter;
 import com.cjljohnson.PetriNetter.model.PetriGraph;
 import com.cjljohnson.PetriNetter.reachability.ReachabilityGraph;
 import com.mxgraph.canvas.mxICanvas;

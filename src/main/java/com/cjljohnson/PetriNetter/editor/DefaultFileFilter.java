@@ -7,7 +7,7 @@
  * this file please contact info (at) jgraph (dot) com.
  */
 
-package com.cjljohnson.PetriNetter;
+package com.cjljohnson.PetriNetter.editor;
 
 import java.io.File;
 

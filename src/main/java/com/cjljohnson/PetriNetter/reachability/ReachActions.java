@@ -13,8 +13,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import com.cjljohnson.PetriNetter.PetriNetManager;
 import com.cjljohnson.PetriNetter.model.PetriGraph;
+import com.cjljohnson.PetriNetter.petri.PetriNetManager;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.swing.mxGraphComponent;

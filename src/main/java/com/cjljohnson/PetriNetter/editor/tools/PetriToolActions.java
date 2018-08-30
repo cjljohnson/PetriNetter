@@ -19,10 +19,10 @@ import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 
-import com.cjljohnson.PetriNetter.PetriNetManager;
 import com.cjljohnson.PetriNetter.editor.PetriEditor;
 import com.cjljohnson.PetriNetter.model.PetriGraph;
 import com.cjljohnson.PetriNetter.model.Place;
+import com.cjljohnson.PetriNetter.petri.PetriNetManager;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 

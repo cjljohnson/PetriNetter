@@ -6,7 +6,7 @@
  * @version v1.0
  */
 
-package com.cjljohnson.PetriNetter;
+package com.cjljohnson.PetriNetter.petri;
 
 
 

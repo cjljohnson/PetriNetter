@@ -19,9 +19,9 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.UIManager;
 
-import com.cjljohnson.PetriNetter.PetriGraphActions;
 import com.cjljohnson.PetriNetter.editor.PetriEditorActions.HighlightTransitionsAction;
 import com.cjljohnson.PetriNetter.editor.examples.ExampleActions;
+import com.cjljohnson.PetriNetter.petri.PetriGraphActions;
 
 public class PetriMenuBar extends JMenuBar{
     

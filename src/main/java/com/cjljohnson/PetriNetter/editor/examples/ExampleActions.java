@@ -15,10 +15,10 @@ import javax.swing.AbstractAction;
 
 import org.w3c.dom.Document;
 
-import com.cjljohnson.PetriNetter.PetriNetManager;
 import com.cjljohnson.PetriNetter.editor.PetriEditor;
 import com.cjljohnson.PetriNetter.model.Arc;
 import com.cjljohnson.PetriNetter.model.PetriGraph;
+import com.cjljohnson.PetriNetter.petri.PetriNetManager;
 import com.mxgraph.io.mxCodec;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.util.mxUtils;

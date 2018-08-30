@@ -15,7 +15,7 @@
  * @version v1.0
  */
 
-package com.cjljohnson.PetriNetter;
+package com.cjljohnson.PetriNetter.petri;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

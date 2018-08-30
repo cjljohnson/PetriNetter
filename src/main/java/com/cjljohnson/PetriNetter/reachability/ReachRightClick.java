@@ -15,12 +15,12 @@ import javax.swing.AbstractAction;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 
-import com.cjljohnson.PetriNetter.PetriGraphActions;
-import com.cjljohnson.PetriNetter.PetriNetManager;
 import com.cjljohnson.PetriNetter.model.Arc;
 import com.cjljohnson.PetriNetter.model.PetriGraph;
 import com.cjljohnson.PetriNetter.model.Place;
 import com.cjljohnson.PetriNetter.model.Transition;
+import com.cjljohnson.PetriNetter.petri.PetriGraphActions;
+import com.cjljohnson.PetriNetter.petri.PetriNetManager;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.swing.mxGraphComponent;

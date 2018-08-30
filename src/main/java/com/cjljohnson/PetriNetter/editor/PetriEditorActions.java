@@ -42,9 +42,8 @@ import javax.swing.filechooser.FileFilter;
 
 import org.w3c.dom.Document;
 
-import com.cjljohnson.PetriNetter.DefaultFileFilter;
-import com.cjljohnson.PetriNetter.PetriNetManager;
 import com.cjljohnson.PetriNetter.model.PetriGraph;
+import com.cjljohnson.PetriNetter.petri.PetriNetManager;
 import com.cjljohnson.PetriNetter.reachability.ReachabilityChange;
 import com.mxgraph.canvas.mxICanvas;
 import com.mxgraph.canvas.mxSvgCanvas;

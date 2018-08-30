@@ -11,7 +11,7 @@ package com.cjljohnson.PetriNetter.reachability;
 
 import javax.swing.JSplitPane;
 
-import com.cjljohnson.PetriNetter.PetriNetManager;
+import com.cjljohnson.PetriNetter.petri.PetriNetManager;
 import com.mxgraph.model.mxIGraphModel.mxAtomicGraphModelChange;
 import com.mxgraph.swing.mxGraphComponent;
 
