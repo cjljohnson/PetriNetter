@@ -84,7 +84,6 @@ public class PetriMenuBar extends JMenuBar{
           }
         };
         showHighlight.addActionListener(highlightAction);
-        //showHighlight.setAction(new PetriEditorActions.HighlightTransitionsAction(editor));
         menu.add(showHighlight);
         showHighlight.setSelected(true);
         

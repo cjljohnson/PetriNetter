@@ -29,6 +29,9 @@ public class ReachActions {
 		return closeReachabilityAction;
 	}
     
+	/*
+	 * Get reachabiltiy graph from event.
+	 */
     public static final mxGraph getGraph(ActionEvent e)
     {
         Object source = e.getSource();
@@ -41,6 +44,9 @@ public class ReachActions {
         return null;
     }
 
+    /*
+     * Position label of arc
+     */
     public static class PositionLabelAction extends AbstractAction
     {
         private static final long serialVersionUID = 3887344511242268848L;
@@ -75,16 +81,11 @@ public class ReachActions {
         }
     }
     
+    /*
+     * Set the cell to current cell.
+     */
     public static class GoToNodeAction extends AbstractAction
     {
-
-        /**
-         * 
-         */
-
-        /**
-         * 
-         */
         private static final long serialVersionUID = 3887344511242268848L;
         private mxGraphComponent reachComponent;
         private Object cell;
@@ -118,6 +119,9 @@ public class ReachActions {
         }
     }
     
+    /*
+     * Close reachabiltiy graph
+     */
     public static class CloseReachabilityAction extends AbstractAction
     {
 

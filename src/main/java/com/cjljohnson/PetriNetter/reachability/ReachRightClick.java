@@ -30,7 +30,6 @@ public class ReachRightClick extends JPopupMenu {
     
     public ReachRightClick(final PetriNetManager manager, final mxGraphComponent reachComponent, int x, int y)
     {
-        //final Object cell = hello.getGraphComponent().getCellAt(x, y);
         
         final Object cell = reachComponent.getCellAt(x, y);
 
@@ -38,8 +37,6 @@ public class ReachRightClick extends JPopupMenu {
             edgeMenu(reachComponent, cell);
         } else if (cell != null && ((mxCell)cell).isVertex()) {
         	vertexMenu(manager, reachComponent, cell);
-        } else {
-        	System.out.println("YEE");
         }
         
         add(new AbstractAction("Find Marking", null) {
@@ -47,7 +44,6 @@ public class ReachRightClick extends JPopupMenu {
             
 
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
                 ReachabilityGraph graph = (ReachabilityGraph)reachComponent.getGraph();
                 graph.findNodes();
             }
@@ -57,10 +53,16 @@ public class ReachRightClick extends JPopupMenu {
         
     }
     
+    /*
+     * Create vertex specific components vertex cell is clicked.
+     */
     private void vertexMenu(PetriNetManager manager, mxGraphComponent reachComponent, Object cell) {
     	add(manager.bind("Go to Marking", new ReachActions.GoToNodeAction("goto", reachComponent, cell), "/images/place.gif"));
     }
     
+    /*
+     * Create edge specific components when edge cell clicked.
+     */
     private void edgeMenu(mxGraphComponent reachComponent, Object cell) {
         
         JMenu positionMenu = new JMenu("Label position");
@@ -73,13 +75,7 @@ public class ReachRightClick extends JPopupMenu {
         positionMenu.add(new ReachActions.PositionLabelAction("Bottom Left", reachComponent, cell, "TR"));
         positionMenu.add(new ReachActions.PositionLabelAction("Bottom Right", reachComponent, cell, "TL"));
         
-
         add(positionMenu);
-        
-        
-        
-//        add(manager.bind("Fire Transition", new PetriGraphActions.FireTransitionAction(cell),
-//                        "/images/lightning_go.png"))
 
         addSeparator();
     }

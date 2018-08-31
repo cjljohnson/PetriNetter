@@ -60,7 +60,8 @@ public class PetriRightClick extends JPopupMenu
 				transitionMenu(manager, cell, (Transition)value);
 			}
 		}
-
+		
+		// Options only when in editor mode.
 		if (!manager.reachValid()) {
 			add(manager.bind("Add Place", PetriGraphActions.getCreatePlaceAction(x, y),
 					"/images/place.gif"));
@@ -74,6 +75,7 @@ public class PetriRightClick extends JPopupMenu
 					"/images/reach.gif"));
 		}
 
+		// Options only when in reachability mode
 		if (manager.reachValid()) {
 			add(manager.bind("Close Reachability Graph", ReachActions.getCloseReachabilityAction(),
 					"/images/cancel.png"));
@@ -87,8 +89,6 @@ public class PetriRightClick extends JPopupMenu
 			setAlignmentX(Component.LEFT_ALIGNMENT);
 			// Name
 			JPanel namePanel = new JPanel();
-			//namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.X_AXIS));
-			//namePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 			JLabel nameL = new JLabel(" Name:    ");
 			final JTextField nameTF = new JTextField(7);
 			nameTF.setText(place.getName());
@@ -121,8 +121,6 @@ public class PetriRightClick extends JPopupMenu
 			
 			// Tokens
 			JPanel tokensPanel = new JPanel();
-			//tokensPanel.setLayout(new BoxLayout(tokensPanel, BoxLayout.X_AXIS));
-			//tokensPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
 			JLabel tokensL = new JLabel("Tokens:  ");
 			final JTextField tokensTF = new JTextField(7);
 			tokensTF.setText(Integer.toString(place.getTokens()));

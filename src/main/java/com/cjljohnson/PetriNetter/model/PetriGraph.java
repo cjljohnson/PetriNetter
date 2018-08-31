@@ -61,11 +61,13 @@ public class PetriGraph extends mxGraph{
 		return super.isCellSelectable(cell);
 	}
 	
+	// Prevents cells from being minimsed and expanded
 	public boolean isCellFoldable(Object cell, boolean collapse)
 	{
 		return false;
 	}
 	
+	// Don't allow connections to place labels
 	public boolean isCellConnectable(Object cell) {
 		if (cell instanceof mxCell)
 		{
@@ -79,6 +81,13 @@ public class PetriGraph extends mxGraph{
 		return super.isCellSelectable(cell);
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * Label string for each component.
+	 * 
+	 * @see com.mxgraph.view.mxGraph#convertValueToString(java.lang.Object)
+	 */
 	@Override
 	public String convertValueToString(Object cell)
 	{
@@ -241,6 +250,13 @@ public class PetriGraph extends mxGraph{
 		return (allowDanglingEdges) ? null : "";
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * Petri net specific rules for edge connection.
+	 * 
+	 * @see com.mxgraph.view.mxGraph#validateEdge(java.lang.Object, java.lang.Object, java.lang.Object)
+	 */
 	public String validateEdge(Object edge, Object source, Object target)
 	{
 	    if (source != null && source instanceof mxCell
@@ -265,6 +281,11 @@ public class PetriGraph extends mxGraph{
 	    return "";
 	}
 	
+	/*
+	 * Fires a transition cell passed as a parameter if it is enabled.
+	 * 
+	 * Updates transition highlighting.
+	 */
 	public boolean fireTransition(Object obj)
 	{
 		if (!(obj instanceof mxCell))
@@ -308,15 +329,26 @@ public class PetriGraph extends mxGraph{
 		{
 		    model.endUpdate();
 		}
-		System.out.println(((mxCell)obj).getValue());
 		
 		return true;
 	}
 	
+	/*
+	 * Add place at 0,0.
+	 */
 	public Object addPlace(int tokens, int capacity) {
         return addPlace(tokens, capacity, 0, 0);
     }
 	
+	/*
+	 * Add new place.
+	 * 
+	 * Tokens is initial number of tokens in place. Must be in 
+	 * range 0 - capacity.
+	 * 
+	 * Capacity is max tokens possible at the place.  Must be >1 and 
+	 * >tokens, or -1 for infinite capacity.
+	 */
 	public Object addPlace(int tokens, int capacity, int x, int y) {
 	    Object cell;
 		try {
@@ -339,10 +371,16 @@ public class PetriGraph extends mxGraph{
 		return cell;
 	}
 	
+	/*
+	 * Add transition at 0,0.
+	 */
 	public Object addTransition() {
         return addTransition(0, 0);
     }
 	
+	/*
+	 * Add transition at coordinates.
+	 */
 	public Object addTransition(int x, int y) {
 	    Object cell;
 		try {
@@ -358,6 +396,17 @@ public class PetriGraph extends mxGraph{
 		return cell;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * Create edge between two vertices.
+	 * 
+	 * New edges have an arc weight of 1.
+	 * 
+	 * must be between place and transition or transition and place.
+	 * 
+	 * @see com.mxgraph.view.mxGraph#createEdge(java.lang.Object, java.lang.String, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.String)
+	 */
 	public Object createEdge(Object parent, String id, Object value,
 			Object source, Object target, String style)
 	{
@@ -371,6 +420,9 @@ public class PetriGraph extends mxGraph{
 		return result;
 	}
 	
+	/*
+	 * Update all transition highlighting.
+	 */
 	public void checkEnabledTransitions() {
 		
 		try
@@ -477,6 +529,9 @@ public class PetriGraph extends mxGraph{
 		}
 	}
 	
+	/*
+	 * Checks the enabled status of a transition
+	 */
 	public void checkEnabledTransition(Object o) {
 	    if (o instanceof mxCell) {
             Object value = ((mxCell) o).getValue();
@@ -516,6 +571,9 @@ public class PetriGraph extends mxGraph{
 		
 	}
 	
+	/*
+	 * Checks whether a transition is enabled.
+	 */
 	public boolean isFirable(Object obj) {
 	    
 	    mxCell t;
@@ -545,6 +603,10 @@ public class PetriGraph extends mxGraph{
         return true;
 	}
 	
+	/*
+	 * Check whether an arc meets the firing condition of the transition it is 
+	 * connected to.
+	 */
 	public boolean isFirableArc(Object o) {
 		if (o instanceof mxCell) {
 			mxCell edge = (mxCell)o;
@@ -576,6 +638,11 @@ public class PetriGraph extends mxGraph{
 		return false;
 	}
 
+	/*
+	 * Get the place or transition connected to an edge.
+	 * 
+	 * Parameter is TRUE to find the transition, FALSE to find the edge.
+	 */
 	public Object getVertexFromEdge(Object o, boolean transition) {
 		if (o != null && o instanceof mxCell) 
 		{
@@ -600,6 +667,12 @@ public class PetriGraph extends mxGraph{
 		return null;
 	}
 	
+	/*
+	 * Get a map of current place marking.
+	 * 
+	 * KEY: Cell id string.
+	 * VALUE: Number of tokens at place.
+	 */
 	public Map<String, Integer> getPlaceTokens() {
 		mxGraphModel model = (mxGraphModel) getModel();
 		Map<String, Object> cells = model.getCells();
@@ -618,6 +691,12 @@ public class PetriGraph extends mxGraph{
 		return tokenMap;
 	}
 	
+	/*
+	 * Set the marking to a map of cell IDs to tokens.
+	 * 
+	 * KEY: Cell id string.
+     * VALUE: Number of tokens at place.
+	 */
 	public void setPlaceTokens(Map<String, Integer> tokenMap) {
 		try {
 			getModel().beginUpdate();
@@ -635,6 +714,12 @@ public class PetriGraph extends mxGraph{
 		}
 	}
 	
+	/*
+	 * Get the index of a cell in comparison to other cells of the same type.
+	 * 
+	 * Used for place and transition reference names.
+	 * 
+	 */
 	public int getCellMarkingName(Object cell) {
 		if (cell != null && cell instanceof mxCell)
 		{
@@ -665,6 +750,9 @@ public class PetriGraph extends mxGraph{
 		return 0;
 	}
 	
+	/*
+	 * Set the name of a place.
+	 */
 	public boolean setPlaceName(Object cell, String newName) {
 		if (cell == null || !(cell instanceof mxCell) ||
 				!(((mxCell)cell).getValue() instanceof Place)) {
@@ -695,6 +783,11 @@ public class PetriGraph extends mxGraph{
 		return false;
 	}
 	
+	/*
+	 * Set number of tokens at a place.
+	 * 
+	 * Must be >= 0, and >= capacity if vapavity is not infinite.
+	 */
 	public boolean setTokens(Object cell, int tokens) {
 	    if (cell == null || !(cell instanceof mxCell) ||
 	            !(((mxCell)cell).getValue() instanceof Place)
@@ -721,6 +814,9 @@ public class PetriGraph extends mxGraph{
 	    return false;
 	}
 	
+	/*
+	 * Get number of tokens at a place.
+	 */
 	public int getTokens(Object cell) {
         if (cell == null || !(cell instanceof mxCell) ||
                 !(((mxCell)cell).getValue() instanceof Place)) {
@@ -731,6 +827,11 @@ public class PetriGraph extends mxGraph{
         return place.getTokens();
     }
 	
+	/*
+	 * Set capacity of a place.
+	 * 
+	 * Must be >0 and >= current tokens, or =1 for infinite capacity.
+	 */
 	public boolean setCapacity(Object cell, int capacity) {
         if (cell == null || !(cell instanceof mxCell) ||
                 !(((mxCell)cell).getValue() instanceof Place)
@@ -757,6 +858,11 @@ public class PetriGraph extends mxGraph{
         return false;
     }
 	
+	/*
+	 * Set arc weight.
+	 * 
+	 * Must be >0.
+	 */
 	public boolean setArcWeight(Object cell, int weight) {
 	    if (cell == null || !(cell instanceof mxCell) ||
 	            !(((mxCell)cell).getValue() instanceof Arc)
@@ -783,6 +889,9 @@ public class PetriGraph extends mxGraph{
 	    return true;
 	}
 	
+	/*
+	 * get list of all place cells.
+	 */
 	public Object[] getPlaces() {
 		List<mxCell> places = new ArrayList<mxCell>();
 		
@@ -800,6 +909,9 @@ public class PetriGraph extends mxGraph{
 		return places.toArray();
 	}
 	
+	/*
+	 * Get list of all transition cells.
+	 */
 	public Object[] getTransitions() {
 		List<mxCell> transitions = new ArrayList<mxCell>();
 		
@@ -814,7 +926,10 @@ public class PetriGraph extends mxGraph{
 		}
 		return transitions.toArray();
 	}
-
+	
+	/*
+	 * Initialise custom cell styles.
+	 */
 	private void initStyles() {
 	    mxStylesheet stylesheet = getStylesheet();
 		Hashtable<String, Object> placeStyle = new Hashtable<String, Object>();
@@ -911,6 +1026,9 @@ public class PetriGraph extends mxGraph{
         stylesheet.putCellStyle("ALIGN_BL", alignBL);
 	}
 	
+	/*
+	 * Enable/disable highlighting transitions by setting ACTIVETRANSITION style stroke colour.
+	 */
 	public void highlightActiveTransitions(boolean highlight) {
 		Map<String, Object> style = getStylesheet().getCellStyle("ACTIVETRANSITION", null);
 		
@@ -927,6 +1045,9 @@ public class PetriGraph extends mxGraph{
 		refresh();
 	}
 	
+	/*
+	 * Set position of arc labels relative to mid-point.
+	 */
 	public void setCellLabelPosition(Object obj, String position) {
         if (obj instanceof mxCell && ((mxCell)obj).isEdge()) {
             mxCell cell = (mxCell)obj;
@@ -942,6 +1063,9 @@ public class PetriGraph extends mxGraph{
         }
     }
 	
+	/*
+	 * Set place label position relative to place cell.
+	 */
 	public void setPlaceLabelPosition(Object obj, double x, double y) {
         if (obj instanceof mxCell && ((mxCell)obj).getValue() instanceof Place) {
             mxCell cell = (mxCell)obj;

@@ -91,6 +91,9 @@ public class ReachabilityGraph extends mxGraph{
 
 	}
 	
+	/*
+	 * Show semi-live transitions in popup.
+	 */
 	public void showLive() {
 		String message = "The following transitions are semi-live:\n";
 		
@@ -118,6 +121,9 @@ public class ReachabilityGraph extends mxGraph{
 		JOptionPane.showMessageDialog(null, message);
 	}
 
+	/*
+	 * Show deadlocked markings in popup.
+	 */
 	public void showDeadlock() {
 	    String message;
 
@@ -142,6 +148,9 @@ public class ReachabilityGraph extends mxGraph{
         JOptionPane.showMessageDialog(null, message);
     }
 	
+	/*
+	 * Show place boundedness in popup.
+	 */
 	public void showBounded() {
 		String message = "Place boundedness for all places:\n";
 		for (Map<String, Integer> map : nodeMap.keySet()) {
@@ -164,6 +173,13 @@ public class ReachabilityGraph extends mxGraph{
 		JOptionPane.showMessageDialog(null, message);
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * Can't select edges.
+	 * 
+	 * @see com.mxgraph.view.mxGraph#isCellSelectable(java.lang.Object)
+	 */
 	public boolean isCellSelectable(Object cell)
 	{
 	    if (getModel().isEdge(cell))
@@ -174,7 +190,13 @@ public class ReachabilityGraph extends mxGraph{
 	    return super.isCellSelectable(cell);
 	}
 	
-	
+	/*
+	 * Generate reachabiltiy graph from initial state.
+	 * 
+	 * Explores in breadth first manner.
+	 * 
+	 * Explored markings capped at max iteration number.
+	 */
 	public void calcReachability() {
 		Queue<Map<String, Integer>> queue = new ArrayDeque<Map<String, Integer>>();
 		i = 0;
@@ -208,6 +230,9 @@ public class ReachabilityGraph extends mxGraph{
 		}
 	}
 	
+	/*
+	 * Calculate reachable markings from a marking.
+	 */
 	private void calcNodeReachability(Map<String, Integer> state, Queue<Map<String, Integer>> queue) {
 		graph2.setPlaceTokens(state);
 		mxCell node1 = nodeMap.get(state);
@@ -258,6 +283,9 @@ public class ReachabilityGraph extends mxGraph{
 		        
 	}
 	
+	/*
+	 * initialise reachabiltiy custom styles.
+	 */
 	private void initStyles() {
 		mxStylesheet stylesheet = getStylesheet();
 		
@@ -340,6 +368,10 @@ public class ReachabilityGraph extends mxGraph{
         stylesheet.putCellStyle("ALIGN_BL", alignBL);
 	}
 	
+	/*
+     * Set current marking of reachability graph and update connected 
+     * Petri net to eflect new state.
+     */
 	public void setActiveState(Object obj) {
 	    if (obj instanceof mxCell) {
 	        mxCell vertex = (mxCell)obj;
@@ -361,6 +393,9 @@ public class ReachabilityGraph extends mxGraph{
                 setCurrentCell(cell);
 	}
 	
+	/*
+     * Set current marking of reachability graph.
+     */
 	public void setCurrentCell(Object obj) {
 	    if (obj == currentCell) {
 	        return;
@@ -380,6 +415,9 @@ public class ReachabilityGraph extends mxGraph{
 	    }
 	}
 	
+	/*
+	 * Set position of edge labels relative to edge mid-point.
+	 */
 	public void setCellLabelPosition(Object obj, String position) {
 	    if (obj instanceof mxCell && ((mxCell)obj).isEdge()) {
 	        mxCell cell = (mxCell)obj;
@@ -388,6 +426,13 @@ public class ReachabilityGraph extends mxGraph{
         }
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * Create tooltip for a cell on mosue over.
+	 * 
+	 * @see com.mxgraph.view.mxGraph#getToolTipForCell(java.lang.Object)
+	 */
 	@Override
 	public String getToolTipForCell(Object cell) {
 		if (cell instanceof mxCell)
@@ -425,6 +470,9 @@ public class ReachabilityGraph extends mxGraph{
 		return "";
 	}
 	
+	/*
+	 * Search for a user defined marking in reachabiltiy graph.
+	 */
 	public void findNodes() {
 	    
 	    Map<String, Integer> key = (Map<String, Integer>) nodeMap.keySet().toArray()[0];
@@ -469,6 +517,9 @@ public class ReachabilityGraph extends mxGraph{
 	    
 	}
 	
+	/*
+	 * Get marking map from cell.
+	 */
 	public Map<String, Integer> getMarkingMap(Object cell) {
 		if (cell instanceof mxCell)
 		{
@@ -482,6 +533,9 @@ public class ReachabilityGraph extends mxGraph{
 		return null;
 	}
 	
+	/*
+	 * Get marking name from cell.
+	 */
 	public String getMarkingName(Object cell) {
 		if (cell instanceof mxCell)
 		{

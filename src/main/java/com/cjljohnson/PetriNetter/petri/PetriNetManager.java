@@ -105,11 +105,13 @@ public class PetriNetManager extends JPanel {
 	private File currentFile;
 	private mxUndoManager undoManager;
 	private Object[] finalisedNet;
-
+	
+	// Initialise custom edge style function
 	static {
 		mxStyleRegistry.putValue("PETRI_STYLE", new PetriEdgeFunction());
 	}
 
+	// Undo handler
 	protected mxIEventListener undoHandler = new mxIEventListener()
 	{
 		public void invoke(Object source, mxEventObject evt)
@@ -119,15 +121,12 @@ public class PetriNetManager extends JPanel {
 		}
 	};
 
+	// Listen for when to open and close reachability graph
 	protected mxIEventListener changeTracker = new mxIEventListener()
 	{
 		public void invoke(Object source, mxEventObject evt)
 		{
-			//			reachValid = false;
-			//			if (reachComponent != null)
-			//				reachComponent.setEnabled(false);
 			setModified(true);
-			System.out.println(evt.getProperties());
 			if(reachComponent != null && (changeGraphModel(evt) || checkMarking(evt))) {
 				ArrayList<Object> changes = (ArrayList<Object>) evt.getProperty("changes");
 				for (Object change : changes) {
@@ -185,12 +184,6 @@ public class PetriNetManager extends JPanel {
 						boolean isReachableMarking = ((ReachabilityGraph)reachComponent.getGraph())
 								.isReachableMarking(((PetriGraph)petriComponent.getGraph()).getPlaceTokens());
 						((ReachabilityGraph)reachComponent.getGraph()).updateActiveMarking(); // Always update marking
-						//                        if (isReachableMarking) {
-						//                            
-						//                            return false;
-						//                        } else {
-						//                            return true;
-						//                        }
 
 					}
 				}
@@ -229,6 +222,9 @@ public class PetriNetManager extends JPanel {
 		undoManager.addListener(mxEvent.REDO, undoHandler);
 	}
 
+	/*
+	 * Initialise manager
+	 */
 	private void init(final PetriGraph graph) {
 
 		initialisePetriGraph(graph);
@@ -240,6 +236,9 @@ public class PetriNetManager extends JPanel {
 		add(petriComponent, BorderLayout.CENTER);
 	}
 
+	/*
+	 * Initialise PetriGraph
+	 */
 	private void initialisePetriGraph(final PetriGraph graph) {
 		graph.setCellsResizable(false);
 		graph.setMultigraph(false);
@@ -281,10 +280,12 @@ public class PetriNetManager extends JPanel {
 		graph.getModel().addListener(mxEvent.CHANGE, changeTracker);
 	}
 
+	/*
+	 * Initialise PetriGraph Swing component
+	 */
 	public void initialiseGraphComponent(final mxGraphComponent graphComponent) {
 		final PetriGraph graph = (PetriGraph) graphComponent.getGraph();
 
-		//getContentPane().add(graphComponent);
 		graphComponent.setGridVisible(true);
 		// Sets the background to white
 		graphComponent.getViewport().setOpaque(true);
@@ -371,15 +372,12 @@ public class PetriNetManager extends JPanel {
 		});
 
 		new mxRubberband(graphComponent);
-		//new mxPanningHandler(graphComponent);
 		new PetriKeyboardHandler(graphComponent);
-
-		//graphComponent.getConnectionHandler().getMarker().setHotspot(0.9);
-		//graphComponent.getConnectionHandler().getMarker().setHotspotEnabled(true);
-		//graphComponent.getConnectionHandler().setConnectIcon(new ImageIcon(
-		//        PetriEditor.class.getResource("/images/transition.gif")));
 	}
 
+	/*
+	 * Callback active tool click action
+	 */
 	private void doToolAction(MouseEvent e) {
 		Component c = e.getComponent();
 		while (c != null && !(c instanceof PetriEditor)) {
@@ -390,14 +388,16 @@ public class PetriNetManager extends JPanel {
 			editor.getSelectedTool().onClick(e, this);
 		}
 	}
-
+	
+	/*
+	 * Create right click menu at mouse event coordinates.
+	 */
 	private void showGraphPopupMenu(MouseEvent e)
 	{
 		Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(),
 				petriComponent);
 
 		mxPoint graphPoint = petriComponent.getPointForEvent(e, true);
-		System.out.println(graphPoint);
 
 		PetriRightClick menu = new PetriRightClick(this, (int)graphPoint.getX(), (int)graphPoint.getY());
 		menu.show(petriComponent, pt.x, pt.y);
@@ -434,6 +434,9 @@ public class PetriNetManager extends JPanel {
 				return newAction;
 	}
 
+	/*
+	 * Generate reachability graph from current Petri net
+	 */
 	public void createReachabilityGraph() {
 		// Ask user reachability size
 		int iterations = -1;
@@ -481,17 +484,10 @@ public class PetriNetManager extends JPanel {
 		final ReachabilityGraph reach = new ReachabilityGraph((PetriGraph)petriComponent.getGraph(), iterations);
 
 		// define layout
-		//mxOrganicLayout layout = new mxOrganicLayout(reach);
 		mxFastOrganicLayout layout = new mxFastOrganicLayout(reach);
-		//mxIGraphLayout layout = new mxEdgeLabelLayout(reach);
 
-		//layout.setForceConstant(50);
-		//layout.setMinDistanceLimit(5);
-		//layout.setMinDistanceLimit(1);
 		layout.setDisableEdgeStyle(false);
-		//layout.setForceConstant(20);
 		layout.setForceConstant(20 + reach.getChildVertices(reach.getDefaultParent()).length * 2);
-		//layout.setMinDistanceLimit(40);
 		// layout graph
 		layout.execute(reach.getDefaultParent());
 
@@ -588,16 +584,11 @@ public class PetriNetManager extends JPanel {
 
 		});
 
-		//this.reachComponent = reachComponent;
-
 		// Initial Marking
-
-
 
 		// TABLE
 		PetriGraph graph = ((PetriGraph)petriComponent.getGraph());
 		Object[] places = ((PetriGraph)petriComponent.getGraph()).getPlaces();
-		System.out.println(Arrays.toString(places));
 		String[] columnNames = new String[places.length];
 		int i = 0;
 		for (Object place : places) {
@@ -614,7 +605,6 @@ public class PetriNetManager extends JPanel {
 
 		reach.setMinimumGraphSize(reach.getGraphBounds());
 		Dimension dim = new Dimension(400, 300);
-		//new Dimension(reach.getGraphBounds().getX(), reach.getGraphBounds().getY())
 		reachComponent.setPreferredSize(dim);
 
 		// Close button
@@ -696,7 +686,10 @@ public class PetriNetManager extends JPanel {
 		}
 
 	}
-
+	
+	/*
+	 * Set reach component for undo and redo.
+	 */
 	public void setReachComponent(boolean reachValid, mxGraphComponent reachComponent, JSplitPane splitPane) {
 		this.reachValid = reachValid;
 		this.reachComponent = reachComponent;
@@ -723,12 +716,17 @@ public class PetriNetManager extends JPanel {
 		}
 	}
 
-
+	/*
+	 * Remember current state of net.
+	 */
 	public void finaliseNet() {
 		mxGraph graph = petriComponent.getGraph();
 		finalisedNet = graph.cloneCells(graph.getChildCells(graph.getDefaultParent()));
 	}
 
+	/*
+	 * Revert to saved finalised net.
+	 */
 	public boolean revertToFinalised() {
 		if (finalisedNet != null) {
 			mxGraph graph = petriComponent.getGraph();

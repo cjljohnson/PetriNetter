@@ -80,8 +80,6 @@ public class PetriEditorActions {
     private static ShowLiveness showLiveness = new ShowLiveness();
     private static HistoryAction undoAction = new HistoryAction(true);
     private static HistoryAction redoAction = new HistoryAction(false);
-    private static FinaliseNetAction finaliseNetAction = new FinaliseNetAction();
-    private static RevertToFinalisedNetAction revertToFinaliseNetAction = new RevertToFinalisedNetAction();
     private static ZoomAction zoomIn = new ZoomAction(-1);
     private static ZoomAction zoomOut = new ZoomAction(1);
     private static ZoomAction zoomReset = new ZoomAction(0);
@@ -127,14 +125,6 @@ public class PetriEditorActions {
     public static final HistoryAction getRedoAction() {
         return redoAction;
     }
-    
-    public static FinaliseNetAction getFinaliseNetAction() {
-		return finaliseNetAction;
-	}
-
-	public static RevertToFinalisedNetAction getRevertToFinaliseNetAction() {
-		return revertToFinaliseNetAction;
-	}
 	
 	public static ZoomAction getZoomInAction() {
 	    return zoomIn;
@@ -165,7 +155,10 @@ public class PetriEditorActions {
     }
 
     /**
-     *
+     * Open file.
+     * 
+     * Adapted from JGraphX example code:
+     * https://github.com/jgraph/jgraphx/blob/master/examples/com/mxgraph/examples/swing/editor/EditorActions.java
      */
     @SuppressWarnings("serial")
     public static class OpenAction extends AbstractAction
@@ -203,8 +196,6 @@ public class PetriEditorActions {
                     mxCodec codec = new mxCodec(document);
                     codec.decode(document.getDocumentElement(), 
                             graph.getModel());
-                    //                 editor.setCurrentFile(file);
-                    //                 resetEditor(editor);
                     return;
                 }
             }
@@ -315,7 +306,10 @@ public class PetriEditorActions {
     }
 
     /**
-     *
+     * Save file.
+     * 
+     * Adapted from JGraphX example code:
+     * https://github.com/jgraph/jgraphx/blob/master/examples/com/mxgraph/examples/swing/editor/EditorActions.java
      */
     @SuppressWarnings("serial")
     public static class SaveAction extends AbstractAction
@@ -559,8 +553,11 @@ public class PetriEditorActions {
     }
     
     /**
-    *
-    */
+     * Export image.
+     * 
+     * Adapted from JGraphX example code:
+     * https://github.com/jgraph/jgraphx/blob/master/examples/com/mxgraph/examples/swing/editor/EditorActions.java
+     */
    @SuppressWarnings("serial")
    public static class ExportImageAction extends AbstractAction
    {
@@ -758,7 +755,10 @@ public class PetriEditorActions {
            }
        }
    }
-
+   
+   /**
+    * Create reachability graph.
+    */
     @SuppressWarnings("serial")
     public static class CreateReachabilityAction extends AbstractAction
     {
@@ -967,47 +967,6 @@ public class PetriEditorActions {
        }
    }
    
-   @SuppressWarnings("serial")
-   public static class FinaliseNetAction extends AbstractAction
-   {
-
-       /**
-        * 
-        */
-       public void actionPerformed(ActionEvent e)
-       {
-           PetriEditor editor = (PetriEditor)e.getSource();
-           if (editor != null)
-           {
-               PetriNetManager manager = editor.getActiveGraphManager();
-               if (manager != null)
-               {
-                   manager.finaliseNet();
-               }
-           }
-       }
-   }
-   
-   @SuppressWarnings("serial")
-   public static class RevertToFinalisedNetAction extends AbstractAction
-   {
-
-       /**
-        * 
-        */
-       public void actionPerformed(ActionEvent e)
-       {
-           PetriEditor editor = (PetriEditor)e.getSource();
-           if (editor != null)
-           {
-               PetriNetManager manager = editor.getActiveGraphManager();
-               if (manager != null)
-               {
-                   manager.revertToFinalised();
-               }
-           }
-       }
-   }
    
    @SuppressWarnings("serial")
    public static class ZoomAction extends AbstractAction

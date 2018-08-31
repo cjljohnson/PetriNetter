@@ -39,7 +39,13 @@ public class PetriToolActions {
         
         
         public abstract void onClick(MouseEvent e, PetriNetManager manager);
-
+        
+        /*
+         * (non-Javadoc)
+         * Sets selected tool of editor to this tool and sets the cursor.
+         * 
+         * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+         */
         public void actionPerformed(ActionEvent e) {
             editor.setSelectedTool(this);
             for (Component manager : editor.getPane().getComponents()) {
@@ -50,8 +56,14 @@ public class PetriToolActions {
             
         }
         
+        /*
+         * Sets the cursor.
+         */
         public abstract void setCursor(mxGraphComponent graph);
         
+        /*
+         * Enable or dsiable graph handlers depending on tool.
+         */
         protected void setGraphHandlers(mxGraphComponent graph, boolean enabled) {
         	if (!enabled) {
         		graph.getGraph().clearSelection();
@@ -63,6 +75,9 @@ public class PetriToolActions {
         
     }
     
+    /*
+     * Set the cursor to the default cursor mode.
+     */
     public static class CursorAction extends ToolAction
     {
         private static final long serialVersionUID = 3887344511242268848L;
@@ -90,6 +105,9 @@ public class PetriToolActions {
         }
     }
     
+    /*
+     * Set to place creation mode.
+     */
     public static class CreatePlaceAction extends ToolAction
     {
         private static final long serialVersionUID = 3887344511242268848L;
@@ -134,6 +152,9 @@ public class PetriToolActions {
         }
     }
     
+    /*
+     * Set to transition creation mode.
+     */
     public static class CreateTransitionAction extends ToolAction
     {
         private static final long serialVersionUID = 3887344511242268848L;
@@ -179,6 +200,9 @@ public class PetriToolActions {
         }
     }
     
+    /*
+     * Create arc mode.
+     */
     public static class CreateArcAction extends ToolAction
     {
         private static final long serialVersionUID = 3887344511242268848L;
@@ -209,6 +233,9 @@ public class PetriToolActions {
         }
     }
     
+    /*
+     * Add token mode.
+     */
     public static class AddTokenAction extends ToolAction
     {
         private static final long serialVersionUID = 3887344511242268848L;
@@ -252,6 +279,9 @@ public class PetriToolActions {
         }
     }
     
+    /*
+     * Remove token mode
+     */
     public static class RemoveTokenAction extends ToolAction
     {
         private static final long serialVersionUID = 3887344511242268848L;

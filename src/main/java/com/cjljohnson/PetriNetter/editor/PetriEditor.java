@@ -54,7 +54,6 @@ public class PetriEditor extends JPanel{
     
     public PetriEditor(String title) {
         JFrame frame = new JFrame(title);
-        
         ImageIcon img = new ImageIcon(PetriEditor.class.getResource("/images/place.gif"));
         frame.setIconImage(img.getImage());
         
@@ -62,7 +61,6 @@ public class PetriEditor extends JPanel{
         this.toolBar = new PetriToolBar(this, JToolBar.HORIZONTAL);
         this.pane = new JTabbedPane();
         pane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-        
         this.highlightTransitions = true;
         
         setLayout(new BorderLayout());
@@ -92,6 +90,9 @@ public class PetriEditor extends JPanel{
         frame.setVisible(true);
     }
     
+    /*
+     * Create new petri net in new tab.
+     */
     public PetriNetManager newPetriNet() {
         PetriNetManager manager = new PetriNetManager();
         
@@ -129,6 +130,9 @@ public class PetriEditor extends JPanel{
         return manager;
     }
     
+    /*
+     * Update the title of a tab
+     */
     public boolean updateTitle(Component component) {
         if (!(component instanceof PetriNetManager)) {
             return false;
@@ -148,11 +152,17 @@ public class PetriEditor extends JPanel{
         return true;
     }
     
+    /*
+     * Set the tab title.
+     */
     public boolean setTabTitle(Component component, String newTitle) {
         pane.setTitleAt(pane.indexOfComponent(component), newTitle);
         return true;
     }
     
+    /*
+     * Close all tabs
+     */
     public boolean closeAllTabs() {
     	while (pane.getTabCount() > 0) {
     		boolean successful = closeTab(0);
@@ -163,6 +173,9 @@ public class PetriEditor extends JPanel{
     	return true;
     }
     
+    /*
+     * Close a tab with regard to save status.
+     */
     public boolean closeTab(int i) {
     	
     	if (i == -1 || i >= pane.getTabCount()) {
@@ -194,6 +207,9 @@ public class PetriEditor extends JPanel{
     return true;	
     }
     
+    /*
+     * Enable or disable transition highlighting of all Petri nets.
+     */
     public void setHighlightTransitions(boolean highlight) {
     	this.highlightTransitions = highlight;
     	for (int i = 0; i < pane.getTabCount(); i++) {
@@ -241,6 +257,9 @@ public class PetriEditor extends JPanel{
         return newAction;
     }
     
+    /*
+     * Add a PetriNetManager to a new tab.
+     */
     public boolean addPetriNet(PetriNetManager manager) {
         pane.add("Petri Net", manager);
         PetriGraph graph = (PetriGraph)manager.getPetriComponent().getGraph();

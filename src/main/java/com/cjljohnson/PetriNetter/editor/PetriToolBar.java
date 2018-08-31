@@ -39,7 +39,8 @@ public class PetriToolBar extends JToolBar {
                 .createEmptyBorder(3, 3, 3, 3), getBorder()));
         setFloatable(false);
         setRollover(true);
-
+        
+        // Save and Load
         add(editor.bind("New", PetriEditorActions.getNewAction(),
         		UIManager.getIcon("FileView.fileIcon"))).setToolTipText("New");
         add(editor.bind("Open", PetriEditorActions.getOpenAction(),
@@ -56,6 +57,8 @@ public class PetriToolBar extends JToolBar {
         
         addSeparator();
         
+        
+        // Undo history
         add(editor.bind("Undo", PetriEditorActions.getUndoAction(),
                 new ImageIcon(
                         PetriEditor.class.getResource("/images/arrow_undo.png")))).setToolTipText("Undo");
@@ -64,6 +67,8 @@ public class PetriToolBar extends JToolBar {
                         PetriEditor.class.getResource("/images/arrow_redo.png")))).setToolTipText("Redo");
         
         addSeparator();
+        
+        // Zoom
         add(editor.bind("Reset Zoom", PetriEditorActions.getZoomResetAction(),
                 new ImageIcon(
                         PetriEditor.class.getResource("/images/magnifier.png")))).setToolTipText("Reset Zoom level");
@@ -78,6 +83,7 @@ public class PetriToolBar extends JToolBar {
         
         addSeparator();
         
+        // Tool modes
         JToggleButton cursor = new JToggleButton(new ImageIcon(
                 PetriEditor.class.getResource("/images/cursor.png")));
         cursor.setToolTipText("Cursor");
@@ -124,6 +130,7 @@ public class PetriToolBar extends JToolBar {
         
         addSeparator();
         
+        // Analysis
         Action reach = editor.bind("Create Reachability Graph", new PetriEditorActions.CreateReachabilityAction(),
         		 "/images/reach.gif");
         reach.putValue(Action.SHORT_DESCRIPTION, "Create Reachability Graph");
@@ -142,17 +149,6 @@ public class PetriToolBar extends JToolBar {
         Action deadlock = editor.bind("Deadlock", new PetriEditorActions.ShowDeadlock(),
                 UIManager.getIcon("Tree.leafIcon"));
         deadlock.putValue(Action.SHORT_DESCRIPTION, "Calculate Deadlock");
-        add(deadlock);
-        
-//        addSeparator();
-//        add(editor.bind("Finalise net", PetriEditorActions.getFinaliseNetAction(),
-//                new ImageIcon(
-//                        PetriEditor.class.getResource("/images/star.png"))));
-//        add(editor.bind("Revert to finalised net", PetriEditorActions.getRevertToFinaliseNetAction(),
-//        		new ImageIcon(
-//        				PetriEditor.class.getResource("/images/star_revert.png"))));
-        
-        
-        
+        add(deadlock);        
     }
 }

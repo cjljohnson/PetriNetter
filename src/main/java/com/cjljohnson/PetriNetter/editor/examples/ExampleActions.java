@@ -26,6 +26,9 @@ import com.mxgraph.util.mxXmlUtils;
 
 public class ExampleActions {
 	
+    /*
+     * A critical section with lock.
+     */
 	@SuppressWarnings("serial")
     public static class LockExampleAction extends AbstractAction
     {
@@ -81,6 +84,9 @@ public class ExampleActions {
         }
     }
 	
+	/*
+	 * Producer-consume with buffer.
+	 */
 	@SuppressWarnings("serial")
     public static class BufferExampleAction extends AbstractAction
     {
@@ -135,6 +141,9 @@ public class ExampleActions {
         }
     }
 	
+	/*
+	 * Dining Philosophers.
+	 */
 	@SuppressWarnings("serial")
     public static class DiningExampleAction extends AbstractAction
     {
@@ -145,10 +154,6 @@ public class ExampleActions {
         {
             PetriEditor editor = (PetriEditor)e.getSource();
             PetriGraph graph = new PetriGraph();
-            
-            //FileInputStream stream = new FileInputStream(new FIle());
-            
-            
             
             Document document;
 			try {
