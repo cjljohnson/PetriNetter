@@ -125,7 +125,6 @@ public class PetriToolBar extends JToolBar {
         removeToken.addActionListener(new PetriToolActions.RemoveTokenAction(editor));
         
         cursor.setSelected(true);
-        System.out.println(cursor.getActionListeners()[0]);
         editor.setSelectedTool((ToolAction)cursor.getActionListeners()[0]);
         
         addSeparator();

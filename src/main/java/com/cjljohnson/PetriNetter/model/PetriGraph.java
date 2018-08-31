@@ -766,8 +766,6 @@ public class PetriGraph extends mxGraph{
 
 		if (!(newName == null ? place.getName() == null : newName.equals(place.getName()))) {
 			
-			System.out.println(newName);
-			System.out.println(place.getName());
 
 			try {
 				model.beginUpdate();
@@ -1058,7 +1056,6 @@ public class PetriGraph extends mxGraph{
             }
             
             style += ";ALIGN_" + position;
-            System.out.println(style);
             setCellStyle(style, new Object[] {cell});
         }
     }
